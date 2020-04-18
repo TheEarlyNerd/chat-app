@@ -7,11 +7,11 @@ export default class LandingScreen extends Component {
     return (
       <KeyboardAvoidingView style={styles.container}>
         <View style={styles.animationContainer}>
-          <Text style={styles.logoText}>Babble</Text>
-
           <LinearGradient
-            colors={[ '#1ACCB4', '#299BCB' ]}
-            style={styles.landingBackground}
+            start={{ x: 1, y: 0 }}
+            end={{ x: 0, y: 0 }}
+            colors={[ '#5DD9DE', '#39C9CE' ]}
+            style={styles.backgroundGradient}
           />
         </View>
 
@@ -28,14 +28,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   animationContainer: {
-    flex: 2,
+    flex: 1,
     alignItems: 'center',
   },
   formContainer: {
-    flex: 2,
+    flex: 3,
     justifyContent: 'center',
   },
-  landingBackground: {
+  backgroundGradient: {
     position: 'absolute',
     top: -100,
     right: -100,
@@ -45,13 +45,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#5DD9DE',
     transform: [ { rotate: '-9deg' } ],
 
-  },
-
-
-  logoText: {
-    color: '#FFFFFF',
-    marginTop: 70,
-    fontFamily: 'NunitoSans-Black',
-    fontSize: 42,
   },
 });
