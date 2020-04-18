@@ -1,22 +1,27 @@
 import React, { Component } from 'react';
-import { Text, View, KeyboardAvoidingView, StyleSheet } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { MessageCircleIcon } from '../components/icons';
+import { View, KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { BabbleTiledIconsBackground } from '../components';
+import { HeartIcon } from '../components/icons';
 
 export default class LandingScreen extends Component {
   render() {
     return (
       <KeyboardAvoidingView style={styles.container}>
         <View style={styles.animationContainer}>
-          <LinearGradient
-            start={{ x: 1, y: 0 }}
-            end={{ x: 0, y: 0 }}
-            colors={[ '#5DD9DE', '#39C9CE' ]}
+          <BabbleTiledIconsBackground
+            iconComponents={[ HeartIcon ]}
+            iconSize={20}
+            iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
+            iconSpacing={30}
+            linearGradientRotationAngle={-9}
+            linearGradientProps={{
+              colors: [ '#299BCB', '#1ACCB4' ],
+              locations: [ 0, 0.7 ],
+              useAngle: true,
+              angle: 36,
+            }}
             style={styles.backgroundGradient}
           />
-
-          <MessageCircleIcon width={100} height={100} />
-
         </View>
 
         <View style={styles.formContainer}>
@@ -32,7 +37,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   animationContainer: {
-    flex: 1,
+    flex: 2,
     alignItems: 'center',
   },
   formContainer: {
@@ -40,14 +45,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   backgroundGradient: {
-    position: 'absolute',
-    top: -100,
-    right: -100,
-    bottom: 0,
-    left: -100,
-    zIndex: -1,
-    backgroundColor: '#5DD9DE',
-    transform: [ { rotate: '-9deg' } ],
-
+    ...StyleSheet.absoluteFillObject,
   },
 });
