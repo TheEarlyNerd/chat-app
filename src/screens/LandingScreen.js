@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { MessageCircleIcon } from '../components/icons';
 
 export default class LandingScreen extends Component {
   render() {
@@ -13,6 +14,9 @@ export default class LandingScreen extends Component {
             colors={[ '#5DD9DE', '#39C9CE' ]}
             style={styles.backgroundGradient}
           />
+
+          <MessageCircleIcon width={100} height={100} />
+
         </View>
 
         <View style={styles.formContainer}>
