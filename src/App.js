@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import { Animated } from 'react-native';
-import RootNavigator from './navigators/RootNavigator';
+
+// temp
+import LandingScreen from './screens/LandingScreen';
 
 export default class App extends Component {
+  state = {
+    containerOpacityAnimated: new Animated.Value(0),
+  }
+
   componentDidMount() {
-    this.animateVisibility(1, 750);
+    this.animateContainerOpacity(1, 750);
   }
 
   animateContainerOpacity(toValue, duration) {
@@ -20,9 +26,7 @@ export default class App extends Component {
   render() {
     return (
       <Animated.View style={{ flex: 1, opacity: this.state.containerOpacityAnimated }}>
-        <RootNavigator
-          initialRouteName={this.state.initialRouteName}
-        />
+        <LandingScreen />
       </Animated.View>
     );
   }
