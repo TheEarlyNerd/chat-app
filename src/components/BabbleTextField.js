@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { InfoIcon } from '../components/icons';
 
 export default class BabbleTextField extends Component {
   render() {
-    const { containerStyle, style, ...props } = this.props;
+    const { containerStyle, style, inputPrefix, labelPostfix, ...props } = this.props;
 
     return (
       <View style={[ styles.container, containerStyle ]}>
-        <Text style={styles.labelText}>Enter your phone number</Text>
+        <View style={styles.labelContainer}>
+          <Text style={styles.labelText}>Enter your phone number</Text>
+          {labelPostfix}
+        </View>
 
         <View style={styles.textInputContainer}>
+          {inputPrefix}
+
           <TextInput
             placeholderColor={'#909090'}
             style={[ styles.textInput, style ]}
@@ -27,9 +33,15 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
   },
+  labelContainer: {
+    flexDirection: 'row',
+    width: '100%',
+  },
   textInputContainer: {
-    backgroundColor: '#F2F8FC',
-    borderWidth: 0.5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F1F7FB',
+    borderWidth: 1,
     borderColor: '#E1E3E8',
     borderRadius: 4,
   },
@@ -46,11 +58,12 @@ const styles = StyleSheet.create({
     paddingTop: 2,
     paddingHorizontal: 10,
     height: 46,
+    width: '100%',
   },
   shadow: {
     position: 'absolute',
     top: 50,
-    bottom: 0,
+    bottom: 1,
     left: '5%',
     right: '5%',
     zIndex: -2,

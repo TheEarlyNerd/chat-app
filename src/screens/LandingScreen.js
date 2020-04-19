@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, KeyboardAvoidingView, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { BabbleTextField, BabbleButton, BabbleTiledIconsBackground } from '../components';
+import { BabbleTextField, BabbleButton, BabbleCountrySelector, BabbleTiledIconsBackground } from '../components';
 import { MessageSquareIcon, HeartIcon } from '../components/icons';
 
 export default class LandingScreen extends Component {
@@ -34,6 +34,7 @@ export default class LandingScreen extends Component {
             returnKeyType={'done'}
             keyboardType={'phone-pad'}
             containerStyle={styles.textFieldContainer}
+            inputPrefix={(<BabbleCountrySelector style={styles.countrySelector} />)}
           />
 
           <BabbleButton style={styles.continueButton}>Continue</BabbleButton>
@@ -67,6 +68,10 @@ const styles = StyleSheet.create({
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
     zIndex: -1,
+  },
+  countrySelector: {
+    marginLeft: 10,
+    marginTop: -2,
   },
   continueButton: {
     marginBottom: 20,
