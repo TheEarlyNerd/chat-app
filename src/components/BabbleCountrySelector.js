@@ -127,6 +127,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#323643',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 18,
+    fontSize: 24,
   },
 });

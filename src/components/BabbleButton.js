@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#FFFFFF',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 18,
+    fontSize: 19,
   },
   shadow: {
     position: 'absolute',

@@ -48,16 +48,16 @@ const styles = StyleSheet.create({
   labelText: {
     color: '#2A99CC',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 16,
+    fontSize: 18,
     marginBottom: 8,
   },
   textInput: {
     color: '#323643',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 18,
+    fontSize: 24,
     paddingTop: 2,
     paddingHorizontal: 10,
-    height: 46,
+    height: 50,
     width: '100%',
   },
   shadow: {

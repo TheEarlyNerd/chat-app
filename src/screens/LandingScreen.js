@@ -8,7 +8,7 @@ export default class LandingScreen extends Component {
     return (
       <KeyboardAvoidingView
         behavior={'padding'}
-        keyboardVerticalOffset={-90}
+        keyboardVerticalOffset={-85}
         style={styles.container}
       >
         <View style={styles.animationContainer}>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   countrySelector: {
     marginLeft: 10,
-    marginTop: -2,
+    marginTop: 1,
   },
   continueButton: {
     marginBottom: 20,
