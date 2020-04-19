@@ -12,6 +12,8 @@ export default class LandingScreen extends Component {
         style={styles.container}
       >
         <View style={styles.animationContainer}>
+          <Text style={styles.logoText}>Babble</Text>
+
           <BabbleTiledIconsBackground
             iconComponents={[ MessageSquareIcon, HeartIcon ]}
             iconSize={20}
@@ -64,6 +66,17 @@ const styles = StyleSheet.create({
   },
   textFieldContainer: {
     marginBottom: 30,
+  },
+  logoText: {
+    color: '#FFFFFF',
+    fontFamily: 'Lobster-Regular',
+    fontSize: 60,
+    marginTop: 60,
+//    letterSpacing: -3,
+    shadowColor: '#252A3F',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
   },
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
