@@ -47,6 +47,10 @@ export default class BabbleTiledIconsBackground extends Component {
   }
 
   _updateStateDimensions = event => {
+    if (this.state.componentWidth && this.state.componentHeight) {
+      return; // setting state again resets icon positions because of random.
+    }
+
     this.setState({
       componentWidth: event.nativeEvent.layout.width,
       componentHeight: event.nativeEvent.layout.height,
@@ -57,7 +61,7 @@ export default class BabbleTiledIconsBackground extends Component {
     const { linearGradientProps, linearGradientRotationAngle, style } = this.props;
 
     return (
-      <View onLayout={this._updateStateDimensions} style={style}>
+      <View onLayout={this._updateStateDimensions} style={[ styles.container, style ]}>
         <View style={styles.iconsContainer}>
           {this._generateIcons()}
         </View>
@@ -77,6 +81,12 @@ export default class BabbleTiledIconsBackground extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    shadowColor: '#252A3F',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+  },
   iconsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
