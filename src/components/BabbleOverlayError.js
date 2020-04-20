@@ -26,17 +26,18 @@ export default class BabbleOverlayError extends Component {
         delay: 5000,
       }),
     ]).start(() => {
-      maestro.dispatchEvent('OVERLAYS:HIDE');
+      maestro.dispatchEvent('OVERLAYS:HIDE', { name: 'Error' });
     });
   }
 
   render() {
-    const { message } = this.props.data;
+    const { message, iconComponent } = this.props.data;
     const { containerTranslateYAnimated } = this.state;
+    const Icon = iconComponent || FrownIcon;
 
     return (
       <Animated.View style={[ styles.container, { transform: [ { translateY: containerTranslateYAnimated } ] } ]}>
-        <FrownIcon
+        <Icon
           width={25}
           height={25}
           style={styles.errorIcon}

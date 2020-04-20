@@ -21,7 +21,7 @@ export default class BabbleOverlayCountrySelector extends Component {
 
   _hide = () => {
     this._toggle(false).then(() => {
-      maestro.dispatchEvent('OVERLAYS:HIDE');
+      maestro.dispatchEvent('OVERLAYS:HIDE', { name: 'CountrySelector' });
     });
   }
 

@@ -4,8 +4,7 @@ import maestro from '../maestro';
 
 export default class BabbleOverlayContainer extends Component {
   state = {
-    activeOverlay: '',
-    activeOverlayData: null,
+    activeOverlays: {},
   }
 
   componentDidMount() {
@@ -17,32 +16,35 @@ export default class BabbleOverlayContainer extends Component {
   }
 
   receiveEvent(name, data) {
+    const activeOverlays = Object.assign({}, this.state.activeOverlays);
+
     if (name === 'OVERLAYS:SHOW') {
-      this.setState({
-        activeOverlay: data.name,
-        activeOverlayData: data.data,
-      });
+      activeOverlays[data.name] = data.data;
     }
 
     if (name === 'OVERLAYS:HIDE') {
-      this.setState({
-        activeOverlay: '',
-        activeOverlayData: null,
-      });
+      delete activeOverlays[data.name];
     }
+
+    this.setState({ activeOverlays });
   }
 
   render() {
-    const { activeOverlay, activeOverlayData } = this.state;
+    const { activeOverlays } = this.state;
+    const overlayComponents = [];
 
-    if (activeOverlay === 'CountrySelector') {
-      return <BabbleOverlayCountrySelector data={activeOverlayData} />;
-    }
+    Object.keys(activeOverlays).forEach(overlayName => {
+      const data = activeOverlays[overlayName];
 
-    if (activeOverlay === 'Error') {
-      return <BabbleOverlayError data={activeOverlayData} />;
-    }
+      if (overlayName === 'CountrySelector') {
+        overlayComponents.push(<BabbleOverlayCountrySelector data={data} key={overlayName} />);
+      }
 
-    return null;
+      if (overlayName === 'Error') {
+        overlayComponents.push(<BabbleOverlayError data={data} key={overlayName} />);
+      }
+    });
+
+    return overlayComponents;
   }
 }
