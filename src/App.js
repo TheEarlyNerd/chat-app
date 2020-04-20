@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Animated, StatusBar } from 'react-native';
+import { BabbleOverlaysContainer } from './components';
 
 // temp
 import LandingScreen from './screens/LandingScreen';
@@ -27,6 +28,7 @@ export default class App extends Component {
     return (
       <Animated.View style={{ flex: 1, opacity: this.state.containerOpacityAnimated }}>
         <StatusBar barStyle={'light-content'} />
+        <BabbleOverlaysContainer />
         <LandingScreen />
       </Animated.View>
     );

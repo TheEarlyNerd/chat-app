@@ -4,11 +4,12 @@ import LinearGradient from 'react-native-linear-gradient';
 
 export default class BabbleButton extends Component {
   render() {
-    const { children, loading, disabled, style } = this.props;
+    const { children, onPress, loading, disabled, style } = this.props;
 
     return (
       <TouchableOpacity
         disabled={loading || disabled}
+        onPress={onPress}
         style={[
           styles.button,
           style,

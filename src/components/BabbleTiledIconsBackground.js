@@ -88,10 +88,12 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   iconsContainer: {
+    flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   linearGradient: {
     position: 'absolute',

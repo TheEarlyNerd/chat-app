@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { InfoIcon } from '../components/icons';
 
 export default class BabbleTextField extends Component {
+  textInputComponent = null;
+
+  focus = () => {
+    this.textInputComponent.focus();
+  }
+
   render() {
-    const { containerStyle, style, inputPrefix, labelPostfix, ...props } = this.props;
+    const { containerStyle, style, error, inputPrefix, labelPostfix, ...props } = this.props;
 
     return (
       <View style={[ styles.container, containerStyle ]}>
@@ -19,9 +24,14 @@ export default class BabbleTextField extends Component {
           <TextInput
             placeholderColor={'#909090'}
             style={[ styles.textInput, style ]}
+            ref={component => this.textInputComponent = component}
             {...props}
           />
         </View>
+
+        {typeof error === 'string' && error.length > 0 && (
+          <Text style={styles.errorText}>{error}</Text>
+        )}
 
         <View style={styles.shadow} />
       </View>
@@ -63,7 +73,7 @@ const styles = StyleSheet.create({
   shadow: {
     position: 'absolute',
     top: 50,
-    bottom: 1,
+    height: 35,
     left: '5%',
     right: '5%',
     zIndex: -2,
@@ -72,5 +82,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
     shadowRadius: 5,
+  },
+  errorText: {
+    position: 'absolute',
+    bottom: -25,
+    color: '#F53333',
+    fontFamily: 'NunitoSans-Regular',
+    fontSize: 16,
   },
 });
