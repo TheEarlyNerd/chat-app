@@ -8,9 +8,13 @@ export default class InterfaceHelper extends Helper {
   showError = ({ message, iconComponent }) => {
     message = (typeof message === 'object') ? message.message : message;
 
-    this.maestro.dispatchEvent('OVERLAYS:SHOW', {
+    this.showOverlay({
       name: 'Error',
       data: { message, iconComponent },
     });
   }
+
+  showOverlay = ({ name, data }) => {
+    this.maestro.dispatchEvent('OVERLAYS:SHOW', { name, data });
+  };
 }

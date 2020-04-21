@@ -1,55 +1,29 @@
 import React, { Component } from 'react';
 import { View, KeyboardAvoidingView, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { getCountry } from 'react-native-localize';
-import { BabbleTextField, BabbleButton, BabbleTiledIconsBackground } from '../components';
+import { BabblePhoneField, BabbleButton, BabbleTiledIconsBackground } from '../components';
 import { MessageSquareIcon, HeartIcon } from '../components/icons';
-import countries from '../data/countries';
 import maestro from '../maestro';
-
-const { userManager } = maestro.managers;
 
 export default class LandingScreen extends Component {
   state = {
-    country: countries.find(country => country.countryCode === getCountry()),
     phone: '',
     phoneError: '',
     loading: false,
   }
 
-  // temp
-  componentDidMount() {
-    setInterval(() => {
-      maestro.dispatchEvent('OVERLAYS:SHOW', {
-        name: 'Error',
-        data: {
-          message: 'Yo this is a test error, something strange is happening just letting you know.',
-        },
-      });
-    }, 8000);
-  }
-
-  _showCountrySelector = () => {
-    maestro.dispatchEvent('OVERLAYS:SHOW', {
-      name: 'CountrySelector',
-      data: {
-        onCountrySelected: country => this.setState({ country }),
-      },
-    });
-  }
-
   _login = () => {
-    const { phone, country } = this.state;
+    const { phone } = this.state;
     const validPhone = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(phone);
 
     if (!validPhone) {
       return this.setState({ phoneError: 'Invalid phone number.' });
     }
 
-    // send coe=dess
+    // send codes
   }
 
   render() {
-    const { country, phoneError, loading } = this.state;
+    const { phoneError, loading } = this.state;
 
     return (
       <KeyboardAvoidingView
@@ -77,19 +51,7 @@ export default class LandingScreen extends Component {
         </View>
 
         <View style={styles.formContainer}>
-          <BabbleTextField
-            placeholder={'(201) 867-5309'}
-            onChangeText={phone => this.setState({ phone })}
-            returnKeyType={'done'}
-            keyboardType={'phone-pad'}
-            containerStyle={styles.textFieldContainer}
-            inputPrefix={(
-              <TouchableOpacity onPress={this._showCountrySelector} style={styles.phoneTextFieldPrefixButton}>
-                <Text style={styles.phoneTextFieldPrefixButtonText}>{country.emoji} +{country.phoneCode}</Text>
-              </TouchableOpacity>
-            )}
-            error={phoneError}
-          />
+          <BabblePhoneField containerStyle={styles.phoneFieldContainer} />
 
           <BabbleButton
             onPress={this._login}
@@ -122,7 +84,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 30,
   },
-  textFieldContainer: {
+  phoneFieldContainer: {
     marginBottom: 35,
   },
   logoText: {
@@ -139,15 +101,6 @@ const styles = StyleSheet.create({
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
     zIndex: -1,
-  },
-  phoneTextFieldPrefixButton: {
-    marginLeft: 10,
-    marginTop: 1,
-  },
-  phoneTextFieldPrefixButtonText: {
-    color: '#323643',
-    fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 24,
   },
   continueButton: {
     marginBottom: 20,

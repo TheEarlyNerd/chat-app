@@ -35,11 +35,11 @@ export default class BabbleOverlayCountrySelector extends Component {
     });
   }
 
-  _onCountrySelected = country => {
-    const { onCountrySelected } = this.props.data;
+  _onSelectedCountry = country => {
+    const { onSelectedCountry } = this.props.data;
 
-    if (onCountrySelected) {
-      onCountrySelected(country);
+    if (onSelectedCountry) {
+      onSelectedCountry(country);
     }
 
     this._hide();
@@ -47,7 +47,7 @@ export default class BabbleOverlayCountrySelector extends Component {
 
   _selectorRenderItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => this._onCountrySelected(item)} style={styles.countryButton}>
+      <TouchableOpacity onPress={() => this._onSelectedCountry(item)} style={styles.countryButton}>
         <Text style={styles.countryButtonText}>{item.text}</Text>
       </TouchableOpacity>
     );
