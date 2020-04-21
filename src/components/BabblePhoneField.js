@@ -53,6 +53,7 @@ export default class BabblePhoneField extends Component {
 
     return (
       <BabbleTextField
+        label={'Enter your phone number'}
         placeholder={this._formatPhoneNumber('2018675309')}
         onTextInput={this._onTextInput}
         returnKeyType={'done'}

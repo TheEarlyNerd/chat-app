@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Animated, StatusBar } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import { BabbleOverlaysContainer } from './components';
-
-// temp
-import LandingScreen from './screens/LandingScreen';
+import RootNavigator from './navigators/RootNavigator';
 
 export default class App extends Component {
   state = {
@@ -26,11 +25,13 @@ export default class App extends Component {
 
   render() {
     return (
-      <Animated.View style={{ flex: 1, opacity: this.state.containerOpacityAnimated }}>
-        <StatusBar barStyle={'light-content'} />
-        <BabbleOverlaysContainer />
-        <LandingScreen />
-      </Animated.View>
+      <NavigationContainer>
+        <Animated.View style={{ flex: 1, opacity: this.state.containerOpacityAnimated }}>
+          <StatusBar barStyle={'light-content'} />
+          <RootNavigator />
+          <BabbleOverlaysContainer />
+        </Animated.View>
+      </NavigationContainer>
     );
   }
 }

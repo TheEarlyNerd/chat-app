@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { BabbleFieldLabel } from './';
 
 export default class BabbleTextField extends Component {
   textInputComponent = null;
@@ -9,14 +10,18 @@ export default class BabbleTextField extends Component {
   }
 
   render() {
-    const { containerStyle, style, error, inputPrefix, labelPostfix, ...props } = this.props;
+    const { containerStyle, label, style, error, inputPrefix, labelPostfix, ...props } = this.props;
 
     return (
       <View style={[ styles.container, containerStyle ]}>
-        <View style={styles.labelContainer}>
-          <Text style={styles.labelText}>Enter your phone number</Text>
-          {labelPostfix}
-        </View>
+        {label && (
+          <BabbleFieldLabel
+            containerStyle={styles.fieldLabelContainer}
+            postfix={labelPostfix}
+          >
+            {label}
+          </BabbleFieldLabel>
+        )}
 
         <View style={styles.textInputContainer}>
           {inputPrefix}
@@ -33,7 +38,11 @@ export default class BabbleTextField extends Component {
           <Text style={styles.errorText}>{error}</Text>
         )}
 
-        <View style={styles.shadow} />
+        <View style={[
+          styles.shadow,
+          (label) ? styles.shadowLabel : null,
+          (!label) ? styles.shadowNoLabel : null,
+        ]} />
       </View>
     );
   }
@@ -41,10 +50,6 @@ export default class BabbleTextField extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-  },
-  labelContainer: {
-    flexDirection: 'row',
     width: '100%',
   },
   textInputContainer: {
@@ -55,10 +60,7 @@ const styles = StyleSheet.create({
     borderColor: '#E1E3E8',
     borderRadius: 4,
   },
-  labelText: {
-    color: '#2A99CC',
-    fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 18,
+  fieldLabelContainer: {
     marginBottom: 8,
   },
   textInput: {
@@ -72,7 +74,6 @@ const styles = StyleSheet.create({
   },
   shadow: {
     position: 'absolute',
-    top: 50,
     height: 35,
     left: '5%',
     right: '5%',
@@ -82,6 +83,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
     shadowRadius: 5,
+  },
+  shadowLabel: {
+    top: 50,
+  },
+  shadowNoLabel: {
+    top: 17,
   },
   errorText: {
     position: 'absolute',
