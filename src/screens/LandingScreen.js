@@ -61,6 +61,8 @@ export default class LandingScreen extends Component {
             Continue
           </BabbleButton>
 
+          {/* we should have a skip or explain button for skeptical users, phone is a big ask? */}
+
           <TouchableOpacity>
             <Text style={styles.termsButtonText}>By continuing, I confirm that I am at least 18 years old and I agree to Babble's <Text style={styles.termsButtonTextBold}>Terms of Service</Text> and <Text style={styles.termsButtonTextBold}>Privacy Policy</Text>.</Text>
           </TouchableOpacity>

@@ -23,14 +23,38 @@ export default class BabblePhoneField extends Component {
     });
   }
 
+  _onTextInput = ({ nativeEvent }) => {
+    const { text, range } = nativeEvent;
+    const { phone } = this.state;
+
+    if (text === '' && phone.length > 0) {
+      this.setState({ phone: phone.slice(0, range.start - range.end) });
+    } else {
+      this.setState({ phone: `${phone}${text}` });
+    }
+  }
+
+  _formatPhoneNumber = phoneNumber => {
+    const { phoneCode } = this.state.country;
+
+    try {
+      const formatter = new AsYouType({ defaultCallingCode: phoneCode });
+
+      return formatter.input(`${phoneCode}${phoneNumber}`).replace(' ', '').slice(phoneCode.length);
+    } catch (error) {
+      // formatter doesn't recognize all phone codes and can throw.
+      return phoneNumber;
+    }
+  }
+
   render() {
     const { containerStyle, style, error } = this.props;
-    const { country } = this.state;
+    const { country, phone } = this.state;
 
     return (
       <BabbleTextField
-        placeholder={'(201) 867-5309'}
-        onChangeText={phone => this.setState({ phone })}
+        placeholder={this._formatPhoneNumber('2018675309')}
+        onTextInput={this._onTextInput}
         returnKeyType={'done'}
         keyboardType={'phone-pad'}
         containerStyle={containerStyle}
@@ -39,6 +63,7 @@ export default class BabblePhoneField extends Component {
             <Text style={styles.prefixButtonText}>{country.emoji} +{country.phoneCode}</Text>
           </TouchableOpacity>
         )}
+        value={this._formatPhoneNumber(phone)}
         error={error}
         style={style}
       />
