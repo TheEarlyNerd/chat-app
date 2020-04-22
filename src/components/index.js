@@ -6,6 +6,7 @@ import BabbleOverlaysContainer from './BabbleOverlaysContainer';
 import BabblePhoneField from './BabblePhoneField';
 import BabbleTextField from './BabbleTextField';
 import BabbleTiledIconsBackground from './BabbleTiledIconsBackground';
+import BabbleUserAvatar from './BabbleUserAvatar';
 import BabbleUsernameField from './BabbleUsernameField';
 
 export {
@@ -17,5 +18,6 @@ export {
   BabblePhoneField,
   BabbleTextField,
   BabbleTiledIconsBackground,
+  BabbleUserAvatar,
   BabbleUsernameField,
 };

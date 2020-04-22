@@ -32,7 +32,7 @@ export default class BabbleTextField extends Component {
 
   render() {
     const { value } = this.state;
-    const { containerStyle, label, style, error, inputPrefix, labelPostfix, ...props } = this.props;
+    const { containerStyle, label, info, error, style, inputPrefix, labelPostfix, ...props } = this.props;
 
     return (
       <View style={[ styles.container, containerStyle ]}>
@@ -58,8 +58,12 @@ export default class BabbleTextField extends Component {
           />
         </View>
 
-        {typeof error === 'string' && error.length > 0 && (
-          <Text style={styles.errorText}>{error}</Text>
+        {!!error && (
+          <Text style={[ styles.subtext, styles.errorText ]}>{error}</Text>
+        )}
+
+        {!!info && !error && (
+          <Text style={[ styles.subtext, styles.infoText ]}>{info}</Text>
         )}
 
         <View style={[
@@ -114,11 +118,16 @@ const styles = StyleSheet.create({
   shadowNoLabel: {
     top: 17,
   },
-  errorText: {
+  subtext: {
     position: 'absolute',
     bottom: -25,
-    color: '#F53333',
     fontFamily: 'NunitoSans-Regular',
     fontSize: 16,
+  },
+  infoText: {
+    color: '#9B9B9B',
+  },
+  errorText: {
+    color: '#F53333',
   },
 });

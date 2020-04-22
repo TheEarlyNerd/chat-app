@@ -1,18 +1,26 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, View, Text, Image, StyleSheet } from 'react-native';
-import { BabbleTextField, BabbleUsernameField, BabbleButton, BabbleTiledIconsBackground } from '../components';
-import { UserIcon } from '../components/icons';
+import { View, Text, Dimensions, StyleSheet } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { BabbleTextField, BabbleUsernameField, BabbleButton, BabbleTiledIconsBackground, BabbleUserAvatar } from '../components';
+import { SmileIcon, CameraIcon } from '../components/icons';
+
+const windowHeight = Dimensions.get('window').height;
 
 export default class SetupProfileScreen extends Component {
   render() {
     return (
-      <KeyboardAvoidingView
-        behavior={'padding'}
-        style={styles.container}
-      >
+      <KeyboardAwareScrollView>
         <View style={styles.previewContainer}>
+          <BabbleUserAvatar
+            source={{ uri: '' }}
+            size={125}
+          />
+
+          <Text style={[ styles.previewText, styles.previewNameText ]}>Welcome to <Text style={styles.logoText}>Babble</Text></Text>
+          <Text style={[ styles.previewText, styles.previewUsernameText ]}>Let's Setup Your Account!</Text>
+
           <BabbleTiledIconsBackground
-            iconComponents={[ UserIcon ]}
+            iconComponents={[ SmileIcon, CameraIcon ]}
             iconSize={20}
             iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
             iconSpacing={37}
@@ -35,29 +43,48 @@ export default class SetupProfileScreen extends Component {
 
           <BabbleUsernameField
             label={'Username'}
-            containerStyle={styles.fieldContainer}
+            info={'You can always change this later.'}
+            containerStyle={styles.lastFieldContainer}
           />
 
           <BabbleButton>Continue</BabbleButton>
         </View>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   previewContainer: {
-    flex: 1,
+    height: windowHeight / 2,
     alignItems: 'center',
+    justifyContent: 'center', //temp
   },
   formContainer: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 30,
+    paddingTop: 70,
+    paddingBottom: 50,
+  },
+  logoText: {
+    fontFamily: 'Lobster-Regular',
+  },
+  previewText: {
+    color: '#FFFFFF',
+    fontFamily: 'NunitoSans-Bold',
+    shadowColor: '#252A3F',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+  },
+  previewNameText: {
+    marginTop: 25,
+    marginBottom: 10,
+    fontSize: 36,
+  },
+  previewUsernameText: {
+    fontSize: 22,
   },
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
@@ -65,5 +92,8 @@ const styles = StyleSheet.create({
   },
   fieldContainer: {
     marginBottom: 35,
+  },
+  lastFieldContainer: {
+    marginBottom: 50,
   },
 });
