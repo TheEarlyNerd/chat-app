@@ -3,13 +3,35 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { BabbleFieldLabel } from './';
 
 export default class BabbleTextField extends Component {
+  state = {
+    value: '',
+  }
+
   textInputComponent = null;
+
+  get value() {
+    return this.state.value;
+  }
+
+  set value(value) {
+    this.setState({ value });
+  }
+
+  clear = () => {
+    this.setState({ value: '' });
+    this.textInputComponent.clear();
+  }
 
   focus = () => {
     this.textInputComponent.focus();
   }
 
+  _onChangeText = text => {
+    this.setState({ value: text });
+  }
+
   render() {
+    const { value } = this.state;
     const { containerStyle, label, style, error, inputPrefix, labelPostfix, ...props } = this.props;
 
     return (
@@ -28,7 +50,9 @@ export default class BabbleTextField extends Component {
 
           <TextInput
             placeholderColor={'#909090'}
+            onChangeText={this._onChangeText}
             style={[ styles.textInput, style ]}
+            value={value}
             ref={component => this.textInputComponent = component}
             {...props}
           />

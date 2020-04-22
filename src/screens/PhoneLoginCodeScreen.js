@@ -4,11 +4,62 @@ import { BabbleFieldLabel, BabbleTextField, BabbleButton, BabbleTiledIconsBackgr
 import { LockIcon, CheckCircleIcon } from '../components/icons';
 
 export default class PhoneLoginCodeScreen extends Component {
+  state = {
+    code: '',
+    focusedCodeTextFieldIndex: 0,
+    sendingText: true,
+    loading: true,
+    error: null,
+  }
+
+  codeTextFields = [];
+  loginCodeDelayTimeout = null;
+
+  componentDidMount() {
+    this.loginCodeDelayTimeout = setTimeout(() => this.setState({
+      sendingText: false,
+      loading: false,
+    }), 5500);
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.loginCodeDelayTimeout);
+  }
+
+  _onKeyPress = ({ nativeEvent }) => {
+    const { key } = nativeEvent;
+    const { focusedCodeTextFieldIndex } = this.state;
+    const currentCodeTextField = this.codeTextFields[focusedCodeTextFieldIndex];
+    const indexShift = (key !== 'Backspace') ? 1 : -1;
+
+    if (indexShift === 1) {
+      if (focusedCodeTextFieldIndex >= this.codeTextFields.length - 1) {
+        return;
+      }
+
+      if (currentCodeTextField.value && !this.codeTextFields[focusedCodeTextFieldIndex + indexShift].value) {
+        this.codeTextFields[focusedCodeTextFieldIndex + indexShift].value = key;
+      }
+    }
+
+    if (indexShift === -1) {
+      if (focusedCodeTextFieldIndex <= 0 || currentCodeTextField.value) {
+        return currentCodeTextField.clear();
+      }
+
+      if (!currentCodeTextField.value) {
+        this.codeTextFields[focusedCodeTextFieldIndex + indexShift].clear();
+      }
+    }
+
+    this.codeTextFields[focusedCodeTextFieldIndex + indexShift].focus();
+  }
+
   render() {
     return (
       <KeyboardAvoidingView
         behavior={'padding'}
-        keyboardVerticalOffset={-30}
+        keyboardVerticalOffset={-35}
         style={styles.container}
       >
         <View style={styles.animationContainer}>
@@ -34,11 +85,15 @@ export default class PhoneLoginCodeScreen extends Component {
           <View style={styles.codeContainer}>
             {Array(6).fill(null).map((value, index) => (
               <BabbleTextField
-                placeholder={`${index + 1}`}
                 maxLength={1}
+                onKeyPress={this._onKeyPress}
+                onFocus={() => this.setState({ focusedCodeTextFieldIndex: index })}
+                returnKeyType={'done'}
+                keyboardType={'phone-pad'}
                 containerStyle={styles.codeTextField}
                 style={styles.codeTextFieldInput}
                 key={`code_${index}`}
+                ref={component => this.codeTextFields[index] = component}
               />
             ))}
           </View>
