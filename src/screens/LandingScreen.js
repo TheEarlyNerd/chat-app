@@ -7,23 +7,26 @@ import maestro from '../maestro';
 export default class LandingScreen extends Component {
   state = {
     phone: '',
-    phoneError: '',
+    error: '',
     loading: false,
   }
 
-  _login = () => {
+  _submit = () => {
     const { phone } = this.state;
     const validPhone = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(phone);
 
     if (!validPhone) {
-      return this.setState({ phoneError: 'Invalid phone number.' });
+      return this.setState({ error: 'Invalid phone number.' });
     }
 
     // send codes
+
+    //temp
+    this.props.navigation.navigate('PhoneLoginCode');
   }
 
   render() {
-    const { phoneError, loading } = this.state;
+    const { error, loading } = this.state;
 
     return (
       <KeyboardAvoidingView
@@ -51,10 +54,14 @@ export default class LandingScreen extends Component {
         </View>
 
         <View style={styles.formContainer}>
-          <BabblePhoneField containerStyle={styles.phoneFieldContainer} />
+          <BabblePhoneField
+            onPhoneChange={phone => this.setState({ phone })}
+            containerStyle={styles.phoneFieldContainer}
+            error={error}
+          />
 
           <BabbleButton
-            onPress={this._login}
+            onPress={this._submit}
             loading={loading}
             style={styles.continueButton}
           >

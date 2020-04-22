@@ -5,7 +5,6 @@ import { LockIcon, CheckCircleIcon } from '../components/icons';
 
 export default class PhoneLoginCodeScreen extends Component {
   state = {
-    code: '',
     focusedCodeTextFieldIndex: 0,
     sendingText: true,
     loading: true,
@@ -16,6 +15,8 @@ export default class PhoneLoginCodeScreen extends Component {
   loginCodeDelayTimeout = null;
 
   componentDidMount() {
+    this.codeTextFields[0].focus();
+
     this.loginCodeDelayTimeout = setTimeout(() => this.setState({
       sendingText: false,
       loading: false,
@@ -55,11 +56,26 @@ export default class PhoneLoginCodeScreen extends Component {
     this.codeTextFields[focusedCodeTextFieldIndex + indexShift].focus();
   }
 
+  _submit = () => {
+    const code = this.codeTextFields.map(textField => textField.value).join('');
+
+    if (code.length < 6) {
+      return this.setState({ error: 'Invalid login code.' });
+    }
+
+    // do login stuff
+
+    //temp
+    this.props.navigation.navigate('SetupProfile');
+  }
+
   render() {
+    const { sendingText, loading, error } = this.state;
+
     return (
       <KeyboardAvoidingView
         behavior={'padding'}
-        keyboardVerticalOffset={-35}
+        keyboardVerticalOffset={-40}
         style={styles.container}
       >
         <View style={styles.animationContainer}>
@@ -80,7 +96,9 @@ export default class PhoneLoginCodeScreen extends Component {
         </View>
 
         <View style={styles.formContainer}>
-          <BabbleFieldLabel containerStyle={styles.codeFieldLabel}>Enter the code we texted you</BabbleFieldLabel>
+          <BabbleFieldLabel containerStyle={styles.codeFieldLabel}>
+            {(sendingText) ? "We're texting you your login code..." : 'Enter the code we texted you'}
+          </BabbleFieldLabel>
 
           <View style={styles.codeContainer}>
             {Array(6).fill(null).map((value, index) => (
@@ -88,7 +106,6 @@ export default class PhoneLoginCodeScreen extends Component {
                 maxLength={1}
                 onKeyPress={this._onKeyPress}
                 onFocus={() => this.setState({ focusedCodeTextFieldIndex: index })}
-                returnKeyType={'done'}
                 keyboardType={'phone-pad'}
                 containerStyle={styles.codeTextField}
                 style={styles.codeTextFieldInput}
@@ -96,13 +113,25 @@ export default class PhoneLoginCodeScreen extends Component {
                 ref={component => this.codeTextFields[index] = component}
               />
             ))}
+
+            {error && (
+              <Text style={styles.errorText}>{error}</Text>
+            )}
           </View>
 
-          <BabbleButton style={styles}>Continue</BabbleButton>
+          <BabbleButton
+            onPress={this._submit}
+            loading={loading}
+            style={styles.continueButton}
+          >
+            Continue
+          </BabbleButton>
 
-          <TouchableOpacity style={styles.resendButton}>
-            <Text style={styles.resendButtonText}>Resend Code</Text>
-          </TouchableOpacity>
+          {!sendingText && (
+            <TouchableOpacity style={styles.resendButton}>
+              <Text style={styles.resendButtonText}>Resend Code</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </KeyboardAvoidingView>
     );
@@ -130,13 +159,22 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 35,
   },
   codeTextField: {
     width: 50,
   },
   codeTextFieldInput: {
     textAlign: 'center',
+  },
+  continueButton: {
+    marginTop: 35,
+  },
+  errorText: {
+    position: 'absolute',
+    bottom: -26,
+    color: '#F53333',
+    fontFamily: 'NunitoSans-Regular',
+    fontSize: 16,
   },
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,

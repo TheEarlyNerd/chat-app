@@ -25,12 +25,16 @@ export default class BabblePhoneField extends Component {
 
   _onTextInput = ({ nativeEvent }) => {
     const { text, range } = nativeEvent;
+    const { onPhoneChange } = this.props;
     const { phone } = this.state;
+    const updatedPhone = (text === '' && phone.length > 0)
+      ? phone.slice(0, range.start - range.end)
+      : `${phone}${text}`;
 
-    if (text === '' && phone.length > 0) {
-      this.setState({ phone: phone.slice(0, range.start - range.end) });
-    } else {
-      this.setState({ phone: `${phone}${text}` });
+    this.setState({ phone: updatedPhone });
+
+    if (onPhoneChange) {
+      onPhoneChange(updatedPhone);
     }
   }
 
