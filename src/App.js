@@ -24,8 +24,12 @@ export default class App extends Component {
   }
 
   render() {
+    const navigationTheme = {
+      colors: { background: '#FFFFFF' },
+    };
+
     return (
-      <NavigationContainer>
+      <NavigationContainer theme={navigationTheme}>
         <Animated.View style={{ flex: 1, opacity: this.state.containerOpacityAnimated }}>
           <StatusBar barStyle={'light-content'} />
           <RootNavigator />

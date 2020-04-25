@@ -1,53 +1,56 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Image, StyleSheet } from 'react-native';
 
 const BabbleUserAvatar = props => (
-  <View style={[
-    styles.container,
-    {
-      width: props.size,
-      height: props.size,
-      borderRadius: props.size,
-    },
-  ]}>
+  <TouchableOpacity
+    style={[
+      styles.container,
+      props.style,
+    ]}
+  >
     <Image
       source={props.source}
       resizeMode={'cover'}
-      style={styles.image}
+      style={[
+        styles.image,
+        {
+          width: props.size,
+          height: props.size,
+          borderRadius: props.size,
+        },
+        props.imageStyle,
+      ]}
     />
 
-    <View style={[
-      styles.shadow,
-      {
-        width: props.size * 0.5,
-        height: props.size * 0.25,
-        shadowOffset: { width: 0, height: props.size * 0.37 },
-      },
-    ]} />
-  </View>
+    <View style={styles.activityIcon} />
+  </TouchableOpacity>
 );
 
 export default BabbleUserAvatar;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1,
+    shadowColor: '#252A3F',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
   },
   image: {
     width: '100%',
     height: '100%',
-    //borderWidth: 2,
-  //  borderColor: '#299BCB',
   },
-  shadow: {
+  activityIcon: {
     position: 'absolute',
-    zIndex: -1,
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#252A3F',
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
+    top: 0,
+    right: 0,
+    width: 12,
+    height: 12,
+    backgroundColor: '#1FD7CB',
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
 });
