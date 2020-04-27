@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen';
 import LandingScreen from '../screens/LandingScreen';
 import PhoneLoginCodeScreen from '../screens/PhoneLoginCodeScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import SetupProfileScreen from '../screens/SetupProfileScreen';
 
 export default props => {
@@ -27,6 +28,11 @@ export default props => {
       <MainStack.Screen
         name={'PhoneLoginCode'}
         component={PhoneLoginCodeScreen}
+      />
+
+      <MainStack.Screen
+        name={'Profile'}
+        component={ProfileScreen}
       />
 
       <MainStack.Screen

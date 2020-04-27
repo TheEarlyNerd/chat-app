@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 export default class BabbleButton extends Component {
   render() {
-    const { children, onPress, loading, disabled, style } = this.props;
+    const { children, onPress, inverted, loading, disabled, style } = this.props;
 
     return (
       <TouchableOpacity
@@ -12,23 +12,35 @@ export default class BabbleButton extends Component {
         onPress={onPress}
         style={[
           styles.button,
+          (inverted) ? styles.buttonInverted : null,
           style,
         ]}
       >
-        <LinearGradient
-          useAngle
-          angle={36}
-          colors={[ '#299BCB', '#1ACCB4' ]}
-          style={styles.linearGradientBackground}
-        />
+        <View style={styles.container}>
+          {!inverted && (
+            <LinearGradient
+              useAngle
+              angle={36}
+              colors={[ '#299BCB', '#1ACCB4' ]}
+              style={styles.linearGradientBackground}
+            />
+          )}
 
-        {loading && (
-          <ActivityIndicator size={'small'} color={'#FFFFFF'} />
-        )}
+          {loading && (
+            <ActivityIndicator size={'small'} color={'#FFFFFF'} />
+          )}
 
-        {!loading && (
-          <Text style={styles.text}>{children}</Text>
-        )}
+          {!loading && (
+            <Text
+              style={[
+                styles.text,
+                (inverted) ? styles.textInverted : null,
+              ]}
+            >
+              {children}
+            </Text>
+          )}
+        </View>
 
         <View style={styles.shadow} />
       </TouchableOpacity>
@@ -37,11 +49,23 @@ export default class BabbleButton extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 4,
+    zIndex: 1,
+  },
   button: {
     width: '100%',
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonInverted: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 4,
   },
   linearGradientBackground: {
     ...StyleSheet.absoluteFillObject,
@@ -51,7 +75,10 @@ const styles = StyleSheet.create({
   text: {
     color: '#FFFFFF',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 19,
+    fontSize: 18,
+  },
+  textInverted: {
+    color: '#26A6C6',
   },
   shadow: {
     position: 'absolute',

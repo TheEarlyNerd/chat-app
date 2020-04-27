@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text, ScrollView, StyleSheet } from 'react-native';
-import { BabbleHeader, BabbleConversationPreviewMessage, BabbleSearchField, BabbleUserAvatar } from '../components';
-import { UserIcon, EyeIcon } from '../components/icons';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { BabbleHeader, BabbleConversationPreview, BabbleSearchField } from '../components';
 
 export default class HomeScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <BabbleHeader style={styles.header} />
+        <BabbleHeader style={styles.header} navigation={this.props.navigation} />
 
         <ScrollView contentContainerStyle={styles.scrollViewContainer} style={styles.scrollView}>
           <BabbleSearchField
@@ -17,66 +16,129 @@ export default class HomeScreen extends Component {
 
           <Text style={styles.headingText}>Direct Messages</Text>
 
-          <BabbleConversationPreviewMessage
-            unread={4}
-            avatarUri={'https://scontent-sea1-1.xx.fbcdn.net/v/t1.0-1/p320x320/71572992_2728234020533981_2005024985860538368_n.jpg?_nc_cat=105&_nc_sid=dbb9e7&_nc_oc=AQkC6_7gtmxcuTEJkxUGX6b4hzh7mmoBmWcHS5WGZF8OITrVIx4nC4EqI2Q33oD8Snpzhy7EZW3GMSyv9xdQSXYF&_nc_ht=scontent-sea1-1.xx&_nc_tp=6&oh=8b49e6ea4ddca8f66a0fbc8939ec16a2&oe=5EC8C59D'}
-            name={'Braydon Batungbacal'}
-            message={'Braydon Batungbacal sent an attachment.'}
-            style={styles.conversationPreviewMessage}
-            media
+          <BabbleConversationPreview
+            conversation={{
+              id: 1,
+              accessLevel: 'private',
+              previewConversationMessage: {
+                text: 'Yo, just got my rad rover, it is freaking awesome - check it out!',
+                conversationMessageReactions: [],
+                tempUnread: true,
+                tempImage: 'https://i.ytimg.com/vi/p-8q3C4-_LA/maxresdefault.jpg',
+              },
+              user: {
+                name: 'Alex Filatov',
+                avatarAttachment: { url: 'https://scontent-sea1-1.xx.fbcdn.net/v/t1.0-1/p480x480/12717707_10205908719979367_3491263903448795284_n.jpg?_nc_cat=102&_nc_sid=dbb9e7&_nc_oc=AQkY9cvHDPkTZjpHJB2AJfWXDxK4jZexz9WgtKReqGes73lh-ujVIyMcXJRyu0LQCjbfewvRZ4lc5mRWUyJbx1n8&_nc_ht=scontent-sea1-1.xx&_nc_tp=6&oh=35573a80e7c0f39280d1dcbea302638b&oe=5ECB2090' },
+              },
+            }}
+            style={styles.conversationPreview}
           />
 
-          <BabbleConversationPreviewMessage
-            avatarUri={'https://scontent-sea1-1.xx.fbcdn.net/v/t1.0-1/p480x480/12717707_10205908719979367_3491263903448795284_n.jpg?_nc_cat=102&_nc_sid=dbb9e7&_nc_oc=AQkY9cvHDPkTZjpHJB2AJfWXDxK4jZexz9WgtKReqGes73lh-ujVIyMcXJRyu0LQCjbfewvRZ4lc5mRWUyJbx1n8&_nc_ht=scontent-sea1-1.xx&_nc_tp=6&oh=35573a80e7c0f39280d1dcbea302638b&oe=5ECB2090'}
-            name={'Alex Filatov'}
-            message={'There is absolutely no way that is the situation with all of this'}
-            style={styles.conversationPreviewMessage}
+          <BabbleConversationPreview
+            conversation={{
+              id: 2,
+              accessLevel: 'private',
+              previewConversationMessage: {
+                text: 'Confident how?',
+                conversationMessageReactions: [],
+              },
+              user: {
+                name: 'Chino Lex',
+                avatarAttachment: { url: 'https://scontent-sea1-1.xx.fbcdn.net/v/t1.0-1/p200x200/27540184_10210530825621359_6792294337055482922_n.jpg?_nc_cat=105&_nc_sid=dbb9e7&_nc_oc=AQkW_rYeyTAD2sOneum0FOCwEuEukpbU1RSz8Pl2k28v6WYffZ9v-AbfvI8cSLcGaQmwdRElIqjLWuRZaxXy4bBq&_nc_ht=scontent-sea1-1.xx&_nc_tp=6&oh=295eea332bb1c7d02054965b94e9228f&oe=5ECB1387' },
+              },
+            }}
+            style={styles.conversationPreview}
           />
-
 
           <Text style={styles.headingText}>Feed</Text>
 
-          <BabbleConversationPreviewMessage
-            avatarUri={'https://static-cdn.jtvnw.net/jtv_user_pictures/ded5a0a6-7650-4df2-a0a9-0d4606c9fadf-profile_image-70x70.png'}
-            name={'ViBElol'}
-            message={'Yes, I’m stating the obvious but I will a bit strong with my speech and I’ll say what needs to be said. Protoss has not been in the leading race on Aligulac since July 2015. When was the last time a toss won a $100000+ tournament ?'}
-            style={styles.conversationPreviewMessage}
-            unread={8}
-            conversation
-            media
+          <BabbleConversationPreview
+            conversation={{
+              id: 3,
+              accessLevel: 'public',
+              previewConversationMessage: {
+                text: 'If ya know anyone that needs some extra cash lmk their venmo and we’ll send something over :)',
+                conversationMessageReactions: [],
+              },
+              user: {
+                name: 'David Dobrik',
+                avatarAttachment: { url: 'https://pbs.twimg.com/profile_images/1223706175910211584/tmu8d9fA_400x400.jpg' },
+              },
+            }}
+            style={styles.conversationPreview}
           />
 
-          <BabbleConversationPreviewMessage
-            avatarUri={'https://pbs.twimg.com/profile_images/1223706175910211584/tmu8d9fA_400x400.jpg'}
-            name={'David Dobrik'}
-            message={'Hi guys!! I wanna help some more people out rather than just sending out venmos!! Reply!!'}
-            style={styles.conversationPreviewMessage}
-            conversation
+          <BabbleConversationPreview
+            conversation={{
+              id: 3,
+              accessLevel: 'public',
+              previewConversationMessage: {
+                text: 'Starlink will deliver high speed broadband internet to locations where access has been unreliable, expensive, or completely unavailable',
+                conversationMessageReactions: [],
+                tempImage: 'https://pbs.twimg.com/media/EWNf6vmWAAAUW_P?format=jpg&name=900x900',
+                tempUnread: true,
+              },
+              user: {
+                name: 'SpaceX',
+                avatarAttachment: { url: 'https://pbs.twimg.com/profile_images/1082744382585856001/rH_k3PtQ_400x400.jpg' },
+              },
+            }}
+            style={styles.conversationPreview}
           />
 
           <Text style={styles.headingText}>Explore</Text>
 
-          {Array(5).fill(null).map((value, index) => (
-            <>
-              <BabbleConversationPreviewMessage
-                unread={15}
-                avatarUri={'https://pbs.twimg.com/profile_images/634514155261833216/czgYrPLQ_400x400.jpg'}
-                name={'Travis Scott'}
-                message={'http://smarturl.it/ASTROWORLD'}
-                style={styles.conversationPreviewMessage}
-                conversation
-              />
+          <BabbleConversationPreview
+            conversation={{
+              id: 3,
+              accessLevel: 'public',
+              previewConversationMessage: {
+                text: 'tom cotton has a real "Where Waldo with two DUIs" vibe...',
+                conversationMessageReactions: [
+                  {
+                    reaction: '🤣🤣',
+                    count: 22,
+                  },
+                  {
+                    reaction: 'YEP',
+                    count: 16,
+                  },
+                  {
+                    reaction: '💩💩💩',
+                    count: 7,
+                  },
+                  {
+                    reaction: '🙄',
+                    count: 1,
+                  },
+                ],
+                tempImage: 'https://pbs.twimg.com/media/EWjYw57UYAADO54?format=jpg&name=medium',
+              },
+              user: {
+                name: 'patric',
+                avatarAttachment: { url: 'https://pbs.twimg.com/profile_images/1191079862502510592/qk_CfP12_400x400.jpg' },
+              },
+            }}
+            style={styles.conversationPreview}
+          />
 
-              <BabbleConversationPreviewMessage
-                unread={53}
-                avatarUri={'https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg'}
-                name={'Donald Trump'}
-                message={'We all supporters here, #lol'}
-                style={styles.conversationPreviewMessage}
-                conversation
-              />
-            </>
-          ))}
+          <BabbleConversationPreview
+            conversation={{
+              id: 3,
+              accessLevel: 'public',
+              previewConversationMessage: {
+                text: 'The best version of Naruto.. debate me if I am wrong...',
+                conversationMessageReactions: [],
+                tempImage: 'https://pbs.twimg.com/media/EWiLMcoWAAElg2y?format=jpg&name=900x900',
+                tempUnread: true,
+              },
+              user: {
+                name: 'Yeezybro',
+                avatarAttachment: { url: 'https://pbs.twimg.com/profile_images/1243141865395957761/iwBQHkyL_400x400.jpg' },
+              },
+            }}
+            style={styles.conversationPreview}
+          />
         </ScrollView>
       </View>
     );
@@ -107,7 +169,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     marginTop: 40,
   },
-  conversationPreviewMessage: {
+  conversationPreview: {
     paddingVertical: 15,
     borderBottomWidth: 0.5,
     borderBottomColor: '#D8D8D8',

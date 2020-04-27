@@ -3,6 +3,7 @@ import { TouchableOpacity, View, Image, StyleSheet } from 'react-native';
 
 const BabbleUserAvatar = props => (
   <TouchableOpacity
+    onPress={props.onPress}
     style={[
       styles.container,
       props.style,
@@ -22,35 +23,35 @@ const BabbleUserAvatar = props => (
       ]}
     />
 
-    <View style={styles.activityIcon} />
+    <View style={[ styles.activityIcon, props.activityIconStyle ]} />
   </TouchableOpacity>
 );
 
 export default BabbleUserAvatar;
 
 const styles = StyleSheet.create({
+  activityIcon: {
+    backgroundColor: '#1FD7CB',
+    borderColor: '#FFFFFF',
+    borderRadius: 6,
+    borderWidth: 2,
+    height: 12,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: 12,
+  },
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1,
     shadowColor: '#252A3F',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
     shadowRadius: 5,
+    zIndex: 1,
   },
   image: {
-    width: '100%',
     height: '100%',
-  },
-  activityIcon: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 12,
-    height: 12,
-    backgroundColor: '#1FD7CB',
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
+    width: '100%',
   },
 });

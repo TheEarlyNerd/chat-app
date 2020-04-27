@@ -58,21 +58,31 @@ export default class BabbleTiledIconsBackground extends Component {
   }
 
   render() {
-    const { linearGradientProps, linearGradientRotationAngle, style } = this.props;
+    const { iconComponents, linearGradientProps, linearGradientRotationAngle, bottom, style } = this.props;
 
     return (
-      <View onLayout={this._updateStateDimensions} style={[ styles.container, style ]}>
-        <View style={styles.iconsContainer}>
-          {this._generateIcons()}
-        </View>
+      <View
+        onLayout={this._updateStateDimensions}
+        style={[
+          styles.container,
+          (bottom) ? styles.containerBottom : null,
+          style,
+        ]}
+      >
+        {!!iconComponents && !!iconComponents.length && (
+          <View style={styles.iconsContainer}>
+            {this._generateIcons()}
+          </View>
+        )}
 
         {linearGradientProps && (
           <LinearGradient
             {...linearGradientProps}
-            style={(linearGradientRotationAngle) ? [
-              { transform: [ { rotate: `${linearGradientRotationAngle}deg` } ] },
+            style={[
+              (linearGradientRotationAngle) ? { transform: [ { rotate: `${linearGradientRotationAngle}deg` } ] } : null,
               styles.linearGradient,
-            ] : styles.linearGradient}
+              (bottom) ? styles.linearGradientBottom : null,
+            ]}
           />
         )}
       </View>
@@ -86,6 +96,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
     shadowRadius: 5,
+  },
+  containerBottom: {
+    shadowOffset: { width: 0, height: -3 },
   },
   iconsContainer: {
     flex: 1,
@@ -102,5 +115,9 @@ const styles = StyleSheet.create({
     left: -100,
     bottom: 0,
     zIndex: -1,
+  },
+  linearGradientBottom: {
+    bottom: -100,
+    top: 0,
   },
 });
