@@ -160,8 +160,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollViewContainer: {
-    paddingTop: 140,
     paddingHorizontal: 15,
+    paddingTop: 140,
   },
   headingText: {
     color: '#404040',
