@@ -30,6 +30,7 @@ export default class HomeScreen extends Component {
                 name: 'Alex Filatov',
                 avatarAttachment: { url: 'https://scontent-sea1-1.xx.fbcdn.net/v/t1.0-1/p480x480/12717707_10205908719979367_3491263903448795284_n.jpg?_nc_cat=102&_nc_sid=dbb9e7&_nc_oc=AQkY9cvHDPkTZjpHJB2AJfWXDxK4jZexz9WgtKReqGes73lh-ujVIyMcXJRyu0LQCjbfewvRZ4lc5mRWUyJbx1n8&_nc_ht=scontent-sea1-1.xx&_nc_tp=6&oh=35573a80e7c0f39280d1dcbea302638b&oe=5ECB2090' },
               },
+              tempGroup: true,
             }}
             style={styles.conversationPreview}
           />
@@ -39,13 +40,14 @@ export default class HomeScreen extends Component {
               id: 2,
               accessLevel: 'private',
               previewConversationMessage: {
-                text: 'Confident how?',
+                text: 'Chino Lex: Confident how?',
                 conversationMessageReactions: [],
               },
               user: {
-                name: 'Chino Lex',
+                name: 'Chino Lex, Spencer Costanzo',
                 avatarAttachment: { url: 'https://scontent-sea1-1.xx.fbcdn.net/v/t1.0-1/p200x200/27540184_10210530825621359_6792294337055482922_n.jpg?_nc_cat=105&_nc_sid=dbb9e7&_nc_oc=AQkW_rYeyTAD2sOneum0FOCwEuEukpbU1RSz8Pl2k28v6WYffZ9v-AbfvI8cSLcGaQmwdRElIqjLWuRZaxXy4bBq&_nc_ht=scontent-sea1-1.xx&_nc_tp=6&oh=295eea332bb1c7d02054965b94e9228f&oe=5ECB1387' },
               },
+              tempGroup: true,
             }}
             style={styles.conversationPreview}
           />
@@ -55,15 +57,16 @@ export default class HomeScreen extends Component {
           <BabbleConversationPreview
             conversation={{
               id: 3,
-              accessLevel: 'public',
+              accessLevel: 'protected',
               previewConversationMessage: {
-                text: 'If ya know anyone that needs some extra cash lmk their venmo and we’ll send something over :)',
+                text: 'David Dobrik: No way blah blah loren ipsum blah blah delor smhemt',
                 conversationMessageReactions: [],
               },
               user: {
-                name: 'David Dobrik',
+                name: 'David Dobrik, Jason Nash',
                 avatarAttachment: { url: 'https://pbs.twimg.com/profile_images/1223706175910211584/tmu8d9fA_400x400.jpg' },
               },
+              tempGroup: true,
             }}
             style={styles.conversationPreview}
           />

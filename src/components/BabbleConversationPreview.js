@@ -1,31 +1,39 @@
 import React, { Component } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { BabbleUserAvatar, BabbleReaction } from './';
+import { BabbleUserAvatar, BabbleUserAvatarGroup, BabbleReaction } from './';
 import { EyeIcon, UsersIcon, UserIcon, MessageCircleIcon } from './icons';
 
 export default class BabbleConversationPreview extends Component {
   render() {
     const { conversation, style } = this.props;
-    const { accessLevel, previewConversationMessage, user } = conversation;
+    const { accessLevel, previewConversationMessage, user, tempGroup } = conversation;
     const { attachments, embeds, conversationMessageReactions, tempUnread, tempImage } = previewConversationMessage;
 
     return (
       <TouchableOpacity style={[ styles.container, style ]}>
-        <BabbleUserAvatar
-          source={{ uri: user.avatarAttachment.url }}
-          size={50}
-        />
+        {!tempGroup && (
+          <BabbleUserAvatar
+            source={{ uri: user.avatarAttachment.url }}
+            size={50}
+          />
+        )}
+
+        {tempGroup && (
+          <BabbleUserAvatarGroup size={50} />
+        )}
 
         <View style={styles.content}>
           <View style={styles.metadata}>
-            <TouchableOpacity style={styles.title}>
+            <View style={styles.title}>
               {accessLevel === 'protected' && (
                 <UsersIcon width={14} height={14} style={styles.protectedIcon} />
               )}
-              
-              <Text style={styles.nameText}>{user.name}</Text>
-            </TouchableOpacity>
+
+              <TouchableOpacity>
+                <Text style={styles.nameText}>{user.name}</Text>
+              </TouchableOpacity>
+            </View>
 
             <View style={styles.stats}>
               {accessLevel !== 'private' && (

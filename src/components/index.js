@@ -11,6 +11,7 @@ import BabbleSearchField from './BabbleSearchField';
 import BabbleTextField from './BabbleTextField';
 import BabbleTiledIconsBackground from './BabbleTiledIconsBackground';
 import BabbleUserAvatar from './BabbleUserAvatar';
+import BabbleUserAvatarGroup from './BabbleUserAvatarGroup';
 import BabbleUsernameField from './BabbleUsernameField';
 
 export {
@@ -27,5 +28,6 @@ export {
   BabbleTextField,
   BabbleTiledIconsBackground,
   BabbleUserAvatar,
+  BabbleUserAvatarGroup,
   BabbleUsernameField,
 };

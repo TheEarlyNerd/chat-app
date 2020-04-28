@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    height: 48,
+    height: 44,
     alignItems: 'center',
     justifyContent: 'center',
   },
