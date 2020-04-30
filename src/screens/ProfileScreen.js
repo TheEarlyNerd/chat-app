@@ -6,7 +6,11 @@ export default class ProfileScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <BabbleHeader style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1 }} />
+        <BabbleHeader
+          back
+          title={'@braydon'}
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1 }}
+        />
         <ScrollView contentContainerStyle={styles.scrollViewContainer} style={styles.scrollView}>
           <View style={styles.user}>
             <BabbleUserAvatar

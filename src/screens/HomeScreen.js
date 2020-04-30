@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { BabbleHeader, BabbleConversationPreview, BabbleSearchField } from '../components';
+import { View, TouchableOpacity, Text, ScrollView, StyleSheet } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import { BabbleHeader, BabbleConversationPreview, BabbleSearchField, BabbleTiledIconsBackground } from '../components';
+import { EditIcon } from '../components/icons';
 
 export default class HomeScreen extends Component {
   render() {
@@ -143,6 +145,17 @@ export default class HomeScreen extends Component {
             style={styles.conversationPreview}
           />
         </ScrollView>
+
+        <TouchableOpacity onPress={() => this.props.navigation.push('Conversation')} style={styles.newButton}>
+          <EditIcon width={25} height={25} style={styles.newButtonIcon} />
+
+          <LinearGradient
+            useAngle
+            angle={36}
+            colors={[ '#299BCB', '#1ACCB4' ]}
+            style={styles.newButtonBackground}
+          />
+        </TouchableOpacity>
       </View>
     );
   }
@@ -177,5 +190,26 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: '#D8D8D8',
   },
-
+  newButton: {
+    alignItems: 'center',
+    borderRadius: 30,
+    bottom: 25,
+    height: 60,
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 30,
+    shadowColor: '#252A3F',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 6,
+    width: 60,
+  },
+  newButtonIcon: {
+    color: '#FFFFFF',
+  },
+  newButtonBackground: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 30,
+    zIndex: -1,
+  },
 });

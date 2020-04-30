@@ -13,6 +13,7 @@ import BabbleTiledIconsBackground from './BabbleTiledIconsBackground';
 import BabbleUserAvatar from './BabbleUserAvatar';
 import BabbleUserAvatarGroup from './BabbleUserAvatarGroup';
 import BabbleUsernameField from './BabbleUsernameField';
+import BabbleUserSelectionToolbar from './BabbleUserSelectionToolbar';
 
 export {
   BabbleButton,
@@ -30,4 +31,5 @@ export {
   BabbleUserAvatar,
   BabbleUserAvatarGroup,
   BabbleUsernameField,
+  BabbleUserSelectionToolbar,
 };
