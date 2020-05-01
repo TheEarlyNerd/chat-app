@@ -59,7 +59,7 @@ export default class BabbleUserSelectionToolbar extends Component {
   }
 
   render() {
-    const { label, style } = this.props;
+    const { label, placeholder, style } = this.props;
     const { selectedUserIndex, textInputValue, users } = this.state;
 
     return (
@@ -98,6 +98,7 @@ export default class BabbleUserSelectionToolbar extends Component {
             caretHidden={selectedUserIndex !== null}
             onKeyPress={this._onKeyPress}
             onChangeText={this._onChangeText}
+            placeholder={(!users.length) ? placeholder : ''}
             returnKeyType={'done'}
             value={textInputValue}
             style={styles.textInput}
@@ -132,25 +133,23 @@ const styles = StyleSheet.create({
   labelText: {
     color: '#909090',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 14,
+    fontSize: 16,
     marginRight: 10,
+  },
+  nameSelectedText: {
+    color: '#FFFFFF',
   },
   nameText: {
     color: '#2A99CC',
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: 14,
   },
-  nameSelectedText: {
-    color: '#FFFFFF',
-  },
   textInput: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 14,
+    fontSize: 16,
     marginLeft: 5,
     paddingVertical: 5,
-//    backgroundColor: '#CCC',
-
   },
   user: {
     alignItems: 'center',

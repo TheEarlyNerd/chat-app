@@ -2,6 +2,7 @@ import BabbleButton from './BabbleButton';
 import BabbleConversationPreview from './BabbleConversationPreview';
 import BabbleFieldLabel from './BabbleFieldLabel';
 import BabbleHeader from './BabbleHeader';
+import BabbleMessageComposerToolbar from './BabbleMessageComposerToolbar';
 import BabbleOverlayCountrySelector from './BabbleOverlayCountrySelector';
 import BabbleOverlayError from './BabbleOverlayError';
 import BabbleOverlaysContainer from './BabbleOverlaysContainer';
@@ -20,6 +21,7 @@ export {
   BabbleConversationPreview,
   BabbleFieldLabel,
   BabbleHeader,
+  BabbleMessageComposerToolbar,
   BabbleOverlayCountrySelector,
   BabbleOverlayError,
   BabbleOverlaysContainer,

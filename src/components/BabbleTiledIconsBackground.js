@@ -58,10 +58,11 @@ export default class BabbleTiledIconsBackground extends Component {
   }
 
   render() {
-    const { iconComponents, linearGradientProps, linearGradientRotationAngle, bottom, style } = this.props;
+    const { iconComponents, linearGradientProps, linearGradientRotationAngle, bottom, key, style } = this.props;
 
     return (
       <View
+        key={key}
         onLayout={this._updateStateDimensions}
         style={[
           styles.container,
