@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { BabbleTiledIconsBackground } from './';
-import { ArrowUpIcon, ImageIcon, MessageSquareIcon, SendIcon } from './icons';
+import { ArrowUpIcon, ImageIcon } from './icons';
 
 export default class BabbleMessageComposerToolbar extends Component {
   state = {
@@ -44,33 +43,12 @@ export default class BabbleMessageComposerToolbar extends Component {
             ]}
           />
         </TouchableOpacity>
-
-        <BabbleTiledIconsBackground
-          bottom
-          iconComponents={[ MessageSquareIcon, SendIcon ]}
-          iconSize={20}
-          iconStyle={{ color: '#FFFFFF', opacity: 0.4 }}
-          iconSpacing={10}
-          linearGradientProps={{
-            colors: [ '#FFFFFF', '#1ACCB4', '#299BCB' ],
-            locations: [ 0.5, 0.75, 1 ],
-            useAngle: true,
-            angle: 36,
-          }}
-          style={styles.backgroundGradient}
-        />
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  backgroundGradient: {
-    ...StyleSheet.absoluteFillObject,
-    opacity: 0.5,
-    shadowOpacity: 0,
-    zIndex: -1,
-  },
   button: {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
@@ -108,6 +86,7 @@ const styles = StyleSheet.create({
     height: 35,
     justifyContent: 'center',
     marginLeft: 15,
+    shadowColor: '#252A3F',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
     shadowRadius: 5,

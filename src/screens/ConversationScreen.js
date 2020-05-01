@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
-import { BabbleHeader, BabbleUserSelectionToolbar, BabbleMessageComposerToolbar } from '../components';
+import { KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { BabbleHeader, BabbleConversationUserSelectionToolbar, BabbleConversation, BabbleConversationMessageComposerToolbar } from '../components';
 
 export default class ConversationScreen extends Component {
   render() {
@@ -12,15 +12,15 @@ export default class ConversationScreen extends Component {
           style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1 }}
         />
 
-        <BabbleUserSelectionToolbar
+        <BabbleConversationUserSelectionToolbar
           label={'To:'}
           placeholder={'The World'}
           style={{ marginTop: 100 }}
         />
 
-        <ScrollView style={{ flex: 1 }} />
+        <BabbleConversation />
 
-        <BabbleMessageComposerToolbar />
+        <BabbleConversationMessageComposerToolbar />
       </KeyboardAvoidingView>
     );
   }
