@@ -25,7 +25,7 @@ export default class BabbleConversationPreview extends Component {
 
         <View style={styles.content}>
           <View style={styles.metadata}>
-            <View style={styles.title}>
+            <View style={styles.heading}>
               {accessLevel === 'protected' && (
                 <UsersIcon width={14} height={14} style={styles.protectedIcon} />
               )}
@@ -68,7 +68,7 @@ export default class BabbleConversationPreview extends Component {
           <View style={styles.preview}>
             <View style={styles.previewTexts}>
               <Text numberOfLines={3} style={[ styles.previewText, (tempUnread) ? styles.previewUnreadColor : null ]}>{previewConversationMessage.text}</Text>
-              <Text style={styles.timeText}>10:24 PM</Text>
+              <Text style={styles.timeText}>Today at 10:24 PM</Text>
             </View>
 
             {tempImage && (
@@ -135,6 +135,10 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     paddingTop: 4,
   },
+  heading: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
   metadata: {
     alignItems: 'center',
     flex: 1,
@@ -199,7 +203,7 @@ const styles = StyleSheet.create({
   },
   statText: {
     color: '#797979',
-    fontFamily: 'NunitoSans-Bold',
+    fontFamily: 'NunitoSans-SemiBold',
     fontSize: 12,
   },
   stats: {
@@ -211,10 +215,6 @@ const styles = StyleSheet.create({
     fontFamily: 'NunitoSans-Bold',
     fontSize: 12,
     marginTop: 4,
-  },
-  title: {
-    alignItems: 'center',
-    flexDirection: 'row',
   },
   unreadBubble: {
     alignItems: 'center',
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   },
   unreadCountText: {
     color: '#FFFFFF',
-    fontFamily: 'NunitoSans-Bold',
+    fontFamily: 'NunitoSans-SemiBold',
     fontSize: 12,
   },
 });

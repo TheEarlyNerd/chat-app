@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 export default class BabbleReaction extends Component {
   render() {
     const { reaction, count, style } = this.props;
 
     return (
-      <View style={[ styles.container, style ]}>
+      <TouchableOpacity style={[ styles.container, style ]}>
         <Text style={styles.reactionText}>{reaction}</Text>
         <Text style={styles.countText}>{count}</Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

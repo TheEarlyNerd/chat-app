@@ -13,7 +13,7 @@ export default props => {
 
   return (
     <MainStack.Navigator
-      initialRouteName={'Home'}
+      initialRouteName={'Conversation'}
       screenOptions={{ headerShown: false }}
     >
       <MainStack.Screen

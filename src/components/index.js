@@ -1,7 +1,10 @@
+import BabbleAutoscaleImage from './BabbleAutoscaleImage';
 import BabbleButton from './BabbleButton';
 import BabbleConversation from './BabbleConversation';
 import BabbleConversationMessage from './BabbleConversationMessage';
+import BabbleConversationMessageAttachment from './BabbleConversationMessageAttachment';
 import BabbleConversationMessageComposerToolbar from './BabbleConversationMessageComposerToolbar';
+import BabbleConversationMessageEmbed from './BabbleConversationMessageEmbed';
 import BabbleConversationPreview from './BabbleConversationPreview';
 import BabbleConversationUserSelectionToolbar from './BabbleConversationUserSelectionToolbar';
 import BabbleFieldLabel from './BabbleFieldLabel';
@@ -19,10 +22,13 @@ import BabbleUserAvatarGroup from './BabbleUserAvatarGroup';
 import BabbleUsernameField from './BabbleUsernameField';
 
 export {
+  BabbleAutoscaleImage,
   BabbleButton,
   BabbleConversation,
   BabbleConversationMessage,
+  BabbleConversationMessageAttachment,
   BabbleConversationMessageComposerToolbar,
+  BabbleConversationMessageEmbed,
   BabbleConversationPreview,
   BabbleConversationUserSelectionToolbar,
   BabbleFieldLabel,
