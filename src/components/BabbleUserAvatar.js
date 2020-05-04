@@ -23,7 +23,9 @@ const BabbleUserAvatar = props => (
       ]}
     />
 
-    <View style={[ styles.activityIcon, props.activityIconStyle ]} />
+    {!props.hideActivityIcon && (
+      <View style={[ styles.activityIcon, props.activityIconStyle ]} />
+    )}
   </TouchableOpacity>
 );
 

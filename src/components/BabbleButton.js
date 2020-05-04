@@ -13,6 +13,7 @@ export default class BabbleButton extends Component {
         style={[
           styles.button,
           (inverted) ? styles.buttonInverted : null,
+          (disabled) ? styles.buttonDisabled : null,
           style,
         ]}
       >
@@ -62,6 +63,9 @@ const styles = StyleSheet.create({
     height: 44,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonDisabled: {
+    opacity: 0.5,
   },
   buttonInverted: {
     backgroundColor: '#FFFFFF',

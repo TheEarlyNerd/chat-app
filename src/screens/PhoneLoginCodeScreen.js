@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { BabbleFieldLabel, BabbleTextField, BabbleButton, BabbleTiledIconsBackground } from '../components';
+import { BabbleCodeField, BabbleButton, BabbleTiledIconsBackground } from '../components';
 import { LockIcon, CheckCircleIcon } from '../components/icons';
+import maestro from '../maestro';
+
+const { userManager } = maestro.managers;
 
 export default class PhoneLoginCodeScreen extends Component {
   state = {
-    focusedCodeTextFieldIndex: 0,
     sendingText: true,
     loading: true,
     error: null,
   }
 
-  codeTextFields = [];
+  codeTextField = null;
   loginCodeDelayTimeout = null;
 
   componentDidMount() {
-    this.codeTextFields[0].focus();
+    this.codeTextField.focus();
 
     this.loginCodeDelayTimeout = setTimeout(() => this.setState({
       sendingText: false,
@@ -27,45 +29,25 @@ export default class PhoneLoginCodeScreen extends Component {
     clearTimeout(this.loginCodeDelayTimeout);
   }
 
-  _onKeyPress = ({ nativeEvent }) => {
-    const { key } = nativeEvent;
-    const { focusedCodeTextFieldIndex } = this.state;
-    const currentCodeTextField = this.codeTextFields[focusedCodeTextFieldIndex];
-    const indexShift = (key !== 'Backspace') ? 1 : -1;
+  _submit = async () => {
+    const { phone } = this.props.route.params;
+    const phoneLoginCode = this.codeTextField.value;
 
-    if (indexShift === 1) {
-      if (focusedCodeTextFieldIndex >= this.codeTextFields.length - 1) {
-        return;
-      }
-
-      if (currentCodeTextField.value && !this.codeTextFields[focusedCodeTextFieldIndex + indexShift].value) {
-        this.codeTextFields[focusedCodeTextFieldIndex + indexShift].value = key;
-      }
-    }
-
-    if (indexShift === -1) {
-      if (focusedCodeTextFieldIndex <= 0 || currentCodeTextField.value) {
-        return currentCodeTextField.clear();
-      }
-
-      if (!currentCodeTextField.value) {
-        this.codeTextFields[focusedCodeTextFieldIndex + indexShift].clear();
-      }
-    }
-
-    this.codeTextFields[focusedCodeTextFieldIndex + indexShift].focus();
-  }
-
-  _submit = () => {
-    const code = this.codeTextFields.map(textField => textField.value).join('');
-
-    if (code.length < 6) {
+    if (phoneLoginCode.length < 6) {
       return this.setState({ error: 'Invalid login code.' });
     }
 
-    // do login stuff
+    this.setState({ loading: true });
 
-    //temp
+    try {
+      await userManager.login({ phone, phoneLoginCode });
+    } catch (error) {
+      return this.setState({
+        error: error.message,
+        loading: false,
+      });
+    }
+
     this.props.navigation.navigate('SetupProfile');
   }
 
@@ -96,28 +78,12 @@ export default class PhoneLoginCodeScreen extends Component {
         </View>
 
         <View style={styles.formContainer}>
-          <BabbleFieldLabel containerStyle={styles.codeFieldLabel}>
-            {(sendingText) ? "We're texting you your login code..." : 'Enter the code we texted you'}
-          </BabbleFieldLabel>
-
-          <View style={styles.codeContainer}>
-            {Array(6).fill(null).map((value, index) => (
-              <BabbleTextField
-                maxLength={1}
-                onKeyPress={this._onKeyPress}
-                onFocus={() => this.setState({ focusedCodeTextFieldIndex: index })}
-                keyboardType={'phone-pad'}
-                containerStyle={styles.codeTextField}
-                style={styles.codeTextFieldInput}
-                key={`code_${index}`}
-                ref={component => this.codeTextFields[index] = component}
-              />
-            ))}
-
-            {error && (
-              <Text style={styles.errorText}>{error}</Text>
-            )}
-          </View>
+          <BabbleCodeField
+            label={(sendingText) ? "We're texting you your login code..." : 'Enter the code we texted you'}
+            codeLength={6}
+            error={error}
+            ref={component => this.codeTextField = component}
+          />
 
           <BabbleButton
             onPress={this._submit}
@@ -139,46 +105,25 @@ export default class PhoneLoginCodeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   animationContainer: {
-    flex: 1,
     alignItems: 'center',
-  },
-  formContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 30,
-  },
-  codeFieldLabel: {
-    marginBottom: 8,
-  },
-  codeContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  codeTextField: {
-    width: 50,
-  },
-  codeTextFieldInput: {
-    textAlign: 'center',
-  },
-  continueButton: {
-    marginTop: 35,
-  },
-  errorText: {
-    position: 'absolute',
-    bottom: -26,
-    color: '#F53333',
-    fontFamily: 'NunitoSans-Regular',
-    fontSize: 16,
   },
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
     zIndex: -1,
+  },
+  container: {
+    flex: 1,
+  },
+  continueButton: {
+    marginTop: 35,
+  },
+  formContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 30,
   },
   resendButton: {
     marginTop: 10,

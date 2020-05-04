@@ -13,7 +13,7 @@ export default props => {
 
   return (
     <MainStack.Navigator
-      initialRouteName={'Conversation'}
+      initialRouteName={'SetupProfile'}
       screenOptions={{ headerShown: false }}
     >
       <MainStack.Screen

@@ -27,7 +27,13 @@ export default class BabbleTextField extends Component {
   }
 
   _onChangeText = text => {
+    const { onChangeText } = this.props;
+
     this.setState({ value: text });
+
+    if (onChangeText) {
+      onChangeText(text);
+    }
   }
 
   render() {

@@ -16,25 +16,25 @@ export default class BabbleReaction extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#F1F2F6',
-    paddingTop: 3,
+    borderRadius: 4,
+    flexDirection: 'row',
+    justifyContent: 'center',
     paddingBottom: 2,
     paddingHorizontal: 4,
-    borderRadius: 4,
-  },
-  reactionText: {
-    color: '#000000',
-    fontFamily: 'NunitoSans-Bold',
-    fontSize: 12,
-    lineHeight: 17,
+    paddingTop: 3,
   },
   countText: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: 12,
     marginLeft: 3,
+  },
+  reactionText: {
+    color: '#000000',
+    fontFamily: 'NunitoSans-Bold',
+    fontSize: 12,
+    lineHeight: 17,
   },
 });

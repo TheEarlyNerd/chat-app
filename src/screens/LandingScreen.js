@@ -4,6 +4,8 @@ import { BabblePhoneField, BabbleButton, BabbleTiledIconsBackground } from '../c
 import { MessageSquareIcon, HeartIcon } from '../components/icons';
 import maestro from '../maestro';
 
+const { userManager } = maestro.managers;
+
 export default class LandingScreen extends Component {
   state = {
     phone: '',
@@ -11,7 +13,7 @@ export default class LandingScreen extends Component {
     loading: false,
   }
 
-  _submit = () => {
+  _submit = async () => {
     const { phone } = this.state;
     const validPhone = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(phone);
 
@@ -19,10 +21,18 @@ export default class LandingScreen extends Component {
       return this.setState({ error: 'Invalid phone number.' });
     }
 
-    // send codes
+    this.setState({ loading: true });
 
-    //temp
-    this.props.navigation.navigate('PhoneLoginCode');
+    try {
+      await userManager.requestPhoneLoginCode(phone);
+    } catch (error) {
+      return this.setState({
+        error: error.message,
+        loading: false,
+      });
+    }
+
+    this.props.navigation.navigate('PhoneLoginCode', { phone });
   }
 
   render() {

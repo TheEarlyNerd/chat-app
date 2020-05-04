@@ -1,30 +1,60 @@
 import React, { Component } from 'react';
 import { View, Text, Dimensions, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import ImagePicker from 'react-native-image-crop-picker';
 import { BabbleTextField, BabbleUsernameField, BabbleButton, BabbleTiledIconsBackground, BabbleUserAvatar } from '../components';
 import { SmileIcon, CameraIcon } from '../components/icons';
+import maestro from '../maestro';
 
-const windowHeight = Dimensions.get('window').height;
+const { interfaceHelper } = maestro.helpers;
 
 export default class SetupProfileScreen extends Component {
+  state = {
+    name: null,
+    username: null,
+  }
+
+  _selectAvatarImage = async () => {
+    try {
+      const image = await ImagePicker.openPicker({
+        width: 512,
+        height: 512,
+        cropping: true,
+      });
+
+      console.log(image);
+    } catch (error) {
+      interfaceHelper.showError({ message: error.message });
+    }
+  }
+
   render() {
+    const { name, username } = this.state;
+
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView contentContainerStyle={{ minHeight: Dimensions.get('window').height }}>
         <View style={styles.previewContainer}>
           <BabbleUserAvatar
-            source={{ uri: '' }}
-            size={125}
+            onPress={this._selectAvatarImage}
+            hideActivityIcon
+            source={require('../assets/images/upload-photo-placeholder.png')}
+            size={150}
+            style={styles.avatar}
           />
 
-          <Text style={[ styles.previewText, styles.previewNameText ]}>Welcome to <Text style={styles.logoText}>Babble</Text></Text>
-          <Text style={[ styles.previewText, styles.previewUsernameText ]}>Let's Setup Your Account!</Text>
+          {!!name && (
+            <Text style={[ styles.previewText, styles.previewNameText ]}>{name}</Text>
+          )}
+
+          {!!username && (
+            <Text style={[ styles.previewText, styles.previewUsernameText ]}>@{username}</Text>
+          )}
 
           <BabbleTiledIconsBackground
             iconComponents={[ SmileIcon, CameraIcon ]}
             iconSize={20}
             iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
             iconSpacing={37}
-            linearGradientRotationAngle={-9}
             linearGradientProps={{
               colors: [ '#299BCB', '#1ACCB4' ],
               locations: [ 0, 0.7 ],
@@ -38,16 +68,26 @@ export default class SetupProfileScreen extends Component {
         <View style={styles.formContainer}>
           <BabbleTextField
             label={'Name'}
+            returnKeyType={'next'}
+            onChangeText={text => this.setState({ name: text })}
             containerStyle={styles.fieldContainer}
+            value={name}
           />
 
           <BabbleUsernameField
             label={'Username'}
+            returnKeyType={'done'}
+            onChangeText={text => this.setState({ username: text })}
             info={'You can always change this later.'}
             containerStyle={styles.lastFieldContainer}
+            value={username}
           />
 
-          <BabbleButton>Continue</BabbleButton>
+          <BabbleButton
+            disabled
+          >
+            Continue
+          </BabbleButton>
         </View>
       </KeyboardAwareScrollView>
     );
@@ -55,20 +95,32 @@ export default class SetupProfileScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  previewContainer: {
-    height: windowHeight / 2,
-    alignItems: 'center',
-    justifyContent: 'center', //temp
+  avatar: {
+    marginBottom: 10,
+  },
+  backgroundGradient: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: -1,
+  },
+  fieldContainer: {
+    marginBottom: 35,
   },
   formContainer: {
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 30,
-    paddingTop: 70,
-    paddingBottom: 50,
   },
-  logoText: {
-    fontFamily: 'Lobster-Regular',
+  lastFieldContainer: {
+    marginBottom: 50,
+  },
+  previewContainer: {
+    alignItems: 'center',
+    height: Dimensions.get('window').height / 2.2,
+    justifyContent: 'center',
+  },
+  previewNameText: {
+    fontSize: 22,
   },
   previewText: {
     color: '#FFFFFF',
@@ -78,22 +130,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 5,
   },
-  previewNameText: {
-    marginTop: 25,
-    marginBottom: 10,
-    fontSize: 36,
-  },
   previewUsernameText: {
-    fontSize: 22,
-  },
-  backgroundGradient: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: -1,
-  },
-  fieldContainer: {
-    marginBottom: 35,
-  },
-  lastFieldContainer: {
-    marginBottom: 50,
+    fontSize: 18,
   },
 });
