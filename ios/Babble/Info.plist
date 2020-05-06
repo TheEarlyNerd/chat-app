@@ -73,7 +73,7 @@
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>To take photos and video with your camera, please grant Babble access.</string>
-	<key>NSAppleMusicUsageDescription</key>
+	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To select photos and videos from your media library, please grant Babble access.</string>
 </dict>
 </plist>

@@ -1,43 +1,98 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, StyleSheet } from 'react-native';
+import { View, Text, Dimensions, Keyboard, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import ImagePicker from 'react-native-image-crop-picker';
 import { BabbleTextField, BabbleUsernameField, BabbleButton, BabbleTiledIconsBackground, BabbleUserAvatar } from '../components';
-import { SmileIcon, CameraIcon } from '../components/icons';
+import { SmileIcon, CameraIcon, ImageIcon } from '../components/icons';
 import maestro from '../maestro';
 
+const { userManager } = maestro.managers;
 const { interfaceHelper } = maestro.helpers;
 
 export default class SetupProfileScreen extends Component {
   state = {
+    avatarImageUri: null,
     name: null,
     username: null,
+    loading: false,
   }
 
-  _selectAvatarImage = async () => {
-    try {
-      const image = await ImagePicker.openPicker({
-        width: 512,
-        height: 512,
-        cropping: true,
-      });
+  usernameField = null;
 
-      console.log(image);
+  _showMediaActionSheet = () => {
+    Keyboard.dismiss();
+
+    interfaceHelper.showOverlay({
+      name: 'ActionSheet',
+      data: {
+        actions: [
+          {
+            iconComponent: CameraIcon,
+            text: 'Open Camera',
+            onPress: () => this._selectAvatarImage('camera'),
+          },
+          {
+            iconComponent: ImageIcon,
+            text: 'Open Photo Library',
+            onPress: () => this._selectAvatarImage('library'),
+          },
+        ],
+      },
+    });
+  }
+
+  _selectAvatarImage = async source => {
+    let image = null;
+    const options = {
+      width: 512,
+      height: 512,
+      mediaType: 'photo',
+      cropperToolbarTitle: 'Pinch To Zoom Or Drag To Crop',
+      cropping: true,
+    };
+
+    try {
+      image = (source === 'camera')
+        ? await ImagePicker.openCamera(options)
+        : await ImagePicker.openPicker(options);
+    } catch {
+      return; // noop, note: ios camera won't open on sim
+    }
+
+    this.setState({ avatarImageUri: image.path });
+  }
+
+  _submit = async () => {
+    const { avatarImageUri, name, username } = this.state;
+
+    this.setState({ loading: true });
+
+    try {
+      await userManager.updateUser({
+        avatarUri: avatarImageUri,
+        name,
+        username,
+      });
     } catch (error) {
       interfaceHelper.showError({ message: error.message });
+
+      return this.setState({ loading: false });
     }
+
+    this.props.navigation.navigate('SetupIOSNotifications');
   }
 
   render() {
-    const { name, username } = this.state;
+    const { avatarImageUri, name, username, loading } = this.state;
 
     return (
       <KeyboardAwareScrollView contentContainerStyle={{ minHeight: Dimensions.get('window').height }}>
         <View style={styles.previewContainer}>
           <BabbleUserAvatar
-            onPress={this._selectAvatarImage}
+            onPress={this._showMediaActionSheet}
             hideActivityIcon
-            source={require('../assets/images/upload-photo-placeholder.png')}
+            showEditIcon={!!avatarImageUri}
+            source={(avatarImageUri) ? { uri: avatarImageUri } : require('../assets/images/upload-photo-placeholder.png')}
             size={150}
             style={styles.avatar}
           />
@@ -69,7 +124,12 @@ export default class SetupProfileScreen extends Component {
           <BabbleTextField
             label={'Name'}
             returnKeyType={'next'}
+            blurOnSubmit={false}
+            autoCapitalize={'words'}
+            autoCompleteType={'name'}
+            autoCorrect={false}
             onChangeText={text => this.setState({ name: text })}
+            onSubmitEditing={() => this.usernameField.focus()}
             containerStyle={styles.fieldContainer}
             value={name}
           />
@@ -77,14 +137,18 @@ export default class SetupProfileScreen extends Component {
           <BabbleUsernameField
             label={'Username'}
             returnKeyType={'done'}
+            autoCompleteType={'username'}
             onChangeText={text => this.setState({ username: text })}
             info={'You can always change this later.'}
             containerStyle={styles.lastFieldContainer}
             value={username}
+            ref={component => this.usernameField = component}
           />
 
           <BabbleButton
-            disabled
+            onPress={this._submit}
+            loading={loading}
+            disabled={!name || !username}
           >
             Continue
           </BabbleButton>

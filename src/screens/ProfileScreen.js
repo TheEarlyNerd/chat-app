@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { BabbleButton, BabbleConversationPreview, BabbleUserAvatar, BabbleHeader } from '../components';
+import { BabbleButton, BabbleConversationPreview, BabbleUserAvatar } from '../components';
 
 export default class ProfileScreen extends Component {
+  componentDidMount() {
+    this.props.navigation.setParams({ title: '@braydon' });
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <BabbleHeader
-          back
-          title={'@braydon'}
-          style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1 }}
-        />
         <ScrollView contentContainerStyle={styles.scrollViewContainer} style={styles.scrollView}>
           <View style={styles.user}>
             <BabbleUserAvatar
@@ -101,8 +100,8 @@ const styles = StyleSheet.create({
   },
   scrollViewContainer: {
     paddingBottom: 30,
-    paddingTop: 140,
     paddingHorizontal: 15,
+    paddingTop: 40,
   },
   user: {
     flexDirection: 'row',

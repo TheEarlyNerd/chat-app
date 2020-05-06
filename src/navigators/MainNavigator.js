@@ -1,24 +1,26 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import { BabbleHeader } from '../components';
 
 import ConversationScreen from '../screens/ConversationScreen';
 import HomeScreen from '../screens/HomeScreen';
-import LandingScreen from '../screens/LandingScreen';
-import PhoneLoginCodeScreen from '../screens/PhoneLoginCodeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import SetupProfileScreen from '../screens/SetupProfileScreen';
 
 export default props => {
   const MainStack = createStackNavigator();
 
   return (
     <MainStack.Navigator
-      initialRouteName={'SetupProfile'}
-      screenOptions={{ headerShown: false }}
+      initialRouteName={'Home'}
+      headerMode={'screen'}
+      screenOptions={{
+        header: ({ scene }) => <BabbleHeader scene={scene} />,
+      }}
     >
       <MainStack.Screen
         name={'Conversation'}
         component={ConversationScreen}
+        options={{ backEnabled: true }}
       />
 
       <MainStack.Screen
@@ -27,23 +29,9 @@ export default props => {
       />
 
       <MainStack.Screen
-        name={'Landing'}
-        component={LandingScreen}
-      />
-
-      <MainStack.Screen
-        name={'PhoneLoginCode'}
-        component={PhoneLoginCodeScreen}
-      />
-
-      <MainStack.Screen
         name={'Profile'}
         component={ProfileScreen}
-      />
-
-      <MainStack.Screen
-        name={'SetupProfile'}
-        component={SetupProfileScreen}
+        options={{ backEnabled: true }}
       />
     </MainStack.Navigator>
   );

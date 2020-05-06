@@ -17,4 +17,8 @@ export default class InterfaceHelper extends Helper {
   showOverlay = ({ name, data }) => {
     this.maestro.dispatchEvent('OVERLAYS:SHOW', { name, data });
   };
+
+  hideOverlay = name => {
+    this.maestro.dispatchEvent('OVERLAYS:HIDE', { name });
+  }
 }

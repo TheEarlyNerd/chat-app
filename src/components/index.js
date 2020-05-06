@@ -11,6 +11,7 @@ import BabbleConversationUserSelectionToolbar from './BabbleConversationUserSele
 import BabbleConversationUsersToolbar from './BabbleConversationUsersToolbar';
 import BabbleFieldLabel from './BabbleFieldLabel';
 import BabbleHeader from './BabbleHeader';
+import BabbleOverlayActionSheet from './BabbleOverlayActionSheet';
 import BabbleOverlayCountrySelector from './BabbleOverlayCountrySelector';
 import BabbleOverlayError from './BabbleOverlayError';
 import BabbleOverlaysContainer from './BabbleOverlaysContainer';
@@ -37,6 +38,7 @@ export {
   BabbleConversationUsersToolbar,
   BabbleFieldLabel,
   BabbleHeader,
+  BabbleOverlayActionSheet,
   BabbleOverlayCountrySelector,
   BabbleOverlayError,
   BabbleOverlaysContainer,

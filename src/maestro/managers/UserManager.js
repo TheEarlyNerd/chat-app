@@ -21,6 +21,7 @@ export default class UserManager extends Manager {
 
     this.updateStore({
       ready: asyncStorageHelper.getItem(LOGGED_IN_USER_KEY).then(user => {
+        console.log(user);
         this.updateStore({ user });
         resolveInitialReadyPromise();
       }),
@@ -50,11 +51,51 @@ export default class UserManager extends Manager {
       throw new Error(response.body);
     }
 
-    this.updateStore({ user: response.body });
+    this._setLoggedInUser(response.body);
+  }
+
+  async updateUser(fields) {
+    const { apiHelper, attachmentsHelper } = this.maestro.helpers;
+    let avatarAttachment = null;
+
+    if (fields.avatarUri) {
+      avatarAttachment = await attachmentsHelper.uploadAttachment({
+        uri: fields.avatarUri,
+        name: 'file',
+      });
+    }
+
+    const response = await apiHelper.patch({
+      path: '/users',
+      data: {
+        avatarAttachmentId: avatarAttachment.id,
+        ...fields,
+      },
+    });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    this._setLoggedInUser(response.body);
   }
 
   logout() {
-    this.updateStore({ user: null });
+    this._setLoggedInUser(null);
     this.resetStore();
+  }
+
+  /*
+   * Helpers
+   */
+
+  _setLoggedInUser(user) {
+    const { asyncStorageHelper } = this.maestro.helpers;
+
+    user = (this.store.user) ? { ...this.store.user, ...user } : user;
+
+    this.updateStore({ user });
+
+    asyncStorageHelper.setItem(LOGGED_IN_USER_KEY, user);
   }
 }

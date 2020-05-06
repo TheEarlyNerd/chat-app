@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity, Text, ScrollView, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { BabbleHeader, BabbleConversationPreview, BabbleSearchField, BabbleTiledIconsBackground } from '../components';
+import { BabbleConversationPreview, BabbleSearchField, BabbleTiledIconsBackground } from '../components';
 import { EditIcon } from '../components/icons';
 
 export default class HomeScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <BabbleHeader style={styles.header} navigation={this.props.navigation} />
-
         <ScrollView contentContainerStyle={styles.scrollViewContainer} style={styles.scrollView}>
           <BabbleSearchField
             placeholder={'Search users and conversations...'}
@@ -165,19 +163,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    left: 0,
-    zIndex: 1,
-  },
   scrollView: {
     flex: 1,
   },
   scrollViewContainer: {
     paddingHorizontal: 15,
-    paddingTop: 140,
+    paddingTop: 40,
   },
   headingText: {
     color: '#404040',

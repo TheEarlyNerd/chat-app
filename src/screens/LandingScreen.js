@@ -52,7 +52,6 @@ export default class LandingScreen extends Component {
             iconSize={20}
             iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
             iconSpacing={37}
-            linearGradientRotationAngle={-9}
             linearGradientProps={{
               colors: [ '#299BCB', '#1ACCB4' ],
               locations: [ 0, 0.7 ],

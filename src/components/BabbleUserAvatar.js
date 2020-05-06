@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, View, Image, StyleSheet } from 'react-native';
+import { EditIcon } from './icons';
 
 const BabbleUserAvatar = props => (
   <TouchableOpacity
@@ -22,6 +23,16 @@ const BabbleUserAvatar = props => (
         props.imageStyle,
       ]}
     />
+
+    {props.showEditIcon && (
+      <View style={styles.editIconContainer}>
+        <EditIcon
+          width={17}
+          height={17}
+          style={[ styles.editIcon, props.editIconStyle ]}
+        />
+      </View>
+    )}
 
     {!props.hideActivityIcon && (
       <View style={[ styles.activityIcon, props.activityIconStyle ]} />
@@ -51,6 +62,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 5,
     zIndex: 1,
+  },
+  editIcon: {
+    color: '#2A99CC',
+  },
+  editIconContainer: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 15,
+    bottom: 5,
+    height: 30,
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 5,
+    width: 30,
   },
   image: {
     height: '100%',
