@@ -2,9 +2,9 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BabbleHeader } from '../components';
 
+import ActivityScreen from '../screens/ActivityScreen';
 import ConversationScreen from '../screens/ConversationScreen';
 import HomeScreen from '../screens/HomeScreen';
-import ProfileScreen from '../screens/ProfileScreen';
 
 export default props => {
   const MainStack = createStackNavigator();
@@ -18,6 +18,15 @@ export default props => {
       }}
     >
       <MainStack.Screen
+        name={'Activity'}
+        component={ActivityScreen}
+        options={{
+          backEnabled: true,
+          title: 'Activity',
+        }}
+      />
+
+      <MainStack.Screen
         name={'Conversation'}
         component={ConversationScreen}
         options={{ backEnabled: true }}
@@ -26,12 +35,7 @@ export default props => {
       <MainStack.Screen
         name={'Home'}
         component={HomeScreen}
-      />
-
-      <MainStack.Screen
-        name={'Profile'}
-        component={ProfileScreen}
-        options={{ backEnabled: true }}
+        options={{ showActivityButton: true }}
       />
     </MainStack.Navigator>
   );
