@@ -60,7 +60,7 @@ const BabbleHeader = ({ scene }) => {
       <View style={styles.headerRight}>
         {showActivityButton && (
           <TouchableOpacity
-            onPress={() => navigation.push('Activity')}
+            onPress={() => navigation.push('ActivityNavigator')}
             style={styles.activityButton}
           >
             <BellIcon

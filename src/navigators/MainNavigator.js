@@ -2,7 +2,6 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BabbleHeader } from '../components';
 
-import ActivityScreen from '../screens/ActivityScreen';
 import ConversationScreen from '../screens/ConversationScreen';
 import HomeScreen from '../screens/HomeScreen';
 
@@ -17,15 +16,6 @@ export default props => {
         header: ({ scene }) => <BabbleHeader scene={scene} />,
       }}
     >
-      <MainStack.Screen
-        name={'Activity'}
-        component={ActivityScreen}
-        options={{
-          backEnabled: true,
-          title: 'Activity',
-        }}
-      />
-
       <MainStack.Screen
         name={'Conversation'}
         component={ConversationScreen}
