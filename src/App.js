@@ -16,7 +16,9 @@ export default class App extends Component {
   async componentDidMount() {
     await userManager.store.ready;
 
-    this.setState({ initialRouteName: userManager.nextRouteNameForUserState() }, () => {
+    this.setState({
+      initialRouteName: userManager.nextRouteNameForUserState(),
+    }, () => {
       setTimeout(() => this._toggleVisibility(true), 750);
     });
   }
