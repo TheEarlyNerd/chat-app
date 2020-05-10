@@ -4,7 +4,7 @@ import { BabbleHeader } from '../components';
 
 import ProfileScreen from '../screens/ProfileScreen';
 
-export default props => {
+export default () => {
   const ProfileStack = createStackNavigator();
 
   return (

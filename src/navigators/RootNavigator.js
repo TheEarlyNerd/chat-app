@@ -22,10 +22,9 @@ export default props => {
         component={ActivityNavigator}
       />
 
-      <RootStack.Screen
-        name={'MainNavigator'}
-        component={MainNavigator}
-      />
+      <RootStack.Screen name={'MainNavigator'}>
+        {() => MainNavigator(props.initialRouteName)}
+      </RootStack.Screen>
 
       <RootStack.Screen
         name={'ProfileNavigator'}

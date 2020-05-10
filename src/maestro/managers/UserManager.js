@@ -68,7 +68,7 @@ export default class UserManager extends Manager {
     const response = await apiHelper.patch({
       path: '/users',
       data: {
-        avatarAttachmentId: avatarAttachment.id,
+        avatarAttachmentId: (avatarAttachment) ? avatarAttachment.id : null,
         ...fields,
       },
     });
@@ -78,6 +78,22 @@ export default class UserManager extends Manager {
     }
 
     this._setLoggedInUser(response.body);
+  }
+
+  nextRouteNameForUserState() {
+    const { user } = this.store;
+
+    if (!user) {
+      return 'Landing';
+    }
+
+    if (!user.name || !user.username) {
+      return 'SetupProfile';
+    }
+
+    // notifications
+
+    return 'Home';
   }
 
   logout() {

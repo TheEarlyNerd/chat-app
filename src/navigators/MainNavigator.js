@@ -4,13 +4,17 @@ import { BabbleHeader } from '../components';
 
 import ConversationScreen from '../screens/ConversationScreen';
 import HomeScreen from '../screens/HomeScreen';
+import LandingScreen from '../screens/LandingScreen';
+import PhoneLoginCodeScreen from '../screens/PhoneLoginCodeScreen';
+import SetupIOSNotificationsScreen from '../screens/SetupIOSNotificationsScreen';
+import SetupProfileScreen from '../screens/SetupProfileScreen';
 
-export default props => {
+export default initialRouteName => {
   const MainStack = createStackNavigator();
 
   return (
     <MainStack.Navigator
-      initialRouteName={'Home'}
+      initialRouteName={initialRouteName}
       headerMode={'screen'}
       screenOptions={{
         header: ({ scene }) => <BabbleHeader scene={scene} />,
@@ -26,6 +30,41 @@ export default props => {
         name={'Home'}
         component={HomeScreen}
         options={{ showActivityButton: true }}
+      />
+
+      <MainStack.Screen
+        name={'Landing'}
+        component={LandingScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <MainStack.Screen
+        name={'PhoneLoginCode'}
+        component={PhoneLoginCodeScreen}
+        options={{
+          gestureEnabled: false,
+          headerShown: false,
+        }}
+      />
+
+      <MainStack.Screen
+        name={'SetupIOSNotifications'}
+        component={SetupIOSNotificationsScreen}
+        options={{
+          gestureEnabled: false,
+          headerShown: false,
+        }}
+      />
+
+      <MainStack.Screen
+        name={'SetupProfile'}
+        component={SetupProfileScreen}
+        options={{
+          gestureEnabled: false,
+          headerShown: false,
+        }}
       />
     </MainStack.Navigator>
   );

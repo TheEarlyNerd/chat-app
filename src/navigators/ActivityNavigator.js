@@ -4,7 +4,7 @@ import { BabbleHeader } from '../components';
 
 import ActivityScreen from '../screens/ActivityScreen';
 
-export default props => {
+export default () => {
   const ActivityStack = createStackNavigator();
 
   return (
