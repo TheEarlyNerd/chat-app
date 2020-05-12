@@ -26,7 +26,7 @@ export default class BabblePhoneField extends Component {
   _onTextInput = ({ nativeEvent }) => {
     const { text, range } = nativeEvent;
     const { onPhoneChange } = this.props;
-    const { phone } = this.state;
+    const { country, phone } = this.state;
     const updatedPhone = (text === '' && phone.length > 0)
       ? phone.slice(0, range.start - range.end)
       : `${phone}${text}`;
@@ -34,7 +34,7 @@ export default class BabblePhoneField extends Component {
     this.setState({ phone: updatedPhone });
 
     if (onPhoneChange) {
-      onPhoneChange(updatedPhone);
+      onPhoneChange(`${country.phoneCode}${updatedPhone}`);
     }
   }
 

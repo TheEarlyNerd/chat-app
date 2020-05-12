@@ -22,7 +22,7 @@ export default class BabbleUserProfileSummary extends Component {
 
           <View style={styles.followers}>
             <Text style={styles.followersText}>Followers</Text>
-            <Text style={styles.followersCountText}>{user.followers}</Text>
+            <Text style={styles.followersCountText}>{user.followersCount}</Text>
           </View>
         </View>
 

@@ -2,14 +2,17 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { BabbleButton, BabbleTiledIconsBackground } from '../components';
 import { BellIcon, SmileIcon } from '../components/icons';
+import maestro from '../maestro';
+
+const { userManager } = maestro.managers;
 
 export default class SetupIOSNotificationsScreen extends Component {
   _enableNotifications = () => {
-    this.props.navigation.navigate('Home');
+    this.props.navigation.navigate(userManager.nextRouteNameForUserState());
   }
 
   _notNow = () => {
-    this.props.navigation.navigate('Home');
+    this.props.navigation.navigate(userManager.nextRouteNameForUserState());
   }
 
   render() {

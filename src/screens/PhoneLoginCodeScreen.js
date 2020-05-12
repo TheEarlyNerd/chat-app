@@ -48,7 +48,7 @@ export default class PhoneLoginCodeScreen extends Component {
       });
     }
 
-    this.props.navigation.navigate('SetupProfile');
+    this.props.navigation.navigate(userManager.nextRouteNameForUserState());
   }
 
   render() {

@@ -79,7 +79,7 @@ export default class SetupProfileScreen extends Component {
       return this.setState({ loading: false });
     }
 
-    this.props.navigation.navigate('SetupIOSNotifications');
+    this.props.navigation.navigate(userManager.nextRouteNameForUserState());
   }
 
   render() {
