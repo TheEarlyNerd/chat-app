@@ -14,6 +14,8 @@ export default class App extends Component {
   }
 
   async componentDidMount() {
+    maestro.link(this);
+
     await userManager.store.ready;
 
     this.setState({
@@ -21,6 +23,22 @@ export default class App extends Component {
     }, () => {
       setTimeout(() => this._toggleVisibility(true), 750);
     });
+  }
+
+  componentWillUnmount() {
+    maestro.unlink(this);
+  }
+
+  async receiveEvent(name, data) {
+    if (name === 'NAVIGATION_RESET') {
+      await this._toggleVisibility(false);
+
+      await new Promise(resolve => {
+        this.setState({ initialRouteName: data.routeName }, resolve);
+      });
+
+      this._toggleVisibility(true);
+    }
   }
 
   _toggleVisibility = show => {

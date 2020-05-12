@@ -80,7 +80,7 @@ export default class ApiHelper extends Helper {
     }
 
     const response = await fetch(requestUrl, requestOptions);
-console.log(response);
+
     if (response.status === 401) {
       userManager.logout();
       return {};

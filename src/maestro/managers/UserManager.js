@@ -21,11 +21,25 @@ export default class UserManager extends Manager {
 
     this.updateStore({
       ready: asyncStorageHelper.getItem(LOGGED_IN_USER_KEY).then(user => {
-        console.log(user);
         this.updateStore({ user });
         resolveInitialReadyPromise();
       }),
     });
+  }
+
+  get storeName() {
+    return 'user';
+  }
+
+  async getUser(userId) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({ path: `/users/${userId}` });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    return response.body;
   }
 
   async requestPhoneLoginCode(phone) {
@@ -99,6 +113,7 @@ export default class UserManager extends Manager {
   logout() {
     this._setLoggedInUser(null);
     this.resetStore();
+    this.maestro.dispatchEvent('NAVIGATION_RESET', { routeName: 'Landing' });
   }
 
   /*
@@ -108,7 +123,7 @@ export default class UserManager extends Manager {
   _setLoggedInUser(user) {
     const { asyncStorageHelper } = this.maestro.helpers;
 
-    user = (this.store.user) ? { ...this.store.user, ...user } : user;
+    user = (this.store.user && user) ? { ...this.store.user, ...user } : user;
 
     this.updateStore({ user });
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ActivityIndicator } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BabbleHeader } from '../components';
 
@@ -18,7 +19,10 @@ export default () => {
       <ProfileStack.Screen
         name={'Profile'}
         component={ProfileScreen}
-        options={{ closeEnabled: true }}
+        options={{
+          closeEnabled: true,
+          title: <ActivityIndicator color={'#FFFFFF'} />,
+        }}
       />
     </ProfileStack.Navigator>
   );

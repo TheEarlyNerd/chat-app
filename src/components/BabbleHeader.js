@@ -2,27 +2,33 @@ import React from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { BabbleTiledIconsBackground, BabbleUserAvatar } from './';
 import { ArrowLeftIcon, MessageSquareIcon, HeartIcon, BellIcon, XIcon } from './icons';
+import maestro from '../maestro';
+
+const { userManager } = maestro.managers;
 
 const BabbleHeader = ({ scene }) => {
+  const { user } = userManager.store;
   const { route, descriptor } = scene;
   const { navigation, options } = descriptor;
   const params = scene.route.params || {};
   const title = options.title || params.title || null;
   const showActivityButton = options.showActivityButton || params.showActivityButton || null;
-
-  console.log(scene);
-
   const { backEnabled, closeEnabled } = options;
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerLeft}>
-        {!backEnabled && !closeEnabled && (
+        {!!user && !backEnabled && !closeEnabled && (
           <BabbleUserAvatar
-            source={{ uri: 'https://scontent-sea1-1.xx.fbcdn.net/v/t1.0-9/71572992_2728234020533981_2005024985860538368_n.jpg?_nc_cat=105&_nc_sid=85a577&_nc_oc=AQm3dmHq4bGkok28oCH8ApLDfEeSaW_It8Sh_pSEX_TkbLpSGjaKsehzOC61rrBy4JhCoRFwIp-1is1cEmrOxA66&_nc_ht=scontent-sea1-1.xx&oh=39ff988af3d5e90acb04e560f6526acb&oe=5EC57631' }}
+            source={{ uri: user.avatarAttachment.url }}
             size={40}
             imageStyle={styles.userButton}
-            onPress={() => navigation.push('ProfileNavigator')}
+            onPress={() => {
+              navigation.push('ProfileNavigator', {
+                screen: 'Profile',
+                params: { userId: user.id },
+              });
+            }}
           />
         )}
 
@@ -52,9 +58,11 @@ const BabbleHeader = ({ scene }) => {
           <Text style={[ styles.text, styles.babbleLogoText ]}>Babble</Text>
         )}
 
-        {!!title && (
+        {!!title && typeof title === 'string' && (
           <Text style={[ styles.text, styles.titleText ]}>{title}</Text>
         )}
+
+        {React.isValidElement(title) && title}
       </View>
 
       <View style={styles.headerRight}>

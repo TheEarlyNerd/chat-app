@@ -7,6 +7,7 @@ import BabbleConversationMessageAttachment from './BabbleConversationMessageAtta
 import BabbleConversationMessageComposerToolbar from './BabbleConversationMessageComposerToolbar';
 import BabbleConversationMessageEmbed from './BabbleConversationMessageEmbed';
 import BabbleConversationPreview from './BabbleConversationPreview';
+import BabbleConversationPreviewsList from './BabbleConversationPreviewsList';
 import BabbleConversationUserSelectionToolbar from './BabbleConversationUserSelectionToolbar';
 import BabbleConversationUsersToolbar from './BabbleConversationUsersToolbar';
 import BabbleFieldLabel from './BabbleFieldLabel';
@@ -23,6 +24,7 @@ import BabbleTiledIconsBackground from './BabbleTiledIconsBackground';
 import BabbleUserAvatar from './BabbleUserAvatar';
 import BabbleUserAvatarGroup from './BabbleUserAvatarGroup';
 import BabbleUsernameField from './BabbleUsernameField';
+import BabbleUserProfileSummary from './BabbleUserProfileSummary';
 
 export {
   BabbleAutoscaleImage,
@@ -34,6 +36,7 @@ export {
   BabbleConversationMessageComposerToolbar,
   BabbleConversationMessageEmbed,
   BabbleConversationPreview,
+  BabbleConversationPreviewsList,
   BabbleConversationUserSelectionToolbar,
   BabbleConversationUsersToolbar,
   BabbleFieldLabel,
@@ -50,4 +53,5 @@ export {
   BabbleUserAvatar,
   BabbleUserAvatarGroup,
   BabbleUsernameField,
+  BabbleUserProfileSummary,
 };
