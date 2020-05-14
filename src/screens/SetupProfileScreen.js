@@ -48,6 +48,7 @@ export default class SetupProfileScreen extends Component {
       height: 512,
       mediaType: 'photo',
       cropperToolbarTitle: 'Pinch To Zoom Or Drag To Crop',
+      cropperCircleOverlay: true,
       cropping: true,
     };
 
@@ -89,10 +90,11 @@ export default class SetupProfileScreen extends Component {
       <KeyboardAwareScrollView contentContainerStyle={{ minHeight: Dimensions.get('window').height }}>
         <View style={styles.previewContainer}>
           <BabbleUserAvatar
+            avatarAttachment={(avatarImageUri) ? { url: avatarImageUri } : null}
+            defaultAvatar={require('../assets/images/upload-photo-placeholder.png')}
             onPress={this._showMediaActionSheet}
             hideActivityIcon
             showEditIcon={!!avatarImageUri}
-            source={(avatarImageUri) ? { uri: avatarImageUri } : require('../assets/images/upload-photo-placeholder.png')}
             size={150}
             style={styles.avatar}
           />

@@ -1,26 +1,154 @@
 import React, { Component } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import moment from 'moment';
 import { BabbleUserAvatar, BabbleUserAvatarGroup, BabbleReaction } from './';
 import { EyeIcon, UsersIcon, UserIcon, MessageCircleIcon } from './icons';
+import maestro from '../maestro';
+
+const { userManager } = maestro.managers;
+const { navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationPreview extends Component {
+  _onPress = () => {
+    const { conversation } = this.props;
+
+    navigationHelper.push('Conversation', { conversationId: conversation.id });
+  }
+
+  _getAvatarAttachment = () => {
+    const { accessLevel, user, conversationUsers } = this.props.conversation;
+    const loggedInUserId = userManager.store.user.id;
+
+    if ([ 'public', 'protected' ].includes(accessLevel)) {
+      return user.avatarAttachment;
+    }
+
+    if (accessLevel === 'private') {
+      return conversationUsers.map(conversationUser => (
+        conversationUser.user
+      )).find(user => user.id !== loggedInUserId).avatarAttachment;
+    }
+  }
+
+  _getGroupUsers = () => {
+    const { accessLevel, conversationUsers } = this.props.conversation;
+    const loggedInUserId = userManager.store.user.id;
+
+    if (accessLevel === 'public') {
+      return [];
+    }
+
+    if (accessLevel === 'protected') {
+      return conversationUsers.filter(conversationUser => (
+        conversationUser.permissions.includes('CONVERSATION_ADMIN') ||
+        conversationUser.permissions.includes('CONVERSATION_MESSAGES_CREATE')
+      )).map(conversationUser => conversationUser.user);
+    }
+
+    if (accessLevel === 'private') {
+      return conversationUsers.map(conversationUser => (
+        conversationUser.user
+      )).filter(user => user.id !== loggedInUserId);
+    }
+  }
+
+  _getName = () => {
+    const { accessLevel, user } = this.props.conversation;
+
+    if (accessLevel === 'public') {
+      return user.name;
+    }
+
+    if ([ 'protected', 'private' ].includes(accessLevel)) {
+      return this._getGroupUsers().map(user => user.name).join(', ');
+    }
+  }
+
+  _getPreviewImageUrl = () => {
+    const { attachments, embeds } = this.props.conversation.previewConversationMessage;
+    let previewImageUrl = null;
+
+    if (attachments.length) {
+      const previewAttachment = attachments.find(attachment => {
+        if (attachment.mimetype.includes('image/')) {
+          return true;
+        }
+      });
+
+      previewImageUrl = (previewAttachment) ? previewAttachment.url : null;
+    }
+
+    if (embeds.length) {
+      const previewEmbed = embeds.find(embed => !!embed.imageUrl);
+
+      previewImageUrl = (previewEmbed) ? previewEmbed.imageUrl : null;
+    }
+
+    return previewImageUrl;
+  }
+
+  _getPreviewText = () => {
+    const { accessLevel, previewConversationMessage } = this.props.conversation;
+    const { text, user } = previewConversationMessage;
+    const loggedInUserId = userManager.store.user.id;
+
+    if ([ 'public', 'protected' ].includes(accessLevel)) {
+      return previewConversationMessage.text;
+    }
+
+    if (accessLevel === 'private') {
+      const isGroup = this._getGroupUsers().length > 1;
+      const authorIsLoggedInUser = user.id === loggedInUserId;
+      const name = (authorIsLoggedInUser) ? 'You' : user.name;
+
+      if (isGroup) {
+        return `${name}: ${text}`;
+      }
+
+      return (authorIsLoggedInUser) ? `You: ${text}` : text;
+    }
+  }
+
+  _getReactions = () => {
+    return this.props.conversation.previewConversationMessage.conversationMessageReactions;
+  }
+
+  _getTime = () => {
+    const { previewConversationMessage } = this.props.conversation;
+
+    return moment(previewConversationMessage.createdAt).calendar();
+  }
+
   render() {
     const { conversation, style } = this.props;
-    const { accessLevel, previewConversationMessage, user, tempGroup } = conversation;
-    const { attachments, embeds, conversationMessageReactions, tempUnread, tempImage } = previewConversationMessage;
+    const { accessLevel } = conversation;
+    const groupUsers = this._getGroupUsers();
+    const reactions = this._getReactions();
+    const previewImageUrl = this._getPreviewImageUrl();
+    const liveCount = 0;
+    const viewCount = 0;
+    const unreadCount = 0;
 
     return (
-      <TouchableOpacity style={[ styles.container, style ]}>
-        {!tempGroup && (
+      <TouchableOpacity
+        onPress={this._onPress}
+        style={[ styles.container, style ]}
+      >
+        {groupUsers.length < 2 && (
           <BabbleUserAvatar
-            source={{ uri: user.avatarAttachment.url }}
+            avatarAttachment={this._getAvatarAttachment()}
+            disabled
             size={50}
           />
         )}
 
-        {tempGroup && (
-          <BabbleUserAvatarGroup size={50} />
+        {groupUsers.length >= 2 && (
+          <BabbleUserAvatarGroup
+            users={groupUsers}
+            disabled
+            size={50}
+          />
         )}
 
         <View style={styles.content}>
@@ -30,9 +158,7 @@ export default class BabbleConversationPreview extends Component {
                 <UsersIcon width={14} height={14} style={styles.protectedIcon} />
               )}
 
-              <TouchableOpacity>
-                <Text style={styles.nameText}>{user.name}</Text>
-              </TouchableOpacity>
+              <Text style={styles.nameText} numberOfLines={1}>{this._getName()}</Text>
             </View>
 
             <View style={styles.stats}>
@@ -40,19 +166,19 @@ export default class BabbleConversationPreview extends Component {
                 <>
                   <View style={styles.stat}>
                     <UserIcon width={17} height={17} style={[ styles.statIcon, styles.statLiveColor ]} />
-                    <Text style={[ styles.statText, styles.statLiveColor ]}>12</Text>
+                    <Text style={[ styles.statText, styles.statLiveColor ]}>{liveCount}</Text>
                   </View>
 
                   <View style={styles.stat}>
                     <EyeIcon width={17} height={17} style={styles.statIcon} />
-                    <Text style={styles.statText}>123</Text>
+                    <Text style={styles.statText}>{viewCount}</Text>
                   </View>
                 </>
               )}
 
-              {tempUnread && (
+              {unreadCount > 0 && (
                 <View style={styles.unreadBubble}>
-                  <Text style={styles.unreadCountText}>12</Text>
+                  <Text style={styles.unreadCountText}>{unreadCount}</Text>
 
                   <LinearGradient
                     useAngle
@@ -67,28 +193,26 @@ export default class BabbleConversationPreview extends Component {
 
           <View style={styles.preview}>
             <View style={styles.previewTexts}>
-              <Text numberOfLines={3} style={[ styles.previewText, (tempUnread) ? styles.previewUnreadColor : null ]}>{previewConversationMessage.text}</Text>
-              <Text style={styles.timeText}>Today at 10:24 PM</Text>
+              <Text numberOfLines={3} style={[ styles.previewText, (unreadCount > 0) ? styles.previewUnreadColor : null ]}>{this._getPreviewText()}</Text>
+              <Text style={styles.timeText}>{this._getTime()}</Text>
             </View>
 
-            {tempImage && (
-              <View style={styles.previewImages}>
-                <Image
-                  source={{ uri: tempImage }}
-                  style={styles.previewImage}
-                />
-              </View>
+            {!!previewImageUrl && (
+              <Image
+                source={{ uri: previewImageUrl }}
+                style={styles.previewImage}
+              />
             )}
           </View>
 
-          {!!conversationMessageReactions.length && (
+          {!!reactions.length && (
             <View style={styles.reactions}>
-              {conversationMessageReactions.map((conversationMessageReaction, index) => (
+              {reactions.map((reaction, index) => (
                 <BabbleReaction
-                  reaction={conversationMessageReaction.reaction}
-                  count={conversationMessageReaction.count}
+                  reaction={reaction.reaction}
+                  count={reaction.count}
                   style={styles.reaction}
-                  key={`${conversation.id}_reaction_${index}`}
+                  key={index}
                 />
               ))}
             </View>
@@ -137,11 +261,12 @@ const styles = StyleSheet.create({
   },
   heading: {
     alignItems: 'center',
+    flex: 1,
     flexDirection: 'row',
+    marginRight: 20,
   },
   metadata: {
     alignItems: 'center',
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -161,9 +286,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginTop: 4,
     width: 50,
-  },
-  previewImages: {
-
   },
   previewText: {
     color: '#797979',

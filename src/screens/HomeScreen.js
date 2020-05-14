@@ -26,7 +26,7 @@ export default class HomeScreen extends Component {
     console.log('got update');
     console.log(conversations);
     console.log(user.user);
-    this.setState({ conversations: conversations.conversations.filter(conversation => conversation.accessLevel === 'private') });
+    this.setState({ conversations: conversations.conversations });
   }
 
   render() {
@@ -44,9 +44,11 @@ export default class HomeScreen extends Component {
 
           <BabbleConversationPreviewsList
             conversations={this.state.conversations}
+            ListHeaderComponentStyle={{ marginBottom: 20 /*temp*/ }}
             ListHeaderComponent={() => (
-              <Text style={styles.headingText}>Direct Messages</Text>
+              <Text style={styles.headingText}></Text>
             )}
+            style={{ paddingBottom: 80 }}
           />
         </ScrollView>
 

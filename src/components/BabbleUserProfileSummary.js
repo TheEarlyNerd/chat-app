@@ -11,7 +11,7 @@ export default class BabbleUserProfileSummary extends Component {
         <View style={styles.user}>
           <BabbleUserAvatar
             activityIconStyle={styles.avatarActivityIcon}
-            source={{ uri: user.avatarAttachment.url }}
+            avatarAttachment={user.avatarAttachment}
             size={60}
           />
 

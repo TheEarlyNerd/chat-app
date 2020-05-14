@@ -2,43 +2,48 @@ import React from 'react';
 import { TouchableOpacity, View, Image, StyleSheet } from 'react-native';
 import { EditIcon } from './icons';
 
-const BabbleUserAvatar = props => (
-  <TouchableOpacity
-    onPress={props.onPress}
-    style={[
-      styles.container,
-      props.style,
-    ]}
-  >
-    <Image
-      source={props.source}
-      resizeMode={'cover'}
+const BabbleUserAvatar = props => {
+  const defaultAvatar = props.defaultAvatar || require('../assets/images/default-avatar.png');
+
+  return (
+    <TouchableOpacity
+      onPress={props.onPress}
       style={[
-        styles.image,
-        {
-          width: props.size,
-          height: props.size,
-          borderRadius: props.size,
-        },
-        props.imageStyle,
+        styles.container,
+        props.style,
       ]}
-    />
+      disabled={props.disabled}
+    >
+      <Image
+        source={(props.avatarAttachment) ? { uri: props.avatarAttachment.url } : defaultAvatar}
+        resizeMode={'cover'}
+        style={[
+          styles.image,
+          {
+            width: props.size,
+            height: props.size,
+            borderRadius: props.size,
+          },
+          props.imageStyle,
+        ]}
+      />
 
-    {props.showEditIcon && (
-      <View style={styles.editIconContainer}>
-        <EditIcon
-          width={17}
-          height={17}
-          style={[ styles.editIcon, props.editIconStyle ]}
-        />
-      </View>
-    )}
+      {props.showEditIcon && (
+        <View style={styles.editIconContainer}>
+          <EditIcon
+            width={17}
+            height={17}
+            style={[ styles.editIcon, props.editIconStyle ]}
+          />
+        </View>
+      )}
 
-    {!props.hideActivityIcon && (
-      <View style={[ styles.activityIcon, props.activityIconStyle ]} />
-    )}
-  </TouchableOpacity>
-);
+      {!props.hideActivityIcon && (
+        <View style={[ styles.activityIcon, props.activityIconStyle ]} />
+      )}
+    </TouchableOpacity>
+  );
+};
 
 export default BabbleUserAvatar;
 

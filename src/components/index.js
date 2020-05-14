@@ -23,6 +23,7 @@ import BabbleTextField from './BabbleTextField';
 import BabbleTiledIconsBackground from './BabbleTiledIconsBackground';
 import BabbleUserAvatar from './BabbleUserAvatar';
 import BabbleUserAvatarGroup from './BabbleUserAvatarGroup';
+import BabbleUserList from './BabbleUserList';
 import BabbleUsernameField from './BabbleUsernameField';
 import BabbleUserProfileSummary from './BabbleUserProfileSummary';
 
@@ -52,6 +53,7 @@ export {
   BabbleTiledIconsBackground,
   BabbleUserAvatar,
   BabbleUserAvatarGroup,
+  BabbleUserList,
   BabbleUsernameField,
   BabbleUserProfileSummary,
 };

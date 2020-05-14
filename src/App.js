@@ -6,6 +6,7 @@ import RootNavigator from './navigators/RootNavigator';
 import maestro from './maestro';
 
 const { userManager } = maestro.managers;
+const { navigationHelper } = maestro.helpers;
 
 export default class App extends Component {
   state = {
@@ -61,6 +62,7 @@ export default class App extends Component {
       <Animated.View style={{ flex: 1, opacity: containerOpacityAnimated }}>
         <NavigationContainer
           theme={navigationTheme}
+          ref={navigation => navigationHelper.setNavigation(navigation)}
           key={`navigation_base_${initialRouteName}`}
         >
           <StatusBar barStyle={'light-content'} />

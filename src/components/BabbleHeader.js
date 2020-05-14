@@ -20,7 +20,7 @@ const BabbleHeader = ({ scene }) => {
       <View style={styles.headerLeft}>
         {!!user && !backEnabled && !closeEnabled && (
           <BabbleUserAvatar
-            source={{ uri: user.avatarAttachment.url }}
+            avatarAttachment={user.avatarAttachment}
             size={40}
             imageStyle={styles.userButton}
             onPress={() => {
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   headerCenter: {
     alignItems: 'center',
-    flex: 1,
+    flex: 2,
     justifyContent: 'center',
     paddingVertical: 10,
   },

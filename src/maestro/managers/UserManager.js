@@ -68,6 +68,20 @@ export default class UserManager extends Manager {
     this._setLoggedInUser(response.body);
   }
 
+  async getSearchUsers(search) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({
+      path: '/users',
+      queryParams: { search },
+    });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    return response.body;
+  }
+
   async updateUser(fields) {
     const { apiHelper, attachmentsHelper } = this.maestro.helpers;
     let avatarAttachment = null;
@@ -111,9 +125,12 @@ export default class UserManager extends Manager {
   }
 
   logout() {
+    const { navigationHelper } = this.maestro.helpers;
+
     this._setLoggedInUser(null);
     this.resetStore();
-    this.maestro.dispatchEvent('NAVIGATION_RESET', { routeName: 'Landing' });
+
+    navigationHelper.reset('Landing');
   }
 
   /*
