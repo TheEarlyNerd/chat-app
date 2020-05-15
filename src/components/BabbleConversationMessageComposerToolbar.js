@@ -1,49 +1,106 @@
 import React, { Component } from 'react';
-import { View, TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { ArrowUpIcon, ImageIcon } from './icons';
+import { KeyboardAvoidingView, TextInput, Text, TouchableOpacity, StyleSheet, Keyboard } from 'react-native';
+import { HeaderHeightContext } from '@react-navigation/stack';
+import ImagePicker from 'react-native-image-crop-picker';
+import { CameraIcon, ArrowUpIcon, ImageIcon } from './icons';
+import maestro from '../maestro';
+
+const { interfaceHelper } = maestro.helpers;
 
 export default class BabbleMessageComposerToolbar extends Component {
   state = {
+    keyboardAvoidingViewEnabled: false,
     text: '',
+  }
+
+  _showMediaActionSheet = () => {
+    Keyboard.dismiss();
+
+    interfaceHelper.showOverlay({
+      name: 'ActionSheet',
+      data: {
+        actions: [
+          {
+            iconComponent: CameraIcon,
+            text: 'Open Camera',
+            onPress: () => this._selectMedia('camera'),
+          },
+          {
+            iconComponent: ImageIcon,
+            text: 'Open Photo Library',
+            onPress: () => this._selectMedia('library'),
+          },
+        ],
+      },
+    });
+  }
+
+  _selectMedia = async source => {
+    const options = { multiple: true };
+    try {
+      const media = (source === 'camera')
+        ? await ImagePicker.openCamera(options)
+        : await ImagePicker.openPicker(options);
+
+      console.log(media);
+    } catch { /* noop */ }
+  }
+
+  _toggleKeyboardAvoidingView = enabled => {
+    this.setState({ keyboardAvoidingViewEnabled: enabled });
   }
 
   render() {
     const { style } = this.props;
-    const { text } = this.state;
+    const { keyboardAvoidingViewEnabled, text } = this.state;
 
     return (
-      <View style={[ styles.container, style ]}>
-        <TouchableOpacity style={[ styles.button, styles.leftButton ]}>
-          <ImageIcon
-            width={22}
-            height={22}
-            style={styles.buttonIcon}
-          />
-        </TouchableOpacity>
+      <HeaderHeightContext.Consumer>
+        {headerHeight => (
+          <KeyboardAvoidingView
+            behavior={'padding'}
+            enabled={keyboardAvoidingViewEnabled}
+            keyboardVerticalOffset={headerHeight + styles.container.paddingVertical}
+            style={[ styles.container, style ]}
+          >
+            <TouchableOpacity
+              onPress={this._showMediaActionSheet}
+              style={[ styles.button, styles.leftButton ]}
+            >
+              <ImageIcon
+                width={22}
+                height={22}
+                style={styles.buttonIcon}
+              />
+            </TouchableOpacity>
 
-        <TouchableOpacity style={[ styles.button, styles.leftButton ]}>
-          <Text style={styles.buttonText}>GIF</Text>
-        </TouchableOpacity>
+            <TouchableOpacity style={[ styles.button, styles.leftButton ]}>
+              <Text style={styles.buttonText}>GIF</Text>
+            </TouchableOpacity>
 
-        <TextInput
-          multiline
-          placeholderColor={'#909090'}
-          placeholder={'Message...'}
-          onChangeText={text => this.setState({ text })}
-          style={styles.textInput}
-        />
+            <TextInput
+              multiline
+              placeholderColor={'#909090'}
+              placeholder={'Message...'}
+              onChangeText={text => this.setState({ text })}
+              onFocus={() => this._toggleKeyboardAvoidingView(true)}
+              onBlur={() => this._toggleKeyboardAvoidingView(false)}
+              style={styles.textInput}
+            />
 
-        <TouchableOpacity disabled={!text.length} style={styles.sendButton}>
-          <ArrowUpIcon
-            width={21}
-            height={21}
-            style={[
-              styles.buttonIcon,
-              (!text.length) ? styles.buttonIconDisabled : null,
-            ]}
-          />
-        </TouchableOpacity>
-      </View>
+            <TouchableOpacity disabled={!text.length} style={styles.sendButton}>
+              <ArrowUpIcon
+                width={21}
+                height={21}
+                style={[
+                  styles.buttonIcon,
+                  (!text.length) ? styles.buttonIconDisabled : null,
+                ]}
+              />
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+        )}
+      </HeaderHeightContext.Consumer>
     );
   }
 }

@@ -11,6 +11,7 @@ export default class BabbleUserSelectionToolbar extends Component {
     textInputValue: '',
     selectedUsers: [],
     searchUsers: [],
+    showSearchUsersList: false,
     loadingSearch: false,
   }
 
@@ -55,11 +56,11 @@ export default class BabbleUserSelectionToolbar extends Component {
     this.setState(state);
   }
 
-  _search = (text) => {
+  _search = search => {
     clearTimeout(this.textInputTimeout);
 
-    if (!text) {
-      return;
+    if (!search) {
+      return this.setState({ loadingSearch: false });
     }
 
     this.setState({ loadingSearch: true });
@@ -67,7 +68,7 @@ export default class BabbleUserSelectionToolbar extends Component {
     this.textInputTimeout = setTimeout(async () => {
       const { selectedUsers } = this.state;
       const selectedUserIds = selectedUsers.map(selectedUser => selectedUser.id);
-      const searchUsers = (await userManager.getSearchUsers(text)).filter(searchUser => {
+      const searchUsers = (await userManager.getSearchUsers(search)).filter(searchUser => {
         return !selectedUserIds.includes(searchUser.id);
       });
 
@@ -93,9 +94,13 @@ export default class BabbleUserSelectionToolbar extends Component {
     this.setState({ selectedUserIndex: null });
   }
 
+  _toggleSearchUsersList = show => {
+    this.setState({ showSearchUsersList: show });
+  }
+
   render() {
     const { label, placeholder, style } = this.props;
-    const { selectedUserIndex, textInputValue, selectedUsers, searchUsers, loadingSearch } = this.state;
+    const { selectedUserIndex, textInputValue, selectedUsers, searchUsers, showSearchUsersList, loadingSearch } = this.state;
 
     return (
       <View>
@@ -114,6 +119,7 @@ export default class BabbleUserSelectionToolbar extends Component {
               >
                 <BabbleUserAvatar
                   avatarAttachment={selectedUser.avatarAttachment}
+                  disabled
                   size={20}
                   style={styles.avatar}
                   activityIconStyle={styles.avatarActivityIcon}
@@ -134,6 +140,8 @@ export default class BabbleUserSelectionToolbar extends Component {
               caretHidden={selectedUserIndex !== null}
               onKeyPress={this._onKeyPress}
               onChangeText={this._onChangeText}
+              onFocus={() => this._toggleSearchUsersList(true)}
+              onBlur={() => this._toggleSearchUsersList(false)}
               placeholder={(!selectedUsers.length) ? placeholder : ''}
               returnKeyType={'done'}
               value={textInputValue}
@@ -143,13 +151,16 @@ export default class BabbleUserSelectionToolbar extends Component {
           </View>
         </TouchableWithoutFeedback>
 
-        <BabbleUserList
-          loading={loadingSearch}
-          users={searchUsers}
-          disableNoResultsMessage={!textInputValue}
-          onPress={this._searchUserPress}
-          keyboardShouldPersistTaps={'always'}
-        />
+        {showSearchUsersList && (
+          <BabbleUserList
+            loading={loadingSearch}
+            users={searchUsers}
+            disableNoResultsMessage={!textInputValue}
+            noResultsMessage={'No users found'}
+            onPress={this._searchUserPress}
+            keyboardShouldPersistTaps={'always'}
+          />
+        )}
       </View>
     );
   }

@@ -39,9 +39,9 @@ export default class BabbleOverlayActionSheet extends Component {
 
     return new Promise(resolve => {
       if (show) {
-        Animated.sequence([ opacityAnimation, translateYAnimation ]).start(resolve);
+        Animated.parallel([ opacityAnimation, translateYAnimation ]).start(resolve);
       } else {
-        Animated.sequence([ translateYAnimation, opacityAnimation ]).start(resolve);
+        Animated.parallel([ translateYAnimation, opacityAnimation ]).start(resolve);
       }
     });
   }

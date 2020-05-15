@@ -42,7 +42,6 @@ export default class SetupProfileScreen extends Component {
   }
 
   _selectAvatarImage = async source => {
-    let image = null;
     const options = {
       width: 512,
       height: 512,
@@ -50,17 +49,16 @@ export default class SetupProfileScreen extends Component {
       cropperToolbarTitle: 'Pinch To Zoom Or Drag To Crop',
       cropperCircleOverlay: true,
       cropping: true,
+      useFrontCamera: true,
     };
 
     try {
-      image = (source === 'camera')
+      const image = (source === 'camera')
         ? await ImagePicker.openCamera(options)
         : await ImagePicker.openPicker(options);
-    } catch {
-      return; // noop, note: ios camera won't open on sim
-    }
 
-    this.setState({ avatarImageUri: image.path });
+      this.setState({ avatarImageUri: image.path });
+    } catch { /* noop */ }
   }
 
   _submit = async () => {

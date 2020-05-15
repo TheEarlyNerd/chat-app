@@ -10,6 +10,7 @@ export default class BabbleUserList extends Component {
       <TouchableOpacity onPress={() => onPress(item)} style={styles.user}>
         <BabbleUserAvatar
           avatarAttachment={item.avatarAttachment}
+          disabled
           size={40}
         />
 
@@ -21,9 +22,11 @@ export default class BabbleUserList extends Component {
     );
   }
 
-  _renderEmptyMessage = () => {
+  _renderNoResultsMessage = () => {
     return (
-      <Text style={styles.emptyText}>No results found</Text>
+      <Text style={styles.emptyText}>
+        {this.props.noResultsMessage || 'No results found'}
+      </Text>
     );
   }
 
@@ -42,7 +45,7 @@ export default class BabbleUserList extends Component {
         renderItem={this._renderUser}
         keyExtractor={item => `${item.id}`}
         style={[ styles.container, style ]}
-        ListEmptyComponent={(!loading && !disableNoResultsMessage) ? this._renderEmptyMessage : null}
+        ListEmptyComponent={(!loading && !disableNoResultsMessage) ? this._renderNoResultsMessage : null}
         ListFooterComponent={(loading) ? this._renderLoading : null}
         {...props}
       />
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   emptyText: {
-    color: '#404040',
+    color: '#797979',
     fontFamily: 'NunitoSans-Bold',
     fontSize: 14,
     marginTop: 15,
