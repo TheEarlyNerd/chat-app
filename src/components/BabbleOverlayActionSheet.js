@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SafeAreaView, View, TouchableOpacity, Text, Animated, StyleSheet } from 'react-native';
+import { SafeAreaView, View, TouchableOpacity, Text, Animated, Keyboard, StyleSheet } from 'react-native';
 import { ArrowDownIcon } from './icons';
 import maestro from '../maestro';
 
@@ -15,6 +15,8 @@ export default class BabbleOverlayActionSheet extends Component {
   }
 
   _show = () => {
+    Keyboard.dismiss();
+
     this._toggle(true);
   }
 
@@ -81,13 +83,22 @@ export default class BabbleOverlayActionSheet extends Component {
             {actions.map((action, index) => (
               <TouchableOpacity onPress={() => this._actionPressed(action.onPress)} style={styles.action} key={index}>
                 <action.iconComponent style={styles.actionIcon} />
-                <Text style={styles.actionText}>{action.text}</Text>
+
+                <View style={styles.actionTextContainer}>
+                  <Text style={styles.actionText}>{action.text}</Text>
+
+                  {!!action.subtext && (
+                    <Text style={styles.actionSubText}>{action.subtext}</Text>
+                  )}
+                </View>
               </TouchableOpacity>
             ))}
 
             <TouchableOpacity onPress={this._hide} style={styles.action}>
               <ArrowDownIcon style={[ styles.actionIcon, styles.actionIconCancel ]} />
-              <Text style={[ styles.actionText, styles.actionTextCancel ]}>Cancel</Text>
+              <View style={styles.actionTextContainer}>
+                <Text style={[ styles.actionText, styles.actionTextCancel ]}>Cancel</Text>
+              </View>
             </TouchableOpacity>
           </SafeAreaView>
         </Animated.View>
@@ -112,14 +123,22 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '100%',
   },
+  actionSubText: {
+    color: '#404040',
+    fontFamily: 'NunitoSans-SemiBold',
+    fontSize: 14,
+  },
   actionText: {
     color: '#323643',
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: 18,
-    marginLeft: 15,
   },
   actionTextCancel: {
     color: '#F54444',
+  },
+  actionTextContainer: {
+    flex: 1,
+    marginLeft: 15,
   },
   container: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

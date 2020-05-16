@@ -23,9 +23,6 @@ export default class HomeScreen extends Component {
   }
 
   receiveStoreUpdate({ conversations, user }) {
-    console.log('got update');
-    console.log(conversations);
-    console.log(user.user);
     this.setState({ conversations: conversations.conversations });
   }
 
@@ -46,7 +43,7 @@ export default class HomeScreen extends Component {
             conversations={this.state.conversations}
             ListHeaderComponentStyle={{ marginBottom: 20 /*temp*/ }}
             ListHeaderComponent={() => (
-              <Text style={styles.headingText}></Text>
+              <Text style={styles.headingText}>Messages</Text>
             )}
             style={{ paddingBottom: 80 }}
           />

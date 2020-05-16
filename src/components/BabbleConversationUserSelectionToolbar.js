@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableWithoutFeedback, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import { BabbleUserAvatar, BabbleUserList } from './';
+import { UsersIcon, MessageCircleIcon, LockIcon, ChevronDownIcon } from './icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
+const { interfaceHelper } = maestro.helpers;
 
 export default class BabbleUserSelectionToolbar extends Component {
   state = {
+    accessLevel: null,
     selectedUserIndex: null,
     textInputValue: '',
     selectedUsers: [],
@@ -21,6 +24,14 @@ export default class BabbleUserSelectionToolbar extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.textInputTimeout);
+  }
+
+  get accessLevel() {
+    return this.state.accessLevel;
+  }
+
+  get selectedUsers() {
+    return this.state.selectedUsers;
   }
 
   _onKeyPress = ({ nativeEvent }) => {
@@ -76,6 +87,34 @@ export default class BabbleUserSelectionToolbar extends Component {
     }, 500);
   }
 
+  _accessLevelPress = () => {
+    interfaceHelper.showOverlay({
+      name: 'ActionSheet',
+      data: {
+        actions: [
+          {
+            iconComponent: MessageCircleIcon,
+            text: 'Public',
+            subtext: 'Anyone can join this conversation, send and react to messages, and invite others.',
+            onPress: () => this.setState({ accessLevel: 'public' }),
+          },
+          {
+            iconComponent: UsersIcon,
+            text: 'V.I.P.',
+            subtext: 'Only people you invite to this conversation can send messages. Anyone can view this conversation and react to messages.',
+            onPress: () => this.setState({ accessLevel: 'protected' }),
+          },
+          {
+            iconComponent: LockIcon,
+            text: 'Private',
+            subtext: 'Only people you invite to this conversation can view it, send messages and react to messages.',
+            onPress: () => this.setState({ accessLevel: 'private' }),
+          },
+        ],
+      },
+    });
+  }
+
   _userPress = userIndex => {
     this.textInput.focus();
     this.setState({ selectedUserIndex: userIndex });
@@ -83,6 +122,7 @@ export default class BabbleUserSelectionToolbar extends Component {
 
   _searchUserPress = user => {
     this.setState({
+      accessLevel: this.state.accessLevel || 'private',
       textInputValue: '',
       selectedUsers: [ ...this.state.selectedUsers, user ],
       searchUsers: [],
@@ -100,8 +140,7 @@ export default class BabbleUserSelectionToolbar extends Component {
 
   render() {
     const { label, placeholder, style } = this.props;
-    const { selectedUserIndex, textInputValue, selectedUsers, searchUsers, showSearchUsersList, loadingSearch } = this.state;
-
+    const { accessLevel, selectedUserIndex, textInputValue, selectedUsers, searchUsers, showSearchUsersList, loadingSearch } = this.state;
     return (
       <View>
         <TouchableWithoutFeedback onPress={this._toolbarPress}>
@@ -148,6 +187,31 @@ export default class BabbleUserSelectionToolbar extends Component {
               style={styles.textInput}
               ref={component => this.textInput = component}
             />
+
+            <TouchableOpacity onPress={this._accessLevelPress} style={styles.accessLevelButton}>
+              {(!accessLevel || accessLevel === 'public') && (
+                <>
+                  <MessageCircleIcon width={16} height={16} style={styles.accessLevelButtonIcon} />
+                  <Text style={styles.accessLevelButtonText}>Public</Text>
+                </>
+              )}
+
+              {accessLevel === 'protected' && (
+                <>
+                  <UsersIcon width={16} height={16} style={styles.accessLevelButtonIcon} />
+                  <Text style={styles.accessLevelButtonText}>V.I.P.</Text>
+                </>
+              )}
+
+              {accessLevel === 'private' && (
+                <>
+                  <LockIcon width={16} height={16} style={styles.accessLevelButtonIcon} />
+                  <Text style={styles.accessLevelButtonText}>Private</Text>
+                </>
+              )}
+
+              <ChevronDownIcon width={20} height={20} style={styles.accessLevelButtonIcon} />
+            </TouchableOpacity>
           </View>
         </TouchableWithoutFeedback>
 
@@ -167,6 +231,27 @@ export default class BabbleUserSelectionToolbar extends Component {
 }
 
 const styles = StyleSheet.create({
+  accessLevelButton: {
+    alignItems: 'center',
+    borderColor: '#2A99CC',
+    borderRadius: 4,
+    borderWidth: 1,
+    flexDirection: 'row',
+    padding: 4,
+    position: 'absolute',
+    right: 15,
+    top: 17,
+  },
+  accessLevelButtonIcon: {
+    color: '#2A99CC',
+  },
+  accessLevelButtonText: {
+    color: '#2A99CC',
+    fontFamily: 'NunitoSans-SemiBold',
+    fontSize: 14,
+    marginLeft: 5,
+    marginRight: 2.5,
+  },
   avatar: {
     marginRight: 5,
   },

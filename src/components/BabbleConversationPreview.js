@@ -25,9 +25,11 @@ export default class BabbleConversationPreview extends Component {
     }
 
     if (accessLevel === 'private') {
-      return conversationUsers.map(conversationUser => (
+      const otherUser = conversationUsers.map(conversationUser => (
         conversationUser.user
-      )).find(user => user.id !== loggedInUserId).avatarAttachment;
+      )).find(user => user.id !== loggedInUserId);
+
+      return (otherUser) ? otherUser.avatarAttachment : user.avatarAttachment;
     }
   }
 
@@ -61,7 +63,7 @@ export default class BabbleConversationPreview extends Component {
     }
 
     if ([ 'protected', 'private' ].includes(accessLevel)) {
-      return this._getGroupUsers().map(user => user.name).join(', ');
+      return this._getGroupUsers().map(user => user.name).join(', ') || user.name;
     }
   }
 

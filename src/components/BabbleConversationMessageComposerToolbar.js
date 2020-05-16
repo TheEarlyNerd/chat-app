@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, TextInput, Text, TouchableOpacity, StyleSheet, Keyboard } from 'react-native';
+import { KeyboardAvoidingView, TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { HeaderHeightContext } from '@react-navigation/stack';
 import ImagePicker from 'react-native-image-crop-picker';
 import { CameraIcon, ArrowUpIcon, ImageIcon } from './icons';
@@ -9,13 +9,18 @@ const { interfaceHelper } = maestro.helpers;
 
 export default class BabbleMessageComposerToolbar extends Component {
   state = {
-    keyboardAvoidingViewEnabled: false,
     text: '',
+    selectedMedia: [],
+  }
+
+  clear() {
+    this.setState({
+      text: '',
+      selectedMedia: [],
+    });
   }
 
   _showMediaActionSheet = () => {
-    Keyboard.dismiss();
-
     interfaceHelper.showOverlay({
       name: 'ActionSheet',
       data: {
@@ -46,20 +51,15 @@ export default class BabbleMessageComposerToolbar extends Component {
     } catch { /* noop */ }
   }
 
-  _toggleKeyboardAvoidingView = enabled => {
-    this.setState({ keyboardAvoidingViewEnabled: enabled });
-  }
-
   render() {
-    const { style } = this.props;
-    const { keyboardAvoidingViewEnabled, text } = this.state;
+    const { onSubmit, style } = this.props;
+    const { text, selectedMedia } = this.state;
 
     return (
       <HeaderHeightContext.Consumer>
         {headerHeight => (
           <KeyboardAvoidingView
             behavior={'padding'}
-            enabled={keyboardAvoidingViewEnabled}
             keyboardVerticalOffset={headerHeight + styles.container.paddingVertical}
             style={[ styles.container, style ]}
           >
@@ -83,12 +83,15 @@ export default class BabbleMessageComposerToolbar extends Component {
               placeholderColor={'#909090'}
               placeholder={'Message...'}
               onChangeText={text => this.setState({ text })}
-              onFocus={() => this._toggleKeyboardAvoidingView(true)}
-              onBlur={() => this._toggleKeyboardAvoidingView(false)}
+              value={text}
               style={styles.textInput}
             />
 
-            <TouchableOpacity disabled={!text.length} style={styles.sendButton}>
+            <TouchableOpacity
+              onPress={() => onSubmit({ text, selectedMedia })}
+              disabled={!text.length}
+              style={styles.sendButton}
+            >
               <ArrowUpIcon
                 width={21}
                 height={21}

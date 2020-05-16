@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, Keyboard, StyleSheet } from 'react-native';
+import { View, Text, Dimensions, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import ImagePicker from 'react-native-image-crop-picker';
 import { BabbleTextField, BabbleUsernameField, BabbleButton, BabbleTiledIconsBackground, BabbleUserAvatar } from '../components';
@@ -20,8 +20,6 @@ export default class SetupProfileScreen extends Component {
   usernameField = null;
 
   _showMediaActionSheet = () => {
-    Keyboard.dismiss();
-
     interfaceHelper.showOverlay({
       name: 'ActionSheet',
       data: {
