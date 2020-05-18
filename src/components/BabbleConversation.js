@@ -4,6 +4,7 @@ import { BabbleConversationMessage } from './';
 
 export default class BabbleConversation extends Component {
   flatlist = null;
+  autoscrollTimeout = null;
 
   state = {
     autoscroll: true,
@@ -24,8 +25,25 @@ export default class BabbleConversation extends Component {
     );
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.autoscrollTimeout);
+  }
+
   _scrollBeginDrag = () => {
     this.setState({ autoscroll: false });
+  }
+
+  _contentSizeChange = () => {
+    const { messages } = this.props;
+    const { autoscroll } = this.state;
+
+    if (messages && autoscroll) {
+      clearTimeout(this.autoscrollTimeout);
+
+      this.autoscrollTimeout = setTimeout(() => {
+        this.flatlist.scrollToEnd({ animated: true });
+      }, 10);
+    }
   }
 
   _endReached = () => {
@@ -41,6 +59,7 @@ export default class BabbleConversation extends Component {
         renderItem={this._renderMessage}
         keyExtractor={item => `${item.id}`}
         onScrollBeginDrag={this._scrollBeginDrag}
+        onContentSizeChange={this._contentSizeChange}
         onEndReached={this._endReached}
         onEndReachedThreshold={0}
         style={[ styles.container, style ]}
