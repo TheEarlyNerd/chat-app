@@ -133,12 +133,12 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
-    minHeight: 50,
   },
   headerCenter: {
     alignItems: 'center',
     flex: 2,
     justifyContent: 'center',
+    minHeight: 50,
     paddingVertical: 10,
   },
   headerLeft: {

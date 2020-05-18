@@ -11,11 +11,28 @@ export default class ConversationScreen extends Component {
 
   state = {
     conversation: null,
-    messages: [],
   }
 
   componentDidMount() {
-    this.props.navigation.setOptions({ title: 'New Conversation' });
+    maestro.link(this);
+
+    const params = this.props.route.params || {};
+    const { conversationId } = params;
+
+    if (conversationId) {
+      conversationsManager.loadActiveConversation(conversationId);
+    } else {
+      this.props.navigation.setOptions({ title: 'New Conversation' });
+    }
+  }
+
+  componentWillUnmount() {
+    maestro.unlink(this);
+  }
+
+  receiveStoreUpdate({ conversations, user }) {
+    this.props.navigation.setOptions({ title: 'Conversation' });
+    this.setState({ conversation: conversations.activeConversation });
   }
 
   _onMessageSubmit = async ({ text, selectedMedia }) => {
@@ -23,30 +40,36 @@ export default class ConversationScreen extends Component {
 
     this.messageComposer.clear();
 
-    if (!conversation) {
-      const temp = await conversationsManager.createConversation({
-        accessLevel: this.userSelector.accessLevel, // naming weird here, more than just user selector
+    if (conversation) {
+      await conversationsManager.createConversationMessage({
+        conversationId: conversation.id,
+        text,
+      });
+    } else {
+      await conversationsManager.createConversation({
+        accessLevel: this.userSelector.accessLevel, // TODO: naming weird here, more than just user selector
         users: this.userSelector.selectedUsers.map(selectedUser => selectedUser.id),
         message: { text },
       });
-
-      console.log(temp);
     }
   }
 
   render() {
-    const { messages } = this.state;
+    const { conversation } = this.state;
+    const { conversationMessages } = conversation || {};
 
     return (
       <SafeAreaView style={styles.container}>
-        <BabbleConversationUserSelectionToolbar
-          label={'To:'}
-          placeholder={'The World'}
-          ref={component => this.userSelector = component}
-        />
+        {!conversation && (
+          <BabbleConversationUserSelectionToolbar
+            label={'To:'}
+            placeholder={'The World'}
+            ref={component => this.userSelector = component}
+          />
+        )}
 
         <BabbleConversation
-          messages={messages}
+          messages={conversationMessages}
         />
 
         <BabbleConversationMessageComposerToolbar

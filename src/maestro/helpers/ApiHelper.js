@@ -94,9 +94,19 @@ export default class ApiHelper extends Helper {
 
   _normalizeResponseBody(responseBody) {
     const normalize = value => {
-      if (typeof value !== 'object') {
+      if (typeof value !== 'object' || [ null, undefined ].includes(value)) {
         return value;
       }
+
+      Object.keys(value).forEach(key => {
+        if (typeof value[key] === 'object') {
+          value[key] = normalize(value[key]);
+        }
+
+        if (Array.isArray(value[key])) {
+          value[key] = value[key].map(item => normalize(item));
+        }
+      });
 
       if (value.createdAt) { value.createdAt = new Date(value.createdAt); }
       if (value.updatedAt) { value.updatedAt = new Date(value.updatedAt); }

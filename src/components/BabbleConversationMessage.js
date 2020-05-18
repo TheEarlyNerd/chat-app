@@ -1,11 +1,51 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import moment from 'moment';
+import ParsedText from 'react-native-parsed-text';
 import { BabbleConversationMessageAttachment, BabbleConversationMessageEmbed, BabbleUserAvatar, BabbleReaction } from './';
+import maestro from '../maestro';
+
+const { navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationMessage extends Component {
+  _userPress = userId => {
+    navigationHelper.push('ProfileNavigator', {
+      screen: 'Profile',
+      params: { userId },
+    });
+  }
+
+  _linkPress = url => {
+    console.log(url);
+  }
+
+  _phonePress = phone => {
+    console.log(phone);
+  }
+
+  emailPress = email => {
+    console.log(email);
+  }
+
   render() {
     const { user, text, attachments, embeds, reactions, createdAt, heading, style } = this.props;
+    const parsedTextOptions = [
+      {
+        onPress: this._linkPress,
+        pattern: /(https?:\/\/|www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&/=]*[-a-zA-Z0-9@:%_+~#?&/=])*/i,
+        style: styles.messageLinkText,
+      },
+      {
+        onPress: this._phonePress,
+        type: 'phone',
+        style: styles.messageLinkText,
+      },
+      {
+        onPress: this._emailPress,
+        type: 'email',
+        style: styles.messageLinkText,
+      },
+    ];
 
     return (
       <TouchableOpacity
@@ -17,8 +57,9 @@ export default class BabbleConversationMessage extends Component {
       >
         {heading && (
           <BabbleUserAvatar
-            source={{ uri: user.avatarAttachment.url }}
+            avatarAttachment={user.avatarAttachment}
             size={40}
+            onPress={() => this._userPress(user.id)}
             style={styles.avatar}
           />
         )}
@@ -26,8 +67,13 @@ export default class BabbleConversationMessage extends Component {
         <View style={styles.content}>
           {heading && (
             <View style={styles.heading}>
-              <TouchableOpacity>
-                <Text style={styles.nameText}>{user.name}</Text>
+              <TouchableOpacity onPress={() => this._userPress(user.id)}>
+                <Text
+                  dataDetectorType={'all'}
+                  style={styles.nameText}
+                >
+                  {user.name}
+                </Text>
               </TouchableOpacity>
 
               <Text style={styles.timeText}>{moment(createdAt).calendar()}</Text>
@@ -35,7 +81,9 @@ export default class BabbleConversationMessage extends Component {
           )}
 
           {text && (
-            <Text style={styles.messageText}>{text}</Text>
+            <ParsedText parse={parsedTextOptions} style={styles.messageText}>
+              {text}
+            </ParsedText>
           )}
 
           {!!attachments && attachments.length > 0 && (
@@ -120,6 +168,9 @@ const styles = StyleSheet.create({
   inlineEmbed: {
     marginRight: 5,
     width: undefined,
+  },
+  messageLinkText: {
+    color: '#2A99CC',
   },
   messageText: {
     color: '#404040',

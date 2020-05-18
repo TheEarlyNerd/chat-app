@@ -26,6 +26,7 @@
     "react-native-localize": "^1.4.0",
     "react-native-maestro": "^1.0.5",
     "react-native-mime-types": "^2.3.0",
+    "react-native-parsed-text": "0.0.21",
     "react-native-reanimated": "^1.8.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.5.0",

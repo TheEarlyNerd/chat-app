@@ -3,15 +3,33 @@ import { FlatList, StyleSheet } from 'react-native';
 import { BabbleConversationMessage } from './';
 
 export default class BabbleConversation extends Component {
+  flatlist = null;
+
+  state = {
+    autoscroll: true,
+  }
+
   _renderMessage = ({ item, index }) => {
     const { messages } = this.props;
 
     return (
       <BabbleConversationMessage
-        heading={!index || messages[index - 1].user.id !== item.user.id}
+        heading={(
+          !index ||
+          messages[index - 1].user.id !== item.user.id ||
+          (item.createdAt - messages[index - 1].createdAt) / 1000 > 60 * 15
+        )}
         {...item}
       />
     );
+  }
+
+  _scrollBeginDrag = () => {
+    this.setState({ autoscroll: false });
+  }
+
+  _endReached = () => {
+    this.setState({ autoscroll: true });
   }
 
   render() {
@@ -22,7 +40,11 @@ export default class BabbleConversation extends Component {
         data={messages}
         renderItem={this._renderMessage}
         keyExtractor={item => `${item.id}`}
+        onScrollBeginDrag={this._scrollBeginDrag}
+        onEndReached={this._endReached}
+        onEndReachedThreshold={0}
         style={[ styles.container, style ]}
+        ref={component => this.flatlist = component}
       />
     );
   }
