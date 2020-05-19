@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, Linking } from 'react-native';
 import moment from 'moment';
 import ParsedText from 'react-native-parsed-text';
 import { BabbleConversationMessageAttachment, BabbleConversationMessageEmbed, BabbleUserAvatar, BabbleReaction } from './';
@@ -20,11 +20,14 @@ export default class BabbleConversationMessage extends Component {
   }
 
   _phonePress = phone => {
-    console.log(phone);
+    Linking.openURL(Platform.select({
+      ios: `tel:${phone}`,
+      android: `telprompt:${phone}`,
+    }));
   }
 
-  emailPress = email => {
-    console.log(email);
+  _emailPress = email => {
+    Linking.openURL(`mailto:${email}`);
   }
 
   render() {

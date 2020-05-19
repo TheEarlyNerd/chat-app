@@ -12,6 +12,10 @@ export default class ApiHelper extends Helper {
     return this._request({ ...options, method: 'GET' });
   }
 
+  put(options) {
+    return this._request({ ...options, method: 'PUT' });
+  }
+
   post(options) {
     return this._request({ ...options, method: 'POST' });
   }

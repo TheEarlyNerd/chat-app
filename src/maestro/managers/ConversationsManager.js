@@ -56,13 +56,11 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
-  async createConversationMessage({ conversationId, text, attachments, embeds }) {
+  async createConversationMessage({ conversationId, text, attachments }) {
     const { apiHelper } = this.maestro.helpers;
     const { userManager } = this.maestro.managers;
     const message = {
       text,
-      attachments: (attachments) ? attachments.map(attachment => attachment.id) : null,
-      embeds: (embeds) ? embeds.map(embed => embed.id) : null,
       nonce: `${conversationId}-${userManager.store.user.id}-${Date.now()}`,
     };
 
@@ -71,7 +69,6 @@ export default class ConversationsManager extends Manager {
       message: {
         ...message,
         attachments,
-        embeds,
         user: userManager.store.user,
         updatedAt: new Date().toISOString(),
         createdAt: new Date().toISOString(),
@@ -79,9 +76,14 @@ export default class ConversationsManager extends Manager {
       },
     });
 
+    const embeds = await this._createEmbedsFromText(text); // OPTIMIZATION: maybe better to post message, then patch with embeds?
+
     const response = await apiHelper.post({
       path: `/conversations/${conversationId}/messages`,
-      data: message,
+      data: {
+        ...message,
+        embeds: embeds.map(embed => embed.id),
+      },
     });
 
     if (response.code !== 200) {
@@ -164,5 +166,32 @@ export default class ConversationsManager extends Manager {
     }
 
     return 0;
+  }
+
+  _createEmbedsFromText = async text => {
+    const { apiHelper } = this.maestro.helpers;
+    const urls = text.match(/(https?:\/\/|www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&/=]*[-a-zA-Z0-9@:%_+~#?&/=])*/ig);
+    const embedPromises = [];
+
+    if (!urls) {
+      return [];
+    }
+
+    urls.forEach(url => {
+      embedPromises.push(apiHelper.put({
+        path: '/embeds',
+        data: { url },
+      }));
+    });
+
+    const embedResponses = await Promise.all(embedPromises);
+
+    return embedResponses.map(embedResponse => {
+      if (embedResponse.code !== 200) {
+        throw new Error(embedResponse.body);
+      }
+
+      return embedResponse.body;
+    });
   }
 }

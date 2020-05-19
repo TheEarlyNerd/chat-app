@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { KeyboardAvoidingView, TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { HeaderHeightContext } from '@react-navigation/stack';
 import ImagePicker from 'react-native-image-crop-picker';
-import { CameraIcon, ArrowUpIcon, ImageIcon } from './icons';
+import { FileTextIcon, CameraIcon, ArrowUpIcon, ImageIcon } from './icons';
 import maestro from '../maestro';
 
 const { interfaceHelper } = maestro.helpers;
@@ -20,7 +20,7 @@ export default class BabbleMessageComposerToolbar extends Component {
     });
   }
 
-  _showMediaActionSheet = () => {
+  _showAttachmentsActionSheet = () => {
     interfaceHelper.showOverlay({
       name: 'ActionSheet',
       data: {
@@ -34,6 +34,10 @@ export default class BabbleMessageComposerToolbar extends Component {
             iconComponent: ImageIcon,
             text: 'Open Photo Library',
             onPress: () => this._selectMedia('library'),
+          },
+          {
+            iconComponent: FileTextIcon,
+            text: 'Open Files',
           },
         ],
       },
@@ -64,7 +68,7 @@ export default class BabbleMessageComposerToolbar extends Component {
             style={[ styles.container, style ]}
           >
             <TouchableOpacity
-              onPress={this._showMediaActionSheet}
+              onPress={this._showAttachmentsActionSheet}
               style={[ styles.button, styles.leftButton ]}
             >
               <ImageIcon
