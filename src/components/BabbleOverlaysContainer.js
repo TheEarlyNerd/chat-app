@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BabbleOverlayActionSheet, BabbleOverlayCountrySelector, BabbleOverlayError } from './';
+import { BabbleOverlayActionSheet, BabbleOverlayCountrySelector, BabbleOverlayGifSelector, BabbleOverlayError } from './';
 import maestro from '../maestro';
 
 export default class BabbleOverlayContainer extends Component {
@@ -42,6 +42,10 @@ export default class BabbleOverlayContainer extends Component {
 
       if (overlayName === 'CountrySelector') {
         overlayComponents.push(<BabbleOverlayCountrySelector data={data} key={overlayName} />);
+      }
+
+      if (overlayName === 'GifSelector') {
+        overlayComponents.push(<BabbleOverlayGifSelector data={data} key={overlayName} />);
       }
 
       if (overlayName === 'Error') {

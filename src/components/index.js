@@ -5,6 +5,7 @@ import BabbleConversation from './BabbleConversation';
 import BabbleConversationMessage from './BabbleConversationMessage';
 import BabbleConversationMessageAttachment from './BabbleConversationMessageAttachment';
 import BabbleConversationMessageComposerToolbar from './BabbleConversationMessageComposerToolbar';
+import BabbleConversationMessageComposerToolbarAttachment from './BabbleConversationMessageComposerToolbarAttachment';
 import BabbleConversationMessageEmbed from './BabbleConversationMessageEmbed';
 import BabbleConversationPreview from './BabbleConversationPreview';
 import BabbleConversationPreviewsList from './BabbleConversationPreviewsList';
@@ -14,7 +15,9 @@ import BabbleFieldLabel from './BabbleFieldLabel';
 import BabbleHeader from './BabbleHeader';
 import BabbleOverlayActionSheet from './BabbleOverlayActionSheet';
 import BabbleOverlayCountrySelector from './BabbleOverlayCountrySelector';
+import BabbleOverlayDismissibleView from './BabbleOverlayDismissibleView';
 import BabbleOverlayError from './BabbleOverlayError';
+import BabbleOverlayGifSelector from './BabbleOverlayGifSelector';
 import BabbleOverlaysContainer from './BabbleOverlaysContainer';
 import BabblePhoneField from './BabblePhoneField';
 import BabbleReaction from './BabbleReaction';
@@ -35,6 +38,7 @@ export {
   BabbleConversationMessage,
   BabbleConversationMessageAttachment,
   BabbleConversationMessageComposerToolbar,
+  BabbleConversationMessageComposerToolbarAttachment,
   BabbleConversationMessageEmbed,
   BabbleConversationPreview,
   BabbleConversationPreviewsList,
@@ -44,7 +48,9 @@ export {
   BabbleHeader,
   BabbleOverlayActionSheet,
   BabbleOverlayCountrySelector,
+  BabbleOverlayDismissibleView,
   BabbleOverlayError,
+  BabbleOverlayGifSelector,
   BabbleOverlaysContainer,
   BabblePhoneField,
   BabbleReaction,

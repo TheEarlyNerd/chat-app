@@ -5,12 +5,17 @@ export default class AttachmentsHelper extends Helper {
     return 'attachmentsHelper';
   }
 
-  async uploadAttachment({ name, uri }) {
+  async uploadAttachment(uri) {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.uploadFiles({
       method: 'PUT',
       path: '/attachments',
-      files: [ { uri, name } ],
+      files: [
+        {
+          uri,
+          name: 'file',
+        },
+      ],
     });
 
     if (response.code !== 200) {

@@ -4,8 +4,18 @@ import Video from 'react-native-video';
 import { BabbleAutoscaleImage } from './';
 
 export default class BabbleConversationMessageEmbed extends Component {
+  state = {
+    videoError: false,
+  }
+
+  _videoError = error => {
+    console.log('video error', error);
+    this.setState({ videoError: true });
+  }
+
   render() {
     const { title, description, url, audioUrl, imageUrl, videoUrl, maxWidth, maxHeight, style } = this.props;
+    const { videoError } = this.state;
     const isLink = (title || description) && url;
 
     return (
@@ -25,7 +35,7 @@ export default class BabbleConversationMessageEmbed extends Component {
           />
         )}
 
-        {imageUrl && !videoUrl && isLink && (
+        {imageUrl && (!videoUrl || videoError) && isLink && (
           <Image
             source={{ uri: imageUrl }}
             resizeMode={'cover'}
@@ -37,11 +47,12 @@ export default class BabbleConversationMessageEmbed extends Component {
           <Text>TODO AUDIO PLAYBACK</Text>
         )}
 
-        {videoUrl && (
+        {videoUrl && !videoError && (
           <Video
             paused
             source={{ uri: videoUrl }}
             controls
+            onError={this._videoError}
             style={styles.video}
           />
         )}

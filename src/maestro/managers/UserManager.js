@@ -87,10 +87,7 @@ export default class UserManager extends Manager {
     let avatarAttachment = null;
 
     if (fields.avatarUri) {
-      avatarAttachment = await attachmentsHelper.uploadAttachment({
-        uri: fields.avatarUri,
-        name: 'file',
-      });
+      avatarAttachment = await attachmentsHelper.uploadAttachment(fields.avatarUri);
     }
 
     const response = await apiHelper.patch({

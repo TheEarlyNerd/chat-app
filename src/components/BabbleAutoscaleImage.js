@@ -24,9 +24,9 @@ export default class BabbleAutoscaleImage extends Component {
   }
 
   _adjustSize = (sourceWidth, sourceHeight) => {
-    const { maxWidth, maxHeight } = this.props;
-    let adjustedWidth = sourceWidth;
-    let adjustedHeight = sourceHeight;
+    const { minWidth, minHeight, maxWidth, maxHeight } = this.props;
+    let adjustedWidth = minWidth || sourceWidth;
+    let adjustedHeight = minHeight || sourceHeight;
     let aspectRatio = 0;
 
     if (sourceWidth > maxWidth) {
@@ -47,15 +47,18 @@ export default class BabbleAutoscaleImage extends Component {
   }
 
   render() {
-    const { style, ...props } = this.props;
+    const { style, containerStyle, ...props } = this.props;
     const { adjustedWidth, adjustedHeight } = this.state;
 
     return (
       <View
-        style={{
-          width: adjustedWidth,
-          height: adjustedHeight,
-        }}
+        style={[
+          {
+            width: adjustedWidth,
+            height: adjustedHeight,
+          },
+          containerStyle,
+        ]}
       >
         {!!adjustedWidth && !!adjustedHeight && (
           <ActivityIndicator

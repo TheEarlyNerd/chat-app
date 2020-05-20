@@ -76,12 +76,14 @@ export default class ConversationsManager extends Manager {
       },
     });
 
+    attachments = await this._createAttachments(attachments);
     const embeds = await this._createEmbedsFromText(text); // OPTIMIZATION: maybe better to post message, then patch with embeds?
 
     const response = await apiHelper.post({
       path: `/conversations/${conversationId}/messages`,
       data: {
         ...message,
+        attachments: attachments.map(attachment => attachment.id),
         embeds: embeds.map(embed => embed.id),
       },
     });
@@ -193,5 +195,16 @@ export default class ConversationsManager extends Manager {
 
       return embedResponse.body;
     });
+  }
+
+  _createAttachments = async attachments => {
+    const { attachmentsHelper } = this.maestro.helpers;
+    const attachmentPromises = [];
+
+    attachments.forEach(attachment => {
+      attachmentPromises.push(attachmentsHelper.uploadAttachment(attachment.url));
+    });
+
+    return Promise.all(attachmentPromises);
   }
 }

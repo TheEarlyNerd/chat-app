@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { KeyboardAvoidingView, View, TextInput, Image, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { HeaderHeightContext } from '@react-navigation/stack';
 import ImagePicker from 'react-native-image-crop-picker';
+import { BabbleConversationMessageComposerToolbarAttachment } from './';
 import { FileTextIcon, CameraIcon, ArrowUpIcon, ImageIcon } from './icons';
 import maestro from '../maestro';
 
@@ -10,13 +11,13 @@ const { interfaceHelper } = maestro.helpers;
 export default class BabbleMessageComposerToolbar extends Component {
   state = {
     text: '',
-    selectedMedia: [],
+    attachments: [],
   }
 
   clear() {
     this.setState({
       text: '',
-      selectedMedia: [],
+      attachments: [],
     });
   }
 
@@ -44,20 +45,54 @@ export default class BabbleMessageComposerToolbar extends Component {
     });
   }
 
+  _showGifSelector = () => {
+    interfaceHelper.showOverlay({
+      name: 'GifSelector',
+      data: { onGifPress: this._gifPressed },
+    });
+  }
+
+  _gifPressed = gif => {
+    const { onSubmit } = this.props;
+
+    onSubmit({ text: gif.images.original.url });
+  }
+
   _selectMedia = async source => {
-    const options = { multiple: true };
+    const options = {
+      maxFiles: 25,
+      multiple: true,
+    };
+
     try {
       const media = (source === 'camera')
         ? await ImagePicker.openCamera(options)
         : await ImagePicker.openPicker(options);
 
-      console.log(media);
+      const newAttachments = media.map(item => ({
+        filename: item.filename,
+        bytes: item.size,
+        url: item.path,
+        mimetype: item.mime,
+        optimistic: true,
+      }));
+
+      const filteredAttachments = this.state.attachments.filter(attachment => {
+        return !newAttachments.some(newAttachment => {
+          return (
+            newAttachment.filename === attachment.filename &&
+            newAttachment.bytes === attachment.bytes
+          );
+        });
+      });
+
+      this.setState({ attachments: [ ...newAttachments, ...filteredAttachments ] });
     } catch { /* noop */ }
   }
 
   render() {
     const { onSubmit, style } = this.props;
-    const { text, selectedMedia } = this.state;
+    const { text, attachments } = this.state;
 
     return (
       <HeaderHeightContext.Consumer>
@@ -78,22 +113,42 @@ export default class BabbleMessageComposerToolbar extends Component {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity style={[ styles.button, styles.leftButton ]}>
+            <TouchableOpacity
+              onPress={this._showGifSelector}
+              style={[ styles.button, styles.leftButton ]}
+            >
               <Text style={styles.buttonText}>GIF</Text>
             </TouchableOpacity>
 
-            <TextInput
-              multiline
-              placeholderColor={'#909090'}
-              placeholder={'Message...'}
-              onChangeText={text => this.setState({ text })}
-              value={text}
-              style={styles.textInput}
-            />
+            <View style={styles.inputContainer}>
+              {!!attachments?.length && (
+                <ScrollView
+                  horizontal
+                  style={styles.attachmentsScrollView}
+                >
+                  {attachments.map((attachment, index) => (
+                    <BabbleConversationMessageComposerToolbarAttachment
+                      attachment={attachment}
+                      style={styles.attachment}
+                      key={`${attachment.filename}-${attachment.bytes}`}
+                    />
+                  ))}
+                </ScrollView>
+              )}
+
+              <TextInput
+                multiline
+                placeholderColor={'#909090'}
+                placeholder={'Message...'}
+                onChangeText={text => this.setState({ text })}
+                value={text}
+                style={styles.textInput}
+              />
+            </View>
 
             <TouchableOpacity
-              onPress={() => onSubmit({ text, selectedMedia })}
-              disabled={!text.length}
+              onPress={() => onSubmit({ text, attachments })}
+              disabled={!text.length && !attachments?.length}
               style={styles.sendButton}
             >
               <ArrowUpIcon
@@ -101,7 +156,7 @@ export default class BabbleMessageComposerToolbar extends Component {
                 height={21}
                 style={[
                   styles.buttonIcon,
-                  (!text.length) ? styles.buttonIconDisabled : null,
+                  (!text.length && !attachments?.length) ? styles.buttonIconDisabled : null,
                 ]}
               />
             </TouchableOpacity>
@@ -113,6 +168,13 @@ export default class BabbleMessageComposerToolbar extends Component {
 }
 
 const styles = StyleSheet.create({
+  attachment: {
+    marginHorizontal: 5,
+  },
+  attachmentsScrollView: {
+    marginHorizontal: 5,
+    marginTop: 10,
+  },
   button: {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
@@ -140,6 +202,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
   },
+  inputContainer: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E1E3E8',
+    borderRadius: 20,
+    borderWidth: 1,
+    flex: 1,
+  },
   leftButton: {
     marginRight: 15,
   },
@@ -157,12 +226,7 @@ const styles = StyleSheet.create({
     width: 35,
   },
   textInput: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E1E3E8',
-    borderRadius: 20,
-    borderWidth: 1,
     color: '#323643',
-    flex: 1,
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: 16,
     maxHeight: 120,

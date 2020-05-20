@@ -20,7 +20,9 @@ export default class ConversationScreen extends Component {
     const { conversationId } = params;
 
     if (conversationId) {
-      conversationsManager.loadActiveConversation(conversationId);
+//      setInterval(() => {
+        conversationsManager.loadActiveConversation(conversationId);
+//      }, 1000);
     } else {
       this.props.navigation.setOptions({ title: 'New Conversation' });
     }
@@ -35,7 +37,7 @@ export default class ConversationScreen extends Component {
     this.setState({ conversation: conversations.activeConversation });
   }
 
-  _onMessageSubmit = async ({ text, selectedMedia }) => {
+  _onMessageSubmit = async ({ text, attachments }) => {
     const { conversation } = this.state;
 
     this.messageComposer.clear();
@@ -44,23 +46,26 @@ export default class ConversationScreen extends Component {
       await conversationsManager.createConversationMessage({
         conversationId: conversation.id,
         text,
+        attachments,
       });
     } else {
       await conversationsManager.createConversation({
         accessLevel: this.userSelector.accessLevel, // TODO: naming weird here, more than just user selector
         users: this.userSelector.selectedUsers.map(selectedUser => selectedUser.id),
-        message: { text },
+        message: { text, attachments },
       });
     }
   }
 
   render() {
+    const params = this.props.route.params || {};
+    const { conversationId } = params;
     const { conversation } = this.state;
     const { conversationMessages } = conversation || {};
 
     return (
       <SafeAreaView style={styles.container}>
-        {!conversation && (
+        {!conversationId && (
           <BabbleConversationUserSelectionToolbar
             label={'To:'}
             placeholder={'The World'}

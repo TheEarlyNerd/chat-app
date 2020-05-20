@@ -3,11 +3,50 @@ import { View, Text, TouchableOpacity, StyleSheet, Platform, Linking } from 'rea
 import moment from 'moment';
 import ParsedText from 'react-native-parsed-text';
 import { BabbleConversationMessageAttachment, BabbleConversationMessageEmbed, BabbleUserAvatar, BabbleReaction } from './';
+import { SmileIcon, Trash2Icon, AlertTriangle, CopyIcon } from './icons';
 import maestro from '../maestro';
 
-const { navigationHelper } = maestro.helpers;
+const { userManager } = maestro.managers;
+const { interfaceHelper, navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationMessage extends Component {
+  _messagePress = () => {
+    const { user, text } = this.props;
+    const actions = [
+      {
+        iconComponent: SmileIcon,
+        text: 'Add Reaction',
+        subtext: 'Show how you feel about this message by adding your reaction.',
+      },
+    ];
+
+    if (text) {
+      actions.push({
+        iconComponent: CopyIcon,
+        text: 'Copy Text',
+      });
+    }
+
+    if (userManager.store.user.id === user.id) {
+      actions.push({
+        iconComponent: Trash2Icon,
+        text: 'Delete Message',
+        subtext: 'Permanently delete this message from the conversation.',
+      });
+    } else {
+      actions.push({
+        iconComponent: AlertTriangle,
+        text: 'Report User',
+        subtext: `Report ${user.name} for send innapropriate messages that may include hate, violence, nudity or something else.`,
+      });
+    }
+
+    interfaceHelper.showOverlay({
+      name: 'ActionSheet',
+      data: { actions },
+    });
+  }
+
   _userPress = userId => {
     navigationHelper.push('ProfileNavigator', {
       screen: 'Profile',
@@ -52,6 +91,8 @@ export default class BabbleConversationMessage extends Component {
 
     return (
       <TouchableOpacity
+        onLongPress={this._messagePress}
+        deleyLongPress={500}
         style={[
           styles.container,
           (heading) ? styles.containerWithHeading : null,
@@ -83,26 +124,32 @@ export default class BabbleConversationMessage extends Component {
             </View>
           )}
 
-          {text && (
+          {!!text && (
             <ParsedText parse={parsedTextOptions} style={styles.messageText}>
               {text}
             </ParsedText>
           )}
 
-          {!!attachments && attachments.length > 0 && (
+          {attachments?.length > 0 && (
             <View style={styles.attachments}>
-              {attachments.map(attachment => (
+              {attachments.map((attachment, index) => (
                 <BabbleConversationMessageAttachment
-                  key={attachment.id}
+                  maxWidth={335}
+                  maxHeight={(attachments.length === 1) ? 200 : 75}
+                  style={[
+                    styles.attachment,
+                    (attachments.length > 1) ? styles.inlineAttachment : null,
+                  ]}
+                  key={index}
                   {...attachment}
                 />
               ))}
             </View>
           )}
 
-          {!!embeds && embeds.length > 0 && (
+          {embeds?.length > 0 && (
             <View style={styles.embeds}>
-              {embeds.map(embed => (
+              {embeds.map((embed, index) => (
                 <BabbleConversationMessageEmbed
                   maxWidth={335}
                   maxHeight={(embeds.length === 1) ? 200 : 75}
@@ -110,21 +157,21 @@ export default class BabbleConversationMessage extends Component {
                     styles.embed,
                     (embeds.length > 1) ? styles.inlineEmbed : null,
                   ]}
-                  key={embed.id}
+                  key={index}
                   {...embed}
                 />
               ))}
             </View>
           )}
 
-          {!!reactions && reactions.length > 0 && (
+          {reactions?.length > 0 && (
             <View style={styles.reactions}>
-              {reactions.map(reaction => (
+              {reactions.map((reaction, index) => (
                 <BabbleReaction
                   reaction={reaction.reaction}
                   count={reaction.count}
                   style={styles.reaction}
-                  key={reaction.id}
+                  key={index}
                 />
               ))}
             </View>
@@ -136,6 +183,14 @@ export default class BabbleConversationMessage extends Component {
 }
 
 const styles = StyleSheet.create({
+  attachment: {
+    marginBottom: 5,
+  },
+  attachments: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 5,
+  },
   avatar: {
     left: 15,
     position: 'absolute',
@@ -167,6 +222,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  inlineAttachment: {
+    marginRight: 5,
+    width: undefined,
   },
   inlineEmbed: {
     marginRight: 5,
