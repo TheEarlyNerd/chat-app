@@ -19,6 +19,7 @@
     "moment": "^2.25.1",
     "react": "16.11.0",
     "react-native": "0.62.2",
+    "react-native-fast-image": "^8.1.5",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-image-crop-picker": "^0.30.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.1",
