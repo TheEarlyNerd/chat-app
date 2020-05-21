@@ -71,8 +71,8 @@ export default class ConversationsManager extends Manager {
         attachments,
         embeds,
         user: userManager.store.user,
-        updatedAt: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
+        updatedAt: new Date(),
+        createdAt: new Date(),
         optimistic: true,
       },
     });
@@ -141,6 +141,7 @@ export default class ConversationsManager extends Manager {
       if (conversation) {
         conversation.conversationMessages.push(message);
         conversation.conversationMessages.sort(this._conversationMessagesSorter);
+        conversation.previewConversationMessage = message;
       }
     }
 
@@ -164,9 +165,14 @@ export default class ConversationsManager extends Manager {
 
     if (conversations) {
       const conversation = conversations.find(conversation => conversation.id === conversationId);
+      const { previewConversationMessage } = conversation;
 
       if (conversation) {
         conversation.conversationMessages = removeMessage(conversation.conversationMessages);
+
+        if (previewConversationMessage?.id === conversationMessageId) {
+          conversation.previewConversationMessage = null;
+        }
       }
     }
 
