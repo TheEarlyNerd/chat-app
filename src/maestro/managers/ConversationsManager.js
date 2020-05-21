@@ -101,6 +101,20 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
+  async deleteConversationMessage({ conversationId, conversationMessageId }) {
+    this._removeMessageFromConversation({ conversationId, conversationMessageId });
+
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.delete({
+      path: `/conversations/${conversationId}/messages/${conversationMessageId}`,
+    });
+
+    if (response.code !== 204) {
+      // TODO: should probably re-add the message to UI if delete fails?
+      throw new Error(response.body);
+    }
+  }
+
   /*
    * Helpers
    */
@@ -139,7 +153,7 @@ export default class ConversationsManager extends Manager {
     const conversations = (store.conversations) ? [ ...store.conversations ] : null;
     const removeMessage = conversationMessages => {
       return conversationMessages.filter(conversationMessage => (
-        (!conversationId || conversationMessage.id !== conversationId) &&
+        (!conversationId || conversationMessage.id !== conversationMessageId) &&
         conversationMessage.nonce !== conversationMessageNonce
       )).sort(this._conversationMessagesSorter);
     };

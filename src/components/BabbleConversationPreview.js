@@ -68,10 +68,12 @@ export default class BabbleConversationPreview extends Component {
   }
 
   _getPreviewImageUrl = () => {
-    const { attachments, embeds } = this.props.conversation.previewConversationMessage;
+    const { conversation } = this.props;
+    const previewConversationMessage = conversation.previewConversationMessage || {};
+    const { attachments, embeds } = previewConversationMessage;
     let previewImageUrl = null;
 
-    if (attachments.length) {
+    if (attachments?.length) {
       const previewAttachment = attachments.find(attachment => {
         if (attachment.mimetype.includes('image/')) {
           return true;
@@ -81,7 +83,7 @@ export default class BabbleConversationPreview extends Component {
       previewImageUrl = (previewAttachment) ? previewAttachment.url : null;
     }
 
-    if (embeds.length) {
+    if (embeds?.length) {
       const previewEmbed = embeds.find(embed => !!embed.imageUrl);
 
       previewImageUrl = (previewEmbed) ? previewEmbed.imageUrl : null;
@@ -92,6 +94,11 @@ export default class BabbleConversationPreview extends Component {
 
   _getPreviewText = () => {
     const { accessLevel, previewConversationMessage } = this.props.conversation;
+
+    if (!previewConversationMessage) {
+      return '(Deleted Message)';
+    }
+
     const { text, user } = previewConversationMessage;
     const loggedInUserId = userManager.store.user.id;
 
@@ -113,13 +120,19 @@ export default class BabbleConversationPreview extends Component {
   }
 
   _getReactions = () => {
-    return this.props.conversation.previewConversationMessage.conversationMessageReactions;
+    const { previewConversationMessage } = this.props.conversation;
+
+    return (previewConversationMessage)
+      ? previewConversationMessage.conversationMessageReactions
+      : null;
   }
 
   _getTime = () => {
     const { previewConversationMessage } = this.props.conversation;
 
-    return moment(previewConversationMessage.createdAt).calendar();
+    return (previewConversationMessage)
+      ? moment(previewConversationMessage.createdAt).calendar()
+      : null;
   }
 
   render() {
@@ -207,7 +220,7 @@ export default class BabbleConversationPreview extends Component {
             )}
           </View>
 
-          {!!reactions.length && (
+          {!!reactions?.length && (
             <View style={styles.reactions}>
               {reactions.map((reaction, index) => (
                 <BabbleReaction
