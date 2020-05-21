@@ -21,7 +21,6 @@ export default class BabbleConversationMessageEmbed extends Component {
     return (
       <TouchableOpacity
         style={[
-          styles.container,
           (isLink) ? styles.containerLink : null,
           style,
         ]}
@@ -74,9 +73,6 @@ export default class BabbleConversationMessageEmbed extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-  },
   containerLink: {
     borderColor: '#D8D8D8',
     borderRadius: 4,

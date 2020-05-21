@@ -10,21 +10,6 @@ export default class BabbleConversation extends Component {
     autoscroll: true,
   }
 
-  _renderMessage = ({ item, index }) => {
-    const { messages } = this.props;
-
-    return (
-      <BabbleConversationMessage
-        heading={(
-          !index ||
-          messages[index - 1].user.id !== item.user.id ||
-          (item.createdAt - messages[index - 1].createdAt) / 1000 > 60 * 15
-        )}
-        {...item}
-      />
-    );
-  }
-
   componentWillUnmount() {
     clearTimeout(this.autoscrollTimeout);
   }
@@ -48,6 +33,21 @@ export default class BabbleConversation extends Component {
 
   _endReached = () => {
     this.setState({ autoscroll: true });
+  }
+
+  _renderMessage = ({ item, index }) => {
+    const { messages } = this.props;
+
+    return (
+      <BabbleConversationMessage
+        heading={(
+          !index ||
+          messages[index - 1].user.id !== item.user.id ||
+          (item.createdAt - messages[index - 1].createdAt) / 1000 > 60 * 15
+        )}
+        {...item}
+      />
+    );
   }
 
   render() {

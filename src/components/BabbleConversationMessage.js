@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, Linking, Alert } from 'react-native';
 import moment from 'moment';
 import ParsedText from 'react-native-parsed-text';
 import { BabbleConversationMessageAttachment, BabbleConversationMessageEmbed, BabbleUserAvatar, BabbleReaction } from './';
 import { SmileIcon, Trash2Icon, AlertTriangle, CopyIcon } from './icons';
 import maestro from '../maestro';
 
-const { userManager } = maestro.managers;
+const { conversationsManager, userManager } = maestro.managers;
 const { interfaceHelper, navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationMessage extends Component {
@@ -17,6 +17,24 @@ export default class BabbleConversationMessage extends Component {
     }, text).trim();
 
     return (linklessText.length) ? text : '';
+  }
+
+  _deleteMessage = () => {
+    const { id, conversationId } = this.props;
+
+    Alert.alert('Delete this message?', 'Are you sure you want to permanently delete this message? This cannot be undone.', [
+      {
+        text: 'Delete',
+        onPress: () => conversationsManager.deleteConversationMessage({
+          conversationId,
+          conversationMessageId: id,
+        }),
+      },
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+    ]);
   }
 
   _messagePress = () => {
@@ -41,6 +59,7 @@ export default class BabbleConversationMessage extends Component {
         iconComponent: Trash2Icon,
         text: 'Delete Message',
         subtext: 'Permanently delete this message from the conversation.',
+        onPress: this._deleteMessage,
       });
     } else {
       actions.push({
@@ -102,7 +121,7 @@ export default class BabbleConversationMessage extends Component {
     return (
       <TouchableOpacity
         onLongPress={this._messagePress}
-        deleyLongPress={500}
+        delayLongPress={200}
         style={[
           styles.container,
           (heading) ? styles.containerWithHeading : null,

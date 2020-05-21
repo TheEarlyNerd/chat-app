@@ -10,10 +10,7 @@ export default class BabbleConversationMessageAttachment extends Component {
     const isVideo = mimetype.includes('video/');
 
     return (
-      <TouchableOpacity style={[
-        styles.container,
-        style,
-      ]}>
+      <TouchableOpacity style={style}>
         {isImage && (
           <BabbleAutoscaleImage
             maxHeight={maxHeight}
@@ -41,9 +38,6 @@ export default class BabbleConversationMessageAttachment extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-  },
   image: {
     borderRadius: 4,
   },
