@@ -29,8 +29,6 @@ export default class HomeScreen extends Component {
   render() {
     const { conversations } = this.state;
 
-    console.log(conversations);
-
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollViewContainer} style={styles.scrollView}>
@@ -40,7 +38,7 @@ export default class HomeScreen extends Component {
           />
 
           <BabbleConversationPreviewsList
-            conversations={this.state.conversations}
+            conversations={conversations}
             ListHeaderComponentStyle={{ marginBottom: 20 /*temp*/ }}
             ListHeaderComponent={() => (
               <Text style={styles.headingText}>Messages</Text>
