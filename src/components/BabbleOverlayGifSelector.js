@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Image, TouchableOpacity, Keyboard, StyleSheet } from 'react-native';
+import { ScrollView, View, TouchableOpacity, Keyboard, StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { BabbleOverlayDismissibleView, BabbleSearchField } from './';
 import maestro from '../maestro';
 
@@ -53,7 +54,7 @@ export default class BabbleOverlayGifSelector extends Component {
   _renderGif = gif => {
     return (
       <TouchableOpacity onPress={() => this._gifPressed(gif)} key={gif.id}>
-        <Image
+        <FastImage
           source={{ uri: gif.images.fixed_width.url }}
           style={[
             { width: '100%', aspectRatio: gif.images.fixed_width.width / gif.images.fixed_width.height },

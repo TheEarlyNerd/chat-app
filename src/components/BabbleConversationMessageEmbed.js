@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Video from 'react-native-video';
 import { BabbleAutoscaleImage } from './';
 
@@ -35,7 +36,7 @@ export default class BabbleConversationMessageEmbed extends Component {
         )}
 
         {imageUrl && (!videoUrl || videoError) && isLink && (
-          <Image
+          <FastImage
             source={{ uri: imageUrl }}
             resizeMode={'cover'}
             style={[ styles.image, styles.linkImage ]}

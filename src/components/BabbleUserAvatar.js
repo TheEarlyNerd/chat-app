@@ -1,5 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, View, Image, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { EditIcon } from './icons';
 
 const BabbleUserAvatar = props => {
@@ -14,7 +15,7 @@ const BabbleUserAvatar = props => {
       ]}
       disabled={props.disabled}
     >
-      <Image
+      <FastImage
         source={(props.avatarAttachment) ? { uri: props.avatarAttachment.url } : defaultAvatar}
         resizeMode={'cover'}
         style={[

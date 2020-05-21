@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Image, ActivityIndicator, StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 export default class BabbleAutoscaleImage extends Component {
   state = {
@@ -68,7 +69,7 @@ export default class BabbleAutoscaleImage extends Component {
           />
         )}
 
-        <Image
+        <FastImage
           style={[ styles.image, style ]}
           {...props}
         />

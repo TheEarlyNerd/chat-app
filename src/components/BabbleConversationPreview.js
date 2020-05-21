@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
 import { BabbleUserAvatar, BabbleUserAvatarGroup, BabbleReaction } from './';
@@ -213,7 +214,7 @@ export default class BabbleConversationPreview extends Component {
             </View>
 
             {!!previewImageUrl && (
-              <Image
+              <FastImage
                 source={{ uri: previewImageUrl }}
                 style={styles.previewImage}
               />

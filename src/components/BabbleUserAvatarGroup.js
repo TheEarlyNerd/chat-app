@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View, Text, Image, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 
 const defaultAvatar = require('../assets/images/default-avatar.png');
@@ -21,7 +22,7 @@ export default class BabbleUserAvatarGroup extends Component {
       >
         <View style={[ styles.innerContainer, { borderRadius: size / 2 } ]}>
           <View style={styles.images}>
-            <Image
+            <FastImage
               resizeMode={'cover'}
               source={(users[0].avatarAttachment) ? { uri: users[0].avatarAttachment.url } : defaultAvatar}
               style={[
@@ -31,7 +32,7 @@ export default class BabbleUserAvatarGroup extends Component {
             />
 
             {users.length > 2 && (
-              <Image
+              <FastImage
                 resizeMode={'cover'}
                 source={(users[2].avatarAttachment) ? { uri: users[2].avatarAttachment.url } : defaultAvatar}
                 style={styles.image}
@@ -40,7 +41,7 @@ export default class BabbleUserAvatarGroup extends Component {
           </View>
 
           <View style={styles.images}>
-            <Image
+            <FastImage
               resizeMode={'cover'}
               source={(users[1].avatarAttachment) ? { uri: users[1].avatarAttachment.url } : defaultAvatar}
               style={[
