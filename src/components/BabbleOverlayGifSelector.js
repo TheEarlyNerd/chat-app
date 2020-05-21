@@ -90,6 +90,7 @@ export default class BabbleOverlayGifSelector extends Component {
           />
 
           <ScrollView
+            keyboardShouldPersistTaps={'handled'}
             contentContainerStyle={styles.gifsScrollViewContainer}
             style={styles.gifsScrollView}
           >
