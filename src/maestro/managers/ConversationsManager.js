@@ -104,7 +104,7 @@ export default class ConversationsManager extends Manager {
   /*
    * Helpers
    */
-
+// TODO: remove/add causes studder on attachment/embed optimistic being replaced with sent.
   _addMessageToConversation({ conversationId, message }) {
     this._removeMessageFromConversation({ // dedupe & remove optimistics
       conversationId,

@@ -10,6 +10,15 @@ const { userManager } = maestro.managers;
 const { interfaceHelper, navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationMessage extends Component {
+  _getText = () => {
+    const { text, embeds } = this.props;
+    const linklessText = embeds.reduce((linklessText, embed) => {
+      return linklessText.replace(embed.url, '');
+    }, text).trim();
+
+    return (linklessText.length) ? text : '';
+  }
+
   _messagePress = () => {
     const { user, text } = this.props;
     const actions = [
@@ -70,7 +79,8 @@ export default class BabbleConversationMessage extends Component {
   }
 
   render() {
-    const { user, text, attachments, embeds, reactions, createdAt, heading, style } = this.props;
+    const { user, attachments, embeds, reactions, createdAt, heading, style } = this.props;
+    const text = this._getText();
     const parsedTextOptions = [
       {
         onPress: this._linkPress,
