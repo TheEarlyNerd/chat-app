@@ -14,9 +14,9 @@ export default class BabbleConversationMessageEmbed extends Component {
   }
 
   render() {
-    const { title, description, url, audioUrl, imageUrl, videoUrl, maxWidth, maxHeight, style } = this.props;
+    const { title, description, contentType, url, audioUrl, imageUrl, videoUrl, maxWidth, maxHeight, style } = this.props;
     const { videoError } = this.state;
-    const isLink = (title || description) && url;
+    const isLink = (title || description) && !contentType.includes('image/') && !contentType.includes('video/') && url;
 
     return (
       <TouchableOpacity
@@ -57,11 +57,11 @@ export default class BabbleConversationMessageEmbed extends Component {
           />
         )}
 
-        {title && (
+        {title && isLink && (
           <Text numberOfLines={2} style={styles.titleText}>{title}</Text>
         )}
 
-        {description && (
+        {description && isLink && (
           <Text numberOfLines={3} style={styles.descriptionText}>{description}</Text>
         )}
 

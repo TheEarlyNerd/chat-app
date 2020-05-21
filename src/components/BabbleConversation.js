@@ -57,7 +57,7 @@ export default class BabbleConversation extends Component {
       <FlatList
         data={messages}
         renderItem={this._renderMessage}
-        keyExtractor={item => `${item.id}`}
+        keyExtractor={item => (item.id) ? `${item.id}` : `${item.nonce}`}
         onScrollBeginDrag={this._scrollBeginDrag}
         onContentSizeChange={this._contentSizeChange}
         onEndReached={this._endReached}

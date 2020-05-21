@@ -37,7 +37,7 @@ export default class ConversationScreen extends Component {
     this.setState({ conversation: conversations.activeConversation });
   }
 
-  _onMessageSubmit = async ({ text, attachments }) => {
+  _onMessageSubmit = async ({ text, attachments, embeds }) => {
     const { conversation } = this.state;
 
     this.messageComposer.clear();
@@ -47,6 +47,7 @@ export default class ConversationScreen extends Component {
         conversationId: conversation.id,
         text,
         attachments,
+        embeds,
       });
     } else {
       await conversationsManager.createConversation({

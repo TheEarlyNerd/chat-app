@@ -56,7 +56,7 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
-  async createConversationMessage({ conversationId, text, attachments }) {
+  async createConversationMessage({ conversationId, text, attachments = [], embeds = [] }) {
     const { apiHelper } = this.maestro.helpers;
     const { userManager } = this.maestro.managers;
     const message = {
@@ -69,6 +69,7 @@ export default class ConversationsManager extends Manager {
       message: {
         ...message,
         attachments,
+        embeds,
         user: userManager.store.user,
         updatedAt: new Date().toISOString(),
         createdAt: new Date().toISOString(),
@@ -77,7 +78,7 @@ export default class ConversationsManager extends Manager {
     });
 
     attachments = await this._createAttachments(attachments);
-    const embeds = await this._createEmbedsFromText(text); // OPTIMIZATION: maybe better to post message, then patch with embeds?
+    embeds = await this._createEmbedsFromText(text); // OPTIMIZATION: maybe better to post message, then patch with embeds?
 
     const response = await apiHelper.post({
       path: `/conversations/${conversationId}/messages`,

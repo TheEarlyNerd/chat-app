@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, View, TextInput, Image, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { KeyboardAvoidingView, View, TextInput, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { HeaderHeightContext } from '@react-navigation/stack';
 import ImagePicker from 'react-native-image-crop-picker';
 import { BabbleConversationMessageComposerToolbarAttachment } from './';
@@ -55,7 +55,15 @@ export default class BabbleMessageComposerToolbar extends Component {
   _gifPressed = gif => {
     const { onSubmit } = this.props;
 
-    onSubmit({ text: gif.images.original.url });
+    onSubmit({
+      text: gif.images.original.url,
+      embeds: [
+        {
+          url: gif.images.original.url,
+          contentType: 'image/gif',
+        },
+      ],
+    });
   }
 
   _selectMedia = async source => {
