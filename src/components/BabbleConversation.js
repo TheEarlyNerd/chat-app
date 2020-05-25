@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
-import { BabbleConversationMessage } from './';
+import { Animated, StyleSheet } from 'react-native';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { BabbleConversationMessage, BabbleConversationMessageOptions } from './';
 
 export default class BabbleConversation extends Component {
-  flatlist = null;
   autoscrollTimeout = null;
+  swipeListView = null;
+  swipeOpenAnimatedValues = {};
 
   state = {
     autoscroll: true,
@@ -26,7 +28,7 @@ export default class BabbleConversation extends Component {
       clearTimeout(this.autoscrollTimeout);
 
       this.autoscrollTimeout = setTimeout(() => {
-        this.flatlist.scrollToEnd({ animated: true });
+        this.swipeListView.scrollToEnd({ animated: true });
       }, 10);
     }
   }
@@ -35,8 +37,16 @@ export default class BabbleConversation extends Component {
     this.setState({ autoscroll: true });
   }
 
+  _swipeValueChange = ({ key, value, isOpen }) => {
+    this.swipeOpenAnimatedValues[key].setValue(Math.abs(value) / 140);
+  }
+
   _renderMessage = ({ item, index }) => {
     const { messages } = this.props;
+
+    if (!this.swipeOpenAnimatedValues[item.nonce]) {
+      this.swipeOpenAnimatedValues[item.nonce] = new Animated.Value(0);
+    }
 
     return (
       <BabbleConversationMessage
@@ -45,6 +55,22 @@ export default class BabbleConversation extends Component {
           messages[index - 1].user.id !== item.user.id ||
           (item.createdAt - messages[index - 1].createdAt) / 1000 > 60 * 15
         )}
+        style={{
+          minHeight: this.swipeOpenAnimatedValues[item.nonce].interpolate({
+            inputRange: [ 0, 1 ],
+            outputRange: [ 0, 55 ],
+            extrapolate: 'clamp',
+          }),
+        }}
+        {...item}
+      />
+    );
+  }
+
+  _renderMessageOptions = ({ item, index }) => {
+    return (
+      <BabbleConversationMessageOptions
+        style={{ opacity: this.swipeOpenAnimatedValues[item.nonce] }}
         {...item}
       />
     );
@@ -54,16 +80,26 @@ export default class BabbleConversation extends Component {
     const { messages, style } = this.props;
 
     return (
-      <FlatList
+      <SwipeListView
         data={messages}
         renderItem={this._renderMessage}
+        renderHiddenItem={this._renderMessageOptions}
         keyExtractor={item => `${item.nonce}`}
         onScrollBeginDrag={this._scrollBeginDrag}
         onContentSizeChange={this._contentSizeChange}
         onEndReached={this._endReached}
         onEndReachedThreshold={0}
+        onSwipeValueChange={this._swipeValueChange}
+        closeOnScroll={false}
+        rightOpenValue={-140}
+        previewDuration={250}
+        previewOpenValue={-50}
+        previewOpenDelay={1000}
+        previewRowKey={messages[messages.length - 1].nonce}
+        disableRightSwipe
+        recalculateHiddenLayout
         style={[ styles.container, style ]}
-        ref={component => this.flatlist = component}
+        listViewRef={component => this.swipeListView = component}
       />
     );
   }

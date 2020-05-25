@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, Linking, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, StyleSheet, Platform, Linking, Alert } from 'react-native';
 import moment from 'moment';
 import ParsedText from 'react-native-parsed-text';
 import { BabbleConversationMessageAttachment, BabbleConversationMessageEmbed, BabbleUserAvatar, BabbleReaction } from './';
@@ -119,9 +119,7 @@ export default class BabbleConversationMessage extends Component {
     ];
 
     return (
-      <TouchableOpacity
-        onLongPress={this._messagePress}
-        delayLongPress={200}
+      <Animated.View
         style={[
           styles.container,
           (heading) ? styles.containerWithHeading : null,
@@ -154,7 +152,7 @@ export default class BabbleConversationMessage extends Component {
           )}
 
           {!!text && (
-            <ParsedText parse={parsedTextOptions} style={styles.messageText}>
+            <ParsedText parse={parsedTextOptions} selectable style={styles.messageText}>
               {text}
             </ParsedText>
           )}
@@ -206,7 +204,7 @@ export default class BabbleConversationMessage extends Component {
             </View>
           )}
         </View>
-      </TouchableOpacity>
+      </Animated.View>
     );
   }
 }
@@ -223,17 +221,18 @@ const styles = StyleSheet.create({
   avatar: {
     left: 15,
     position: 'absolute',
-    top: 2,
+    top: 5,
   },
   container: {
     alignItems: 'flex-start',
+    backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     paddingHorizontal: 15,
-    paddingVertical: 2,
+    paddingVertical: 5,
     width: '100%',
   },
   containerWithHeading: {
-    marginTop: 15,
+    paddingTop: 8,
   },
   content: {
     flex: 1,
@@ -251,6 +250,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 2,
+    marginTop: -4,
   },
   inlineAttachment: {
     marginRight: 5,

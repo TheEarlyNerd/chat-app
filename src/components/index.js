@@ -7,6 +7,7 @@ import BabbleConversationMessageAttachment from './BabbleConversationMessageAtta
 import BabbleConversationMessageComposerToolbar from './BabbleConversationMessageComposerToolbar';
 import BabbleConversationMessageComposerToolbarAttachment from './BabbleConversationMessageComposerToolbarAttachment';
 import BabbleConversationMessageEmbed from './BabbleConversationMessageEmbed';
+import BabbleConversationMessageOptions from './BabbleConversationMessageOptions';
 import BabbleConversationPreview from './BabbleConversationPreview';
 import BabbleConversationPreviewsList from './BabbleConversationPreviewsList';
 import BabbleConversationUserSelectionToolbar from './BabbleConversationUserSelectionToolbar';
@@ -40,6 +41,7 @@ export {
   BabbleConversationMessageComposerToolbar,
   BabbleConversationMessageComposerToolbarAttachment,
   BabbleConversationMessageEmbed,
+  BabbleConversationMessageOptions,
   BabbleConversationPreview,
   BabbleConversationPreviewsList,
   BabbleConversationUserSelectionToolbar,
