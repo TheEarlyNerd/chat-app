@@ -92,10 +92,6 @@ export default class BabbleConversation extends Component {
         onSwipeValueChange={this._swipeValueChange}
         closeOnScroll={false}
         rightOpenValue={-140}
-        previewDuration={250}
-        previewOpenValue={-50}
-        previewOpenDelay={1000}
-        previewRowKey={messages[messages.length - 1].nonce}
         disableRightSwipe
         recalculateHiddenLayout
         style={[ styles.container, style ]}

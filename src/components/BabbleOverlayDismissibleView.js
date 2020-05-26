@@ -71,7 +71,7 @@ export default class BabbleOverlayDismissibleView extends Component {
 
     return (
       <Animated.View style={[ styles.container, { opacity: opacityAnimated } ]}>
-        <KeyboardAvoidingView behavior={'padding'} keyboardVerticalOffset={-120} style={{ flex: 1 }}>
+        <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1 }}>
           <View {...panResponder.panHandlers} style={styles.dismissOverlay}>
             <TouchableOpacity onPress={onTapDismiss} style={styles.dismissOverlay} />
           </View>
@@ -110,9 +110,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
     width: '100%',
-  },
-  scrollViewContainer: {
-    flexGrow: 1,
-    justifyContent: 'flex-end',
   },
 });

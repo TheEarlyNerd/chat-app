@@ -19,24 +19,6 @@ export default class BabbleConversationMessage extends Component {
     return (linklessText.length) ? text : '';
   }
 
-  _deleteMessage = () => {
-    const { id, conversationId } = this.props;
-
-    Alert.alert('Delete this message?', 'Are you sure you want to permanently delete this message? This cannot be undone.', [
-      {
-        text: 'Delete',
-        onPress: () => conversationsManager.deleteConversationMessage({
-          conversationId,
-          conversationMessageId: id,
-        }),
-      },
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
-    ]);
-  }
-
   _messagePress = () => {
     const { user, text } = this.props;
     const actions = [

@@ -111,7 +111,7 @@ export default class BabbleOverlayGifSelector extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: 550,
+    height: 450,
     padding: 15,
   },
   gif: {

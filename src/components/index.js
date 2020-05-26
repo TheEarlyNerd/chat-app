@@ -12,6 +12,7 @@ import BabbleConversationPreview from './BabbleConversationPreview';
 import BabbleConversationPreviewsList from './BabbleConversationPreviewsList';
 import BabbleConversationUserSelectionToolbar from './BabbleConversationUserSelectionToolbar';
 import BabbleConversationUsersToolbar from './BabbleConversationUsersToolbar';
+import BabbleEmojiSelector from './BabbleEmojiSelector';
 import BabbleFieldLabel from './BabbleFieldLabel';
 import BabbleHeader from './BabbleHeader';
 import BabbleOverlayActionSheet from './BabbleOverlayActionSheet';
@@ -19,6 +20,7 @@ import BabbleOverlayCountrySelector from './BabbleOverlayCountrySelector';
 import BabbleOverlayDismissibleView from './BabbleOverlayDismissibleView';
 import BabbleOverlayError from './BabbleOverlayError';
 import BabbleOverlayGifSelector from './BabbleOverlayGifSelector';
+import BabbleOverlayReactionInput from './BabbleOverlayReactionInput';
 import BabbleOverlaysContainer from './BabbleOverlaysContainer';
 import BabblePhoneField from './BabblePhoneField';
 import BabbleReaction from './BabbleReaction';
@@ -46,6 +48,7 @@ export {
   BabbleConversationPreviewsList,
   BabbleConversationUserSelectionToolbar,
   BabbleConversationUsersToolbar,
+  BabbleEmojiSelector,
   BabbleFieldLabel,
   BabbleHeader,
   BabbleOverlayActionSheet,
@@ -53,6 +56,7 @@ export {
   BabbleOverlayDismissibleView,
   BabbleOverlayError,
   BabbleOverlayGifSelector,
+  BabbleOverlayReactionInput,
   BabbleOverlaysContainer,
   BabblePhoneField,
   BabbleReaction,

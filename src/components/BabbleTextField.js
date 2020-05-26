@@ -38,7 +38,7 @@ export default class BabbleTextField extends Component {
 
   render() {
     const { value } = this.state;
-    const { containerStyle, label, info, error, style, inputPrefix, labelPostfix, ...props } = this.props;
+    const { containerStyle, label, info, error, style, inputPrefix, labelPostfix, small, ...props } = this.props;
 
     return (
       <View style={[ styles.container, containerStyle ]}>
@@ -57,7 +57,11 @@ export default class BabbleTextField extends Component {
           <TextInput
             placeholderColor={'#909090'}
             onChangeText={this._onChangeText}
-            style={[ styles.textInput, style ]}
+            style={[
+              styles.textInput,
+              (small) ? styles.textInputSmall : null,
+              style,
+            ]}
             value={value}
             ref={component => this.textInputComponent = component}
             {...props}
@@ -105,6 +109,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     height: 50,
     width: '100%',
+  },
+  textInputSmall: {
+    fontSize: 16,
   },
   shadow: {
     position: 'absolute',

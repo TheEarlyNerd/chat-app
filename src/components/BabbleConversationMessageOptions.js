@@ -1,24 +1,115 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity, Animated, StyleSheet } from 'react-native';
+import { Text, TouchableOpacity, Animated, StyleSheet, Alert } from 'react-native';
 import { BabbleTiledIconsBackground } from './';
-import { Trash2Icon, SmileIcon, MoreHorizontalIcon, MessageSquareIcon } from './icons';
+import { EditIcon, Trash2Icon, ShareIcon, CopyIcon, SmileIcon, MoreHorizontalIcon, MessageSquareIcon, AlertTriangle } from './icons';
+import maestro from '../maestro';
+
+const { conversationsManager, userManager } = maestro.managers;
+const { interfaceHelper } = maestro.helpers;
 
 export default class BabbleConversationMessageOptions extends Component {
+  _deletePress = () => {
+    const { id, conversationId } = this.props;
+
+    Alert.alert('Delete this message?', 'Are you sure you want to permanently delete this message? This cannot be undone.', [
+      {
+        text: 'Delete',
+        onPress: () => conversationsManager.deleteConversationMessage({
+          conversationId,
+          conversationMessageId: id,
+        }),
+      },
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+    ]);
+  }
+
+  _editPress = () => {
+
+  }
+
+  _reactPress = () => {
+    interfaceHelper.showOverlay({
+      name: 'ReactionInput',
+    });
+  }
+
+  _reportPress = () => {
+    const { user } = this.props;
+
+    Alert.alert('Report User', `Are you sure you want to report ${user.name} for sending inappropriate, violent or concerning content?`, [
+      {
+        text: 'Report',
+        onPress: () => {},
+      },
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+    ]);
+  }
+
+  _morePress = () => {
+    const { user } = this.props;
+    const actions = [];
+
+    actions.push({
+      iconComponent: SmileIcon,
+      text: 'Add Reaction',
+      onPress: this._reactPress,
+    });
+
+    if (userManager.store.user.id === user.id) {
+      actions.push({
+        iconComponent: EditIcon,
+        text: 'Edit',
+        onPress: this._editPress,
+      });
+
+      actions.push({
+        iconComponent: Trash2Icon,
+        text: 'Delete',
+        onPress: this._deletePress,
+      });
+    } else {
+      actions.push({
+        iconComponent: AlertTriangle,
+        text: 'Report User',
+        onPress: this._reportPress,
+      });
+    }
+
+    interfaceHelper.showOverlay({
+      name: 'ActionSheet',
+      data: { actions },
+    });
+  }
+
   render() {
-    const { style } = this.props;
+    const { user, style } = this.props;
 
     return (
       <Animated.View style={[ styles.container, style ]}>
-        <TouchableOpacity style={styles.option}>
+        <TouchableOpacity onPress={this._reactPress} style={styles.option}>
           <SmileIcon width={22} height={22} style={styles.optionIcon} />
           <Text style={styles.reactionPlusText}>+</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option}>
-          <Trash2Icon width={22} height={22} style={styles.optionIcon} />
-        </TouchableOpacity>
+        {(userManager.store.user.id === user.id) && (
+          <TouchableOpacity onPress={this._editPress} style={styles.option}>
+            <EditIcon width={22} height={22} style={styles.optionIcon} />
+          </TouchableOpacity>
+        )}
 
-        <TouchableOpacity style={styles.option}>
+        {(userManager.store.user.id !== user.id) && (
+          <TouchableOpacity onPress={this._sharePress} style={styles.option}>
+            <ShareIcon width={22} height={22} style={styles.optionIcon} />
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity onPress={this._morePress} style={styles.option}>
           <MoreHorizontalIcon width={22} height={22} style={styles.optionIcon} />
         </TouchableOpacity>
 

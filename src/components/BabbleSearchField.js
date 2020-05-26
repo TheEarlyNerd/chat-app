@@ -11,7 +11,7 @@ const BabbleSearchField = props => {
       placeholder={props.placeholder}
       returnKeyType={'search'}
       containerStyle={props.containerStyle}
-      style={[ styles.textInput, props.style ]}
+      style={props.style}
       inputPrefix={(
         <SearchIcon
           width={20}
@@ -19,6 +19,7 @@ const BabbleSearchField = props => {
           style={styles.searchIcon}
         />
       )}
+      small
       {...additionalProps}
     />
   );
@@ -27,9 +28,6 @@ const BabbleSearchField = props => {
 export default BabbleSearchField;
 
 const styles = StyleSheet.create({
-  textInput: {
-    fontSize: 16,
-  },
   searchIcon: {
     marginLeft: 15,
     marginRight: 5,
