@@ -63,6 +63,14 @@ export default class BabbleEmojiSelector extends Component {
     }, []);
   }
 
+  _emojiPress = emoji => {
+    const { onEmojiPress } = this.props;
+
+    if (onEmojiPress) {
+      onEmojiPress(emoji);
+    }
+  }
+
   _renderItem = ({ item }) => {
     if (item.type === 'section') {
       return (
@@ -78,7 +86,7 @@ export default class BabbleEmojiSelector extends Component {
 
     if (item.type === 'emoji') {
       return (
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity onPress={() => this._emojiPress(item)} style={styles.button}>
           <Text style={styles.buttonText}>{item.emoji}</Text>
         </TouchableOpacity>
       );

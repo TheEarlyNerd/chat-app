@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { BabbleOverlayDismissibleView, BabbleEmojiSelector } from './';
 import maestro from '../maestro';
 
@@ -20,6 +20,10 @@ export default class BabbleOverlayReactionInput extends Component {
     maestro.dispatchEvent('OVERLAYS:HIDE', { name: 'ReactionInput' });
   }
 
+  _emojiPress = emoji => {
+    console.log(emoji);
+  }
+
   render() {
     return (
       <BabbleOverlayDismissibleView
@@ -27,7 +31,9 @@ export default class BabbleOverlayReactionInput extends Component {
         onDragDismiss={this._hide}
         ref={component => this.dismissibleView = component}
       >
-        <BabbleEmojiSelector />
+        <BabbleEmojiSelector
+          onEmojiPress={this._emojiPress}
+        />
       </BabbleOverlayDismissibleView>
     );
   }
