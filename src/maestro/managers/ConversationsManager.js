@@ -101,6 +101,22 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
+  async createConversationMessageReaction({ conversationId, conversationMessageId, reaction }) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.put({
+      path: `/conversations/${conversationId}/messages/${conversationMessageId}/reactions`,
+      data: { reaction },
+    });
+
+    if (response.code !== 200) {
+      throw new Error(response.body)
+    }
+
+    console.log(response.body);
+
+    return response.body;
+  }
+
   async deleteConversationMessage({ conversationId, conversationMessageId }) {
     this._removeMessageFromConversation({ conversationId, conversationMessageId });
 

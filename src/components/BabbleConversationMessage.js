@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Animated, StyleSheet, Platform, Linking, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, StyleSheet, Platform, Linking } from 'react-native';
 import moment from 'moment';
 import ParsedText from 'react-native-parsed-text';
 import { BabbleConversationMessageAttachment, BabbleConversationMessageEmbed, BabbleUserAvatar, BabbleReaction } from './';
-import { SmileIcon, Trash2Icon, AlertTriangle, CopyIcon } from './icons';
 import maestro from '../maestro';
 
-const { conversationsManager, userManager } = maestro.managers;
-const { interfaceHelper, navigationHelper } = maestro.helpers;
+const { navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationMessage extends Component {
   _getText = () => {
@@ -17,44 +15,6 @@ export default class BabbleConversationMessage extends Component {
     }, text).trim();
 
     return (linklessText.length) ? text : '';
-  }
-
-  _messagePress = () => {
-    const { user, text } = this.props;
-    const actions = [
-      {
-        iconComponent: SmileIcon,
-        text: 'Add Reaction',
-        subtext: 'Show how you feel about this message by adding your reaction.',
-      },
-    ];
-
-    if (text) {
-      actions.push({
-        iconComponent: CopyIcon,
-        text: 'Copy Text',
-      });
-    }
-
-    if (userManager.store.user.id === user.id) {
-      actions.push({
-        iconComponent: Trash2Icon,
-        text: 'Delete Message',
-        subtext: 'Permanently delete this message from the conversation.',
-        onPress: this._deleteMessage,
-      });
-    } else {
-      actions.push({
-        iconComponent: AlertTriangle,
-        text: 'Report User',
-        subtext: `Report ${user.name} for send innapropriate messages that may include hate, violence, nudity or something else.`,
-      });
-    }
-
-    interfaceHelper.showOverlay({
-      name: 'ActionSheet',
-      data: { actions },
-    });
   }
 
   _userPress = userId => {
@@ -80,7 +40,7 @@ export default class BabbleConversationMessage extends Component {
   }
 
   render() {
-    const { user, attachments, embeds, reactions, createdAt, heading, style } = this.props;
+    const { user, attachments, embeds, conversationMessageReactions, createdAt, heading, style } = this.props;
     const text = this._getText();
     const parsedTextOptions = [
       {
@@ -173,9 +133,9 @@ export default class BabbleConversationMessage extends Component {
             </View>
           )}
 
-          {reactions?.length > 0 && (
+          {conversationMessageReactions?.length > 0 && (
             <View style={styles.reactions}>
-              {reactions.map((reaction, index) => (
+              {conversationMessageReactions.map((reaction, index) => (
                 <BabbleReaction
                   reaction={reaction.reaction}
                   count={reaction.count}

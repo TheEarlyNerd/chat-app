@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, TouchableOpacity, Animated, StyleSheet, Alert } from 'react-native';
 import { BabbleTiledIconsBackground } from './';
-import { EditIcon, Trash2Icon, ShareIcon, CopyIcon, SmileIcon, MoreHorizontalIcon, MessageSquareIcon, AlertTriangle } from './icons';
+import { EditIcon, Trash2Icon, ShareIcon, SmileIcon, MoreHorizontalIcon, MessageSquareIcon, AlertTriangle } from './icons';
 import maestro from '../maestro';
 
 const { conversationsManager, userManager } = maestro.managers;
@@ -33,6 +33,10 @@ export default class BabbleConversationMessageOptions extends Component {
   _reactPress = () => {
     interfaceHelper.showOverlay({
       name: 'ReactionInput',
+      data: {
+        conversationId: this.props.conversationId,
+        conversationMessageId: this.props.id, // maybe change it to props.conversationMessage.id?
+      },
     });
   }
 

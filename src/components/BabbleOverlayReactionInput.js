@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
 import { BabbleOverlayDismissibleView, BabbleEmojiSelector } from './';
 import maestro from '../maestro';
+
+const { conversationsManager } = maestro.managers;
 
 export default class BabbleOverlayReactionInput extends Component {
   dismissibleView = null;
@@ -21,7 +22,13 @@ export default class BabbleOverlayReactionInput extends Component {
   }
 
   _emojiPress = emoji => {
-    console.log(emoji);
+    const { conversationId, conversationMessageId } = this.props.data;
+
+    conversationsManager.createConversationMessageReaction({
+      conversationId,
+      conversationMessageId,
+      reaction: emoji.emoji,
+    });
   }
 
   render() {
@@ -38,7 +45,3 @@ export default class BabbleOverlayReactionInput extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-
-});
