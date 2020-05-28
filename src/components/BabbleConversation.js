@@ -41,6 +41,13 @@ export default class BabbleConversation extends Component {
     this.swipeOpenAnimatedValues[key].setValue(Math.abs(value) / 140);
   }
 
+  _closeRow = swipeRow => {
+    return new Promise(resolve => {
+      swipeRow.closeRow();
+      setTimeout(resolve, 400);
+    });
+  }
+
   _renderMessage = ({ item, index }) => {
     const { messages } = this.props;
 
@@ -70,7 +77,7 @@ export default class BabbleConversation extends Component {
   _renderMessageOptions = ({ item, index }, rowMap) => {
     return (
       <BabbleConversationMessageOptions
-        onCloseRow={() => rowMap[item.nonce].closeRow()}
+        onCloseRow={() => this._closeRow(rowMap[item.nonce])}
         style={{ opacity: this.swipeOpenAnimatedValues[item.nonce] }}
         {...item}
       />

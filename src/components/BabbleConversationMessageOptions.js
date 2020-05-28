@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity, Animated, StyleSheet, Alert } from 'react-native';
+import { Text, TouchableOpacity, Animated, LayoutAnimation, StyleSheet, Alert } from 'react-native';
 import { BabbleTiledIconsBackground } from './';
 import { EditIcon, Trash2Icon, ShareIcon, SmileIcon, MoreHorizontalIcon, MessageSquareIcon, AlertTriangle } from './icons';
 import maestro from '../maestro';
@@ -14,10 +14,16 @@ export default class BabbleConversationMessageOptions extends Component {
     Alert.alert('Delete this message?', 'Are you sure you want to permanently delete this message? This cannot be undone.', [
       {
         text: 'Delete',
-        onPress: () => conversationsManager.deleteConversationMessage({
-          conversationId,
-          conversationMessageId: id,
-        }),
+        onPress: async () => {
+          await this.props.onCloseRow();
+
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
+          conversationsManager.deleteConversationMessage({
+            conversationId,
+            conversationMessageId: id,
+          });
+        },
       },
       {
         text: 'Cancel',

@@ -221,7 +221,7 @@ export default class BabbleConversationPreview extends Component {
             )}
           </View>
 
-          {!!reactions?.length && (
+          {accessLevel !== 'private' && !!reactions?.length && (
             <View style={styles.reactions}>
               {reactions.map((reaction, index) => (
                 <BabbleReaction
