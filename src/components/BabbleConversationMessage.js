@@ -140,7 +140,7 @@ export default class BabbleConversationMessage extends Component {
                   reaction={reaction.reaction}
                   count={reaction.count}
                   style={styles.reaction}
-                  key={index}
+                  key={reaction.reaction}
                 />
               ))}
             </View>

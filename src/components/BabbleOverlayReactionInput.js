@@ -22,13 +22,19 @@ export default class BabbleOverlayReactionInput extends Component {
   }
 
   _emojiPress = emoji => {
-    const { conversationId, conversationMessageId } = this.props.data;
+    const { conversationId, conversationMessageId, onEmojiPress } = this.props.data;
 
     conversationsManager.createConversationMessageReaction({
       conversationId,
       conversationMessageId,
-      reaction: emoji.emoji,
+      emoji: emoji.emoji,
     });
+
+    if (onEmojiPress) {
+      onEmojiPress(emoji);
+    }
+
+    this._hide();
   }
 
   render() {

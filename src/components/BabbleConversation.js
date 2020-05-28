@@ -67,9 +67,10 @@ export default class BabbleConversation extends Component {
     );
   }
 
-  _renderMessageOptions = ({ item, index }) => {
+  _renderMessageOptions = ({ item, index }, rowMap) => {
     return (
       <BabbleConversationMessageOptions
+        onCloseRow={() => rowMap[item.nonce].closeRow()}
         style={{ opacity: this.swipeOpenAnimatedValues[item.nonce] }}
         {...item}
       />
@@ -90,6 +91,7 @@ export default class BabbleConversation extends Component {
         onEndReached={this._endReached}
         onEndReachedThreshold={0}
         onSwipeValueChange={this._swipeValueChange}
+        closeOnRowBeginSwipe
         closeOnScroll={false}
         rightOpenValue={-140}
         disableRightSwipe

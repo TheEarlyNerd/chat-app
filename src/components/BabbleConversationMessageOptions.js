@@ -36,6 +36,7 @@ export default class BabbleConversationMessageOptions extends Component {
       data: {
         conversationId: this.props.conversationId,
         conversationMessageId: this.props.id, // maybe change it to props.conversationMessage.id?
+        onEmojiPress: this.props.onCloseRow,
       },
     });
   }

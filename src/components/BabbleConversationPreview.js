@@ -273,7 +273,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     marginLeft: 15,
-    paddingTop: 4,
   },
   heading: {
     alignItems: 'center',
@@ -327,6 +326,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   stat: {
     flexDirection: 'row',
