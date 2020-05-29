@@ -15,7 +15,10 @@ export default class BabbleReaction extends Component {
         ]}
       >
         <Text style={styles.reactionText}>{reaction}</Text>
-        <Text style={styles.countText}>{count}</Text>
+
+        {count > 1 && (
+          <Text style={styles.countText}>{count}</Text>
+        )}
       </TouchableOpacity>
     );
   }
