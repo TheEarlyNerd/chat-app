@@ -5,6 +5,7 @@ import ParsedText from 'react-native-parsed-text';
 import { BabbleConversationMessageAttachment, BabbleConversationMessageEmbed, BabbleUserAvatar, BabbleReaction } from './';
 import maestro from '../maestro';
 
+const { conversationsManager } = maestro.managers;
 const { navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationMessage extends Component {
@@ -39,8 +40,29 @@ export default class BabbleConversationMessage extends Component {
     Linking.openURL(`mailto:${email}`);
   }
 
+  _reactionPress = reaction => {
+    const { id, conversationId, authUserConversationMessageReactions } = this.props;
+    const authReaction = authUserConversationMessageReactions.find(authReaction => (
+      authReaction.reaction === reaction.reaction
+    ));
+
+    if (!authReaction) {
+      conversationsManager.createConversationMessageReaction({
+        conversationId,
+        conversationMessageId: id,
+        emoji: reaction.reaction,
+      });
+    } else {
+      conversationsManager.deleteConversationMessageReaction({
+        conversationId,
+        conversationMessageId: id,
+        conversationMessageReactionId: authReaction.id,
+      });
+    }
+  }
+
   render() {
-    const { user, attachments, embeds, conversationMessageReactions, createdAt, heading, style } = this.props;
+    const { user, attachments, embeds, authUserConversationMessageReactions, conversationMessageReactions, createdAt, heading, style } = this.props;
     const text = this._getText();
     const parsedTextOptions = [
       {
@@ -137,7 +159,11 @@ export default class BabbleConversationMessage extends Component {
             <View style={styles.reactions}>
               {conversationMessageReactions.map((reaction, index) => (
                 <BabbleReaction
+                  onPress={() => this._reactionPress(reaction)}
                   reaction={reaction.reaction}
+                  reacted={authUserConversationMessageReactions.some(conversationMessageReaction => (
+                    conversationMessageReaction.reaction === reaction.reaction
+                  ))}
                   count={reaction.count}
                   style={styles.reaction}
                   key={reaction.reaction}

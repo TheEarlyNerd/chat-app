@@ -3,10 +3,17 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 export default class BabbleReaction extends Component {
   render() {
-    const { reaction, count, style } = this.props;
+    const { onPress, reacted, reaction, count, style } = this.props;
 
     return (
-      <TouchableOpacity style={[ styles.container, style ]}>
+      <TouchableOpacity
+        onPress={onPress}
+        style={[
+          styles.container,
+          (reacted) ? styles.reacted : null,
+          style,
+        ]}
+      >
         <Text style={styles.reactionText}>{reaction}</Text>
         <Text style={styles.countText}>{count}</Text>
       </TouchableOpacity>
@@ -30,6 +37,9 @@ const styles = StyleSheet.create({
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: 12,
     marginLeft: 3,
+  },
+  reacted: {
+    backgroundColor: 'rgba(42, 153, 204, 0.3)',
   },
   reactionText: {
     color: '#000000',

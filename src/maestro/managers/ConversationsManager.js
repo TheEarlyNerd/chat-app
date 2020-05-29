@@ -154,6 +154,24 @@ export default class ConversationsManager extends Manager {
     }
   }
 
+  async deleteConversationMessageReaction({ conversationId, conversationMessageId, conversationMessageReactionId }) {
+    this._removeReactionFromConversationMessage({
+      conversationId,
+      conversationMessageId,
+      conversationMessageReactionId,
+    });
+
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.delete({
+      path: `/conversations/${conversationId}/messages/${conversationMessageId}/reactions/${conversationMessageReactionId}`,
+    });
+
+    if (response.code !== 204) {
+      // TODO: should probably re-add the reaction to UI if delete fails
+      throw new Error(response.body);
+    }
+  }
+
   /*
    * Helpers
    */
@@ -232,7 +250,7 @@ export default class ConversationsManager extends Manager {
       const { authUserConversationMessageReactions, conversationMessageReactions } = conversationMessage;
 
       const authUserConversationMessageReactionIndex = authUserConversationMessageReactions.findIndex(conversationMessageReaction => (
-        conversationMessageReaction.reaction = reaction.reaction
+        conversationMessageReaction.reaction === reaction.reaction
       ));
 
       if (authUserConversationMessageReactionIndex !== -1) {
@@ -290,28 +308,35 @@ export default class ConversationsManager extends Manager {
 
     const removeReactionFromConversationMessage = conversationMessage => {
       const { authUserConversationMessageReactions, conversationMessageReactions } = conversationMessage;
+      const removedConversationMessageReaction = authUserConversationMessageReactions.find(conversationMessageReaction => (
+        (conversationMessageReactionId && conversationMessageReaction.id === conversationMessageReactionId) ||
+        (reaction && conversationMessageReaction.reaction === reaction)
+      ));
+
+      if (!removedConversationMessageReaction) {
+        return;
+      }
 
       conversationMessage.authUserConversationMessageReactions = authUserConversationMessageReactions.filter(conversationMessageReaction => (
-        (!conversationMessageReactionId || conversationMessageReaction.id !== conversationMessageReactionId) &&
-        (!reaction || conversationMessageReaction.reaction !== reaction)
+        conversationMessageReaction.id !== removedConversationMessageReaction.id
       ));
 
       const conversationMessageReaction = conversationMessageReactions.find(conversationMessageReaction => (
-        conversationMessageReaction.reaction === reaction
+        conversationMessageReaction.reaction === removedConversationMessageReaction.reaction
       ));
 
       if (conversationMessageReaction.count > 1) {
         conversationMessageReaction.count--;
       } else {
         conversationMessage.conversationMessageReactions = conversationMessageReactions.filter(conversationMessageReaction => (
-          conversationMessageReaction.reaction === reaction
+          conversationMessageReaction.reaction !== removedConversationMessageReaction.reaction
         ));
       }
     };
 
     const findMessageInConversationAndRemoveReaction = conversation => {
       const { previewConversationMessage } = conversation;
-      const conversationMessage = conversation.conversationMessages.findOne(conversationMessage => (
+      const conversationMessage = conversation.conversationMessages.find(conversationMessage => (
         conversationMessage.id === conversationMessageId
       ));
 
