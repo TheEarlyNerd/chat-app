@@ -38,7 +38,11 @@ export default class BabbleConversation extends Component {
   }
 
   _swipeValueChange = ({ key, value, isOpen }) => {
-    this.swipeOpenAnimatedValues[key].setValue(Math.abs(value) / 140);
+    if (value <= 0) {
+      this.swipeOpenAnimatedValues[key].setValue(Math.abs(value) / 145);
+    } else {
+      this.swipeOpenAnimatedValues[key].setValue(Math.abs(value) / 60);
+    }
   }
 
   _closeRow = swipeRow => {
@@ -100,8 +104,7 @@ export default class BabbleConversation extends Component {
         onSwipeValueChange={this._swipeValueChange}
         closeOnRowBeginSwipe
         closeOnScroll={false}
-        rightOpenValue={-140}
-        disableRightSwipe
+        rightOpenValue={-145}
         recalculateHiddenLayout
         style={[ styles.container, style ]}
         listViewRef={component => this.swipeListView = component}

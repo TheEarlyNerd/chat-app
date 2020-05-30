@@ -68,8 +68,6 @@ export default class ConversationScreen extends Component {
       <SafeAreaView style={styles.container}>
         {!conversationId && (
           <BabbleConversationUserSelectionToolbar
-            label={'To:'}
-            placeholder={'The World'}
             ref={component => this.userSelector = component}
           />
         )}

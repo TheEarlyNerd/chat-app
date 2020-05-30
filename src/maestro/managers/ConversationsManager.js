@@ -68,7 +68,7 @@ export default class ConversationsManager extends Manager {
     const { apiHelper } = this.maestro.helpers;
     const { userManager } = this.maestro.managers;
     const message = {
-      text,
+      text: text.trim(),
       nonce: `${conversationId}-${userManager.store.user.id}-${Date.now()}`,
     };
 

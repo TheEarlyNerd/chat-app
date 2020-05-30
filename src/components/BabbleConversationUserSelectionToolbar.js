@@ -9,7 +9,7 @@ const { interfaceHelper } = maestro.helpers;
 
 export default class BabbleUserSelectionToolbar extends Component {
   state = {
-    accessLevel: null,
+    accessLevel: 'public',
     selectedUserIndex: null,
     textInputValue: '',
     selectedUsers: [],
@@ -107,7 +107,7 @@ export default class BabbleUserSelectionToolbar extends Component {
           {
             iconComponent: LockIcon,
             text: 'Private',
-            subtext: 'Only people you invite to this conversation can view it, send messages and react to messages.',
+            subtext: 'Only people you invite can view this conversation, send messages and react to messages.',
             onPress: () => this.setState({ accessLevel: 'private' }),
           },
         ],
@@ -139,13 +139,14 @@ export default class BabbleUserSelectionToolbar extends Component {
   }
 
   render() {
-    const { label, placeholder, style } = this.props;
+    const { label, style } = this.props;
     const { accessLevel, selectedUserIndex, textInputValue, selectedUsers, searchUsers, showSearchUsersList, loadingSearch } = this.state;
+
     return (
       <View>
         <TouchableWithoutFeedback onPress={this._toolbarPress}>
           <View style={[ styles.container, style ]}>
-            <Text style={styles.labelText}>{label}</Text>
+            <Text style={styles.labelText}>{(accessLevel === 'protected' ? 'Invite:' : 'To:')}</Text>
 
             {selectedUsers.map((selectedUser, index) => (
               <TouchableOpacity
@@ -181,7 +182,7 @@ export default class BabbleUserSelectionToolbar extends Component {
               onChangeText={this._onChangeText}
               onFocus={() => this._toggleSearchUsersList(true)}
               onBlur={() => this._toggleSearchUsersList(false)}
-              placeholder={(!selectedUsers.length) ? placeholder : ''}
+              placeholder={(!selectedUsers.length && accessLevel === 'public') ? 'The World' : ''}
               returnKeyType={'done'}
               value={textInputValue}
               style={styles.textInput}
@@ -189,7 +190,7 @@ export default class BabbleUserSelectionToolbar extends Component {
             />
 
             <TouchableOpacity onPress={this._accessLevelPress} style={styles.accessLevelButton}>
-              {(!accessLevel || accessLevel === 'public') && (
+              {accessLevel === 'public' && (
                 <>
                   <MessageCircleIcon width={16} height={16} style={styles.accessLevelButtonIcon} />
                   <Text style={styles.accessLevelButtonText}>Public</Text>

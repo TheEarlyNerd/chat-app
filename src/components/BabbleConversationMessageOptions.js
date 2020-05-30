@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity, Animated, LayoutAnimation, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, LayoutAnimation, StyleSheet, Alert } from 'react-native';
 import { BabbleTiledIconsBackground } from './';
-import { EditIcon, Trash2Icon, ShareIcon, SmileIcon, MoreHorizontalIcon, MessageSquareIcon, AlertTriangle } from './icons';
+import { CornerUpLeftIcon, EditIcon, Trash2Icon, ShareIcon, SmileIcon, MoreHorizontalIcon, MessageSquareIcon, AlertTriangle } from './icons';
 import maestro from '../maestro';
 
 const { conversationsManager, userManager } = maestro.managers;
@@ -103,26 +103,32 @@ export default class BabbleConversationMessageOptions extends Component {
 
     return (
       <Animated.View style={[ styles.container, style ]}>
-        <TouchableOpacity onPress={this._reactPress} style={styles.option}>
-          <SmileIcon width={22} height={22} style={styles.optionIcon} />
-          <Text style={styles.reactionPlusText}>+</Text>
-        </TouchableOpacity>
+        <View style={styles.leftOptions}>
+          <CornerUpLeftIcon width={22} height={22} style={styles.optionIcon} />
+        </View>
 
-        {(userManager.store.user.id === user.id) && (
-          <TouchableOpacity onPress={this._editPress} style={styles.option}>
-            <EditIcon width={22} height={22} style={styles.optionIcon} />
+        <View style={styles.rightOptions}>
+          <TouchableOpacity onPress={this._reactPress} style={styles.option}>
+            <SmileIcon width={22} height={22} style={styles.optionIcon} />
+            <Text style={styles.reactionPlusText}>+</Text>
           </TouchableOpacity>
-        )}
 
-        {(userManager.store.user.id !== user.id) && (
-          <TouchableOpacity onPress={this._sharePress} style={styles.option}>
-            <ShareIcon width={22} height={22} style={styles.optionIcon} />
+          {(userManager.store.user.id === user.id) && (
+            <TouchableOpacity onPress={this._editPress} style={styles.option}>
+              <EditIcon width={22} height={22} style={styles.optionIcon} />
+            </TouchableOpacity>
+          )}
+
+          {(userManager.store.user.id !== user.id) && (
+            <TouchableOpacity onPress={this._sharePress} style={styles.option}>
+              <ShareIcon width={22} height={22} style={styles.optionIcon} />
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity onPress={this._morePress} style={styles.option}>
+            <MoreHorizontalIcon width={22} height={22} style={styles.optionIcon} />
           </TouchableOpacity>
-        )}
-
-        <TouchableOpacity onPress={this._morePress} style={styles.option}>
-          <MoreHorizontalIcon width={22} height={22} style={styles.optionIcon} />
-        </TouchableOpacity>
+        </View>
 
         <BabbleTiledIconsBackground
           iconComponents={[ MessageSquareIcon ]}
@@ -152,7 +158,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#2A99CC',
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+  },
+  leftOptions: {
+    marginLeft: 15,
   },
   option: {
     alignItems: 'center',
@@ -170,5 +179,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 6,
     top: -8,
+  },
+  rightOptions: {
+    flexDirection: 'row',
+    marginRight: 5,
   },
 });
