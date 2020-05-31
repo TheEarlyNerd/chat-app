@@ -369,11 +369,11 @@ export default class ConversationsManager extends Manager {
 
   _conversationMessagesSorter = (conversationMessageA, conversationMessageB) => {
     if (conversationMessageA.createdAt < conversationMessageB.createdAt) {
-      return -1;
+      return 1;
     }
 
     if (conversationMessageA.createdAt > conversationMessageB.createdAt) {
-      return 1;
+      return -1;
     }
 
     return 0;

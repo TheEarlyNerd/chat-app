@@ -1,19 +1,14 @@
 import React, { Component } from 'react';
-import { Animated, StyleSheet } from 'react-native';
+import { View, Animated, StyleSheet } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { BabbleConversationMessage, BabbleConversationMessageOptions } from './';
 
 export default class BabbleConversation extends Component {
-  autoscrollTimeout = null;
   swipeListView = null;
   swipeOpenAnimatedValues = {};
 
   state = {
     autoscroll: true,
-  }
-
-  componentWillUnmount() {
-    clearTimeout(this.autoscrollTimeout);
   }
 
   _scrollBeginDrag = () => {
@@ -25,16 +20,8 @@ export default class BabbleConversation extends Component {
     const { autoscroll } = this.state;
 
     if (messages && autoscroll) {
-      clearTimeout(this.autoscrollTimeout);
-
-      this.autoscrollTimeout = setTimeout(() => {
-        this.swipeListView.scrollToEnd({ animated: true });
-      }, 10);
+      this.swipeListView.scrollToOffset({ offset: 0, animated: false });
     }
-  }
-
-  _endReached = () => {
-    this.setState({ autoscroll: true });
   }
 
   _swipeValueChange = ({ key, value, isOpen }) => {
@@ -52,6 +39,17 @@ export default class BabbleConversation extends Component {
     });
   }
 
+  _onScroll = ({ nativeEvent: { contentOffset } }) => {
+    if (contentOffset.y <= 0 && !this.state.autoscroll) {
+      this.setState({ autoscroll: true });
+    }
+  }
+
+  _endReached = () => {
+    console.log('end reached');
+    // load more.
+  }
+
   _renderMessage = ({ item, index }) => {
     const { messages } = this.props;
 
@@ -62,9 +60,9 @@ export default class BabbleConversation extends Component {
     return (
       <BabbleConversationMessage
         heading={(
-          !index ||
-          messages[index - 1].user.id !== item.user.id ||
-          (item.createdAt - messages[index - 1].createdAt) / 1000 > 60 * 15
+          index === messages.length - 1 ||
+          messages[index + 1].user.id !== item.user.id ||
+          (item.createdAt - messages[index + 1].createdAt) / 1000 > 60 * 15
         )}
         style={{
           minHeight: this.swipeOpenAnimatedValues[item.nonce].interpolate({
@@ -92,23 +90,30 @@ export default class BabbleConversation extends Component {
     const { messages, style } = this.props;
 
     return (
-      <SwipeListView
-        data={messages}
-        renderItem={this._renderMessage}
-        renderHiddenItem={this._renderMessageOptions}
-        keyExtractor={item => `${item.nonce}`}
-        onScrollBeginDrag={this._scrollBeginDrag}
-        onContentSizeChange={this._contentSizeChange}
-        onEndReached={this._endReached}
-        onEndReachedThreshold={0}
-        onSwipeValueChange={this._swipeValueChange}
-        closeOnRowBeginSwipe
-        closeOnScroll={false}
-        rightOpenValue={-145}
-        recalculateHiddenLayout
-        style={[ styles.container, style ]}
-        listViewRef={component => this.swipeListView = component}
-      />
+      <View style={styles.container}>
+        <SwipeListView
+          data={messages}
+          inverted
+          renderItem={this._renderMessage}
+          renderHiddenItem={this._renderMessageOptions}
+          keyExtractor={item => `${item.nonce}`}
+          onScrollBeginDrag={this._scrollBeginDrag}
+          onContentSizeChange={this._contentSizeChange}
+          onSwipeValueChange={this._swipeValueChange}
+          onScroll={this._onScroll}
+          onEndReached={this._endReached}
+          onEndReachedThreshold={0.2}
+          scrollEventThrottle={0}
+          closeOnRowBeginSwipe
+          closeOnScroll={false}
+          rightOpenValue={-145}
+          recalculateHiddenLayout
+          maintainVisibleContentPosition={{ minIndexForVisible: 0 }} /* TODO: This will not work on Android, new messages will cause chat to jump. */
+          contentContainerStyle={styles.contentContainer}
+          style={[ styles.container, style ]}
+          listViewRef={component => this.swipeListView = component}
+        />
+      </View>
     );
   }
 }
@@ -116,5 +121,9 @@ export default class BabbleConversation extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    justifyContent: 'flex-end',
   },
 });
