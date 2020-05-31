@@ -9,7 +9,7 @@ const { interfaceHelper } = maestro.helpers;
 
 export default class BabbleUserSelectionToolbar extends Component {
   state = {
-    accessLevel: 'public',
+    accessLevel: null,
     selectedUserIndex: null,
     textInputValue: '',
     selectedUsers: [],
@@ -27,7 +27,7 @@ export default class BabbleUserSelectionToolbar extends Component {
   }
 
   get accessLevel() {
-    return this.state.accessLevel;
+    return this.state.accessLevel || 'public';
   }
 
   get selectedUsers() {
@@ -139,7 +139,7 @@ export default class BabbleUserSelectionToolbar extends Component {
   }
 
   render() {
-    const { label, style } = this.props;
+    const { style } = this.props;
     const { accessLevel, selectedUserIndex, textInputValue, selectedUsers, searchUsers, showSearchUsersList, loadingSearch } = this.state;
 
     return (
@@ -182,7 +182,7 @@ export default class BabbleUserSelectionToolbar extends Component {
               onChangeText={this._onChangeText}
               onFocus={() => this._toggleSearchUsersList(true)}
               onBlur={() => this._toggleSearchUsersList(false)}
-              placeholder={(!selectedUsers.length && accessLevel === 'public') ? 'The World' : ''}
+              placeholder={(!selectedUsers.length && (!accessLevel || accessLevel === 'public')) ? 'The World' : ''}
               returnKeyType={'done'}
               value={textInputValue}
               style={styles.textInput}
@@ -190,7 +190,7 @@ export default class BabbleUserSelectionToolbar extends Component {
             />
 
             <TouchableOpacity onPress={this._accessLevelPress} style={styles.accessLevelButton}>
-              {accessLevel === 'public' && (
+              {(!accessLevel || accessLevel === 'public') && (
                 <>
                   <MessageCircleIcon width={16} height={16} style={styles.accessLevelButtonIcon} />
                   <Text style={styles.accessLevelButtonText}>Public</Text>

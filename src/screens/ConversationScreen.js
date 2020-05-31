@@ -19,6 +19,8 @@ export default class ConversationScreen extends Component {
     const params = this.props.route.params || {};
     const { conversationId } = params;
 
+    this.props.navigation.setOptions({ title: (conversationId) ? 'Conversation' : 'New Conversation' });
+
     if (conversationId) {
 //      setInterval(() => {
         conversationsManager.loadActiveConversation(conversationId);
@@ -33,7 +35,6 @@ export default class ConversationScreen extends Component {
   }
 
   receiveStoreUpdate({ conversations, user }) {
-    this.props.navigation.setOptions({ title: 'Conversation' });
     this.setState({ conversation: conversations.activeConversation });
   }
 

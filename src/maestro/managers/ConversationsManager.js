@@ -279,7 +279,9 @@ export default class ConversationsManager extends Manager {
         conversationMessage.id === conversationMessageId
       ));
 
-      addReactionToConversationMessage(conversationMessage);
+      if (conversationMessage) {
+        addReactionToConversationMessage(conversationMessage);
+      }
 
       if (previewConversationMessage && previewConversationMessage.id === conversationMessageId) {
         addReactionToConversationMessage(previewConversationMessage);
@@ -307,7 +309,8 @@ export default class ConversationsManager extends Manager {
     const conversations = (store.conversations) ? [ ...store.conversations ] : null;
 
     const removeReactionFromConversationMessage = conversationMessage => {
-      const { authUserConversationMessageReactions, conversationMessageReactions } = conversationMessage;
+      const authUserConversationMessageReactions = conversationMessage.authUserConversationMessageReactions || [];
+      const conversationMessageReactions = conversationMessage.conversationMessageReactions || [];
       const removedConversationMessageReaction = authUserConversationMessageReactions.find(conversationMessageReaction => (
         (conversationMessageReactionId && conversationMessageReaction.id === conversationMessageReactionId) ||
         (reaction && conversationMessageReaction.reaction === reaction)
@@ -340,7 +343,9 @@ export default class ConversationsManager extends Manager {
         conversationMessage.id === conversationMessageId
       ));
 
-      removeReactionFromConversationMessage(conversationMessage);
+      if (conversationMessage) {
+        removeReactionFromConversationMessage(conversationMessage);
+      }
 
       if (previewConversationMessage && previewConversationMessage.id === conversationMessageId) {
         removeReactionFromConversationMessage(previewConversationMessage);
