@@ -225,7 +225,7 @@ export default class BabbleConversationPreview extends Component {
             <View style={styles.reactions}>
               {reactions.map((reaction, index) => (
                 <BabbleReaction
-                  reaction={reaction.reaction}
+                  reaction={reaction}
                   count={reaction.count}
                   style={styles.reaction}
                   key={index}

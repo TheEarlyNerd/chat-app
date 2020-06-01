@@ -23,6 +23,7 @@ import BabbleOverlayGifSelector from './BabbleOverlayGifSelector';
 import BabbleOverlayReactionInput from './BabbleOverlayReactionInput';
 import BabbleOverlaysContainer from './BabbleOverlaysContainer';
 import BabblePhoneField from './BabblePhoneField';
+import BabbleProfileHeader from './BabbleProfileHeader';
 import BabbleReaction from './BabbleReaction';
 import BabbleSearchField from './BabbleSearchField';
 import BabbleTextField from './BabbleTextField';
@@ -31,7 +32,6 @@ import BabbleUserAvatar from './BabbleUserAvatar';
 import BabbleUserAvatarGroup from './BabbleUserAvatarGroup';
 import BabbleUserList from './BabbleUserList';
 import BabbleUsernameField from './BabbleUsernameField';
-import BabbleUserProfileSummary from './BabbleUserProfileSummary';
 
 export {
   BabbleAutoscaleImage,
@@ -59,6 +59,7 @@ export {
   BabbleOverlayReactionInput,
   BabbleOverlaysContainer,
   BabblePhoneField,
+  BabbleProfileHeader,
   BabbleReaction,
   BabbleSearchField,
   BabbleTextField,
@@ -67,5 +68,4 @@ export {
   BabbleUserAvatarGroup,
   BabbleUserList,
   BabbleUsernameField,
-  BabbleUserProfileSummary,
 };

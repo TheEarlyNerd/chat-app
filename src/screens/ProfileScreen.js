@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
-import { BabbleConversationPreviewsList, BabbleUserProfileSummary } from '../components';
+import { BabbleConversationPreviewsList, BabbleProfileHeader } from '../components';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
@@ -29,7 +29,7 @@ export default class ProfileScreen extends Component {
 
   _renderHeader = () => {
     return (
-      <BabbleUserProfileSummary
+      <BabbleProfileHeader
         user={this.state.user}
         showEdit={this.state.user.id === userManager.store.user.id}
       />

@@ -46,7 +46,6 @@ export default class BabbleConversation extends Component {
   }
 
   _endReached = () => {
-    console.log('end reached');
     // load more.
   }
 
@@ -59,6 +58,7 @@ export default class BabbleConversation extends Component {
 
     return (
       <BabbleConversationMessage
+        message={item}
         heading={(
           index === messages.length - 1 ||
           messages[index + 1].user.id !== item.user.id ||
@@ -71,7 +71,6 @@ export default class BabbleConversation extends Component {
             extrapolate: 'clamp',
           }),
         }}
-        {...item}
       />
     );
   }

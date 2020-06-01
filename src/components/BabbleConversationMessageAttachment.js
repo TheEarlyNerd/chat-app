@@ -5,7 +5,7 @@ import { BabbleAutoscaleImage } from './';
 
 export default class BabbleConversationMessageAttachment extends Component {
   render() {
-    const { filename, bytes, url, mimetype, maxHeight, maxWidth, style } = this.props;
+    const { attachment: { url, mimetype }, maxHeight, maxWidth, style } = this.props;
     const isImage = mimetype.includes('image/');
     const isVideo = mimetype.includes('video/');
 

@@ -10,7 +10,7 @@ const { navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationMessage extends Component {
   _getText = () => {
-    const { text, embeds } = this.props;
+    const { message: { text, embeds } } = this.props;
     const linklessText = embeds.reduce((linklessText, embed) => {
       return linklessText.replace(embed.url, '');
     }, text).trim();
@@ -41,7 +41,7 @@ export default class BabbleConversationMessage extends Component {
   }
 
   _reactionPress = reaction => {
-    const { id, conversationId, authUserConversationMessageReactions } = this.props;
+    const { message: { id, conversationId, authUserConversationMessageReactions } } = this.props;
     const authReaction = authUserConversationMessageReactions.find(authReaction => (
       authReaction.reaction === reaction.reaction
     ));
@@ -62,7 +62,7 @@ export default class BabbleConversationMessage extends Component {
   }
 
   render() {
-    const { user, attachments, embeds, authUserConversationMessageReactions, conversationMessageReactions, createdAt, heading, style } = this.props;
+    const { message: { user, attachments, embeds, authUserConversationMessageReactions, conversationMessageReactions, createdAt }, heading, style } = this.props;
     const text = this._getText();
     const parsedTextOptions = [
       {
@@ -125,6 +125,7 @@ export default class BabbleConversationMessage extends Component {
             <View style={styles.attachments}>
               {attachments.map((attachment, index) => (
                 <BabbleConversationMessageAttachment
+                  attachment={attachment}
                   maxWidth={335}
                   maxHeight={(attachments.length === 1) ? 200 : 75}
                   style={[
@@ -132,7 +133,6 @@ export default class BabbleConversationMessage extends Component {
                     (attachments.length > 1) ? styles.inlineAttachment : null,
                   ]}
                   key={index}
-                  {...attachment}
                 />
               ))}
             </View>
@@ -142,6 +142,7 @@ export default class BabbleConversationMessage extends Component {
             <View style={styles.embeds}>
               {embeds.map((embed, index) => (
                 <BabbleConversationMessageEmbed
+                  embed={embed}
                   maxWidth={335}
                   maxHeight={(embeds.length === 1) ? 200 : 75}
                   style={[
@@ -149,7 +150,6 @@ export default class BabbleConversationMessage extends Component {
                     (embeds.length > 1) ? styles.inlineEmbed : null,
                   ]}
                   key={index}
-                  {...embed}
                 />
               ))}
             </View>
@@ -160,7 +160,7 @@ export default class BabbleConversationMessage extends Component {
               {conversationMessageReactions.map((reaction, index) => (
                 <BabbleReaction
                   onPress={() => this._reactionPress(reaction)}
-                  reaction={reaction.reaction}
+                  reaction={reaction}
                   reacted={authUserConversationMessageReactions.some(conversationMessageReaction => (
                     conversationMessageReaction.reaction === reaction.reaction
                   ))}

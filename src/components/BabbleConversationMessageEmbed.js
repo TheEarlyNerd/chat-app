@@ -15,7 +15,7 @@ export default class BabbleConversationMessageEmbed extends Component {
   }
 
   render() {
-    const { title, description, contentType, url, audioUrl, imageUrl, videoUrl, maxWidth, maxHeight, style } = this.props;
+    const { embed: { title, description, contentType, url, audioUrl, imageUrl, videoUrl }, maxWidth, maxHeight, style } = this.props;
     const { videoError } = this.state;
     const isLink = (title || description) && !contentType.includes('image/') && !contentType.includes('video/') && url;
 

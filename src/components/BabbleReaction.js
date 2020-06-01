@@ -3,7 +3,7 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 export default class BabbleReaction extends Component {
   render() {
-    const { onPress, reacted, reaction, count, style } = this.props;
+    const { reaction: { reaction, count }, onPress, reacted, style } = this.props;
 
     return (
       <TouchableOpacity

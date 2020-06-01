@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { BabbleUserAvatar, BabbleButton } from './';
 
-export default class BabbleUserProfileSummary extends Component {
+export default class BabbleProfileHeader extends Component {
+
+
   render() {
     const { user, showEdit, style } = this.props;
 
@@ -37,7 +39,7 @@ export default class BabbleUserProfileSummary extends Component {
 
           {!showEdit && (
             <>
-              <BabbleButton style={[ styles.button, styles.followButton ]}>Follow</BabbleButton>
+              <BabbleButton style={[ styles.button, styles.followButton ]}>{(user.authUserFollower) ? 'Unfollow' : 'Follow'}</BabbleButton>
               <BabbleButton style={styles.button}>Message</BabbleButton>
             </>
           )}
