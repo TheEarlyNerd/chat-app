@@ -73,9 +73,11 @@ export default class ApiHelper extends Helper {
 
     if (options.queryParams) {
       const queryString = Object.keys(options.queryParams).reduce((accumulator, paramName) => {
-        if (options.queryParams[paramName]) {
-          accumulator.push(`${encodeURIComponent(paramName)}=${encodeURIComponent(options.queryParams[paramName])}`);
-        }
+        const paramValue = (typeof options.queryParams[paramName] === 'object')
+          ? JSON.stringify(options.queryParams[paramName])
+          : options.queryParams[paramName];
+
+        accumulator.push(`${encodeURIComponent(paramName)}=${encodeURIComponent(paramValue)}`);
 
         return accumulator;
       }, []).join('&');

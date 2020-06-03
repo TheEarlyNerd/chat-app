@@ -34,6 +34,40 @@ export default class BabbleUserSelectionToolbar extends Component {
     return this.state.selectedUsers;
   }
 
+  addUser = user => {
+    const { onUserSelectionChange } = this.props;
+    const accessLevel = this.state.accessLevel || 'private';
+    const selectedUsers = [ ...this.state.selectedUsers, user ];
+
+    if (onUserSelectionChange) {
+      onUserSelectionChange({ accessLevel, selectedUsers });
+    }
+
+    this.setState({
+      accessLevel,
+      textInputValue: '',
+      selectedUsers,
+      searchUsers: [],
+    });
+  }
+
+  removeUser = ({ userId, selectedUserIndex }) => {
+    const { onUserSelectionChange } = this.props;
+    const accessLevel = this.accessLevel;
+    const selectedUsers = this.state.selectedUsers.filter((user, index) => {
+      return (
+        (!userId || user.id !== userId) &&
+        (isNaN(selectedUserIndex) || index !== selectedUserIndex)
+      );
+    });
+
+    if (onUserSelectionChange) {
+      onUserSelectionChange({ accessLevel, selectedUsers });
+    }
+
+    this.setState({ accessLevel, selectedUsers });
+  }
+
   _onKeyPress = ({ nativeEvent }) => {
     const { key } = nativeEvent;
     const { textInputValue } = this.state;
@@ -55,7 +89,7 @@ export default class BabbleUserSelectionToolbar extends Component {
 
     if (this.lastKeyPress === 'Backspace' && (!textInputValue.length || selectedUserIndex !== null)) {
       if (selectedUserIndex !== null) {
-        state.selectedUsers = selectedUsers.filter((user, index) => index !== selectedUserIndex);
+        this.removeUser({ selectedUserIndex });
         state.textInputValue = '';
       } else if (selectedUsers.length > 0) {
         state.selectedUserIndex = selectedUsers.length - 1;
@@ -118,15 +152,6 @@ export default class BabbleUserSelectionToolbar extends Component {
   _userPress = userIndex => {
     this.textInput.focus();
     this.setState({ selectedUserIndex: userIndex });
-  }
-
-  _searchUserPress = user => {
-    this.setState({
-      accessLevel: this.state.accessLevel || 'private',
-      textInputValue: '',
-      selectedUsers: [ ...this.state.selectedUsers, user ],
-      searchUsers: [],
-    });
   }
 
   _toolbarPress = () => {
@@ -222,7 +247,7 @@ export default class BabbleUserSelectionToolbar extends Component {
             users={searchUsers}
             disableNoResultsMessage={!textInputValue}
             noResultsMessage={'No users found'}
-            onPress={this._searchUserPress}
+            onPress={this.addUser}
             keyboardShouldPersistTaps={'always'}
           />
         )}

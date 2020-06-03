@@ -1,12 +1,48 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { BabbleUserAvatar, BabbleButton } from './';
+import maestro from '../maestro';
+
+const { userManager } = maestro.managers;
+const { navigationHelper } = maestro.helpers;
 
 export default class BabbleProfileHeader extends Component {
+  state = {
+    authUserFollower: null,
+    followersCount: 0,
+  }
 
+  componentDidMount() {
+    const { authUserFollower, followersCount } = this.props.user;
+
+    this.setState({ authUserFollower, followersCount });
+  }
+
+  _followUnfollowPress = async () => {
+    const userId = this.props.user.id;
+    let followersCount = this.state.followersCount;
+    let authUserFollower = (this.state.authUserFollower)
+      ? { ...this.state.authUserFollower }
+      : null;
+
+    followersCount += (authUserFollower) ? -1 : 1;
+    authUserFollower = (authUserFollower)
+      ? await userManager.unfollowUser(userId)
+      : await userManager.followUser(userId);
+
+    this.setState({
+      authUserFollower,
+      followersCount,
+    });
+  }
+
+  _messagePress = () => {
+    navigationHelper.push('Conversation', { toUsers: [ this.props.user ] });
+  }
 
   render() {
     const { user, showEdit, style } = this.props;
+    const { authUserFollower, followersCount } = this.state;
 
     return (
       <View style={[ styles.container, style ]}>
@@ -24,7 +60,7 @@ export default class BabbleProfileHeader extends Component {
 
           <View style={styles.followers}>
             <Text style={styles.followersText}>Followers</Text>
-            <Text style={styles.followersCountText}>{user.followersCount}</Text>
+            <Text style={styles.followersCountText}>{followersCount}</Text>
           </View>
         </View>
 
@@ -39,8 +75,19 @@ export default class BabbleProfileHeader extends Component {
 
           {!showEdit && (
             <>
-              <BabbleButton style={[ styles.button, styles.followButton ]}>{(user.authUserFollower) ? 'Unfollow' : 'Follow'}</BabbleButton>
-              <BabbleButton style={styles.button}>Message</BabbleButton>
+              <BabbleButton
+                onPress={this._followUnfollowPress}
+                style={[ styles.button, styles.followButton ]}
+              >
+                {(authUserFollower) ? 'Unfollow' : 'Follow'}
+              </BabbleButton>
+
+              <BabbleButton
+                onPress={this._messagePress}
+                style={styles.button}
+              >
+                Message
+              </BabbleButton>
             </>
           )}
         </View>

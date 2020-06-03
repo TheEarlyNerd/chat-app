@@ -17,16 +17,16 @@ export default class ConversationScreen extends Component {
     maestro.link(this);
 
     const params = this.props.route.params || {};
-    const { conversationId } = params;
+    const { conversationId, toUsers } = params;
 
     this.props.navigation.setOptions({ title: (conversationId) ? 'Conversation' : 'New Conversation' });
 
     if (conversationId) {
-//      setInterval(() => {
-        conversationsManager.loadActiveConversation(conversationId);
-//      }, 1000);
-    } else {
-      this.props.navigation.setOptions({ title: 'New Conversation' });
+      conversationsManager.loadActiveConversation(conversationId);
+    }
+
+    if (Array.isArray(toUsers)) {
+      toUsers.forEach(user => this.userSelector.addUser(user));
     }
   }
 
@@ -51,11 +51,21 @@ export default class ConversationScreen extends Component {
         embeds,
       });
     } else {
-      await conversationsManager.createConversation({
+      const createdConversation = await conversationsManager.createConversation({
         accessLevel: this.userSelector.accessLevel, // TODO: naming weird here, more than just user selector
         users: this.userSelector.selectedUsers.map(selectedUser => selectedUser.id),
         message: { text, attachments },
       });
+
+      this.setState({ conversation: createdConversation });
+    }
+  }
+
+  _onUserSelectionChange = ({ selectedUsers, accessLevel }) => {
+    conversationsManager.resetActiveConversation();
+
+    if (accessLevel === 'private') {
+      conversationsManager.loadActivePrivateConversationByUserIds(selectedUsers.map(user => user.id));
     }
   }
 
@@ -69,6 +79,7 @@ export default class ConversationScreen extends Component {
       <SafeAreaView style={styles.container}>
         {!conversationId && (
           <BabbleConversationUserSelectionToolbar
+            onUserSelectionChange={this._onUserSelectionChange}
             ref={component => this.userSelector = component}
           />
         )}

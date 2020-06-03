@@ -29,6 +29,28 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
+  async loadActivePrivateConversationByUserIds(userIds) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({
+      path: '/conversations',
+      queryParams: { privateUserIds: userIds },
+    });
+
+    if (![ 200, 204 ].includes(response.code)) {
+      throw new Error(response.body);
+    }
+
+    const activeConversation = response.body || null;
+
+    if (activeConversation) {
+      activeConversation.conversationMessages.sort(this._conversationMessagesSorter);
+    }
+
+    this.updateStore({ activeConversation: activeConversation });
+
+    return activeConversation;
+  }
+
   async loadConversations() {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.get({ path: '/conversations' });
@@ -170,6 +192,10 @@ export default class ConversationsManager extends Manager {
       // TODO: should probably re-add the reaction to UI if delete fails
       throw new Error(response.body);
     }
+  }
+
+  resetActiveConversation() {
+    this.updateStore({ activeConversation: null });
   }
 
   /*

@@ -42,6 +42,28 @@ export default class UserManager extends Manager {
     return response.body;
   }
 
+  async followUser(userId) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.put({ path: `/users/${userId}/followers` });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    return response.body;
+  }
+
+  async unfollowUser(userId) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.delete({ path: `/users/${userId}/followers` });
+
+    if (response.code !== 204) {
+      throw new Error(response.body);
+    }
+
+    return response.body;
+  }
+
   async requestPhoneLoginCode(phone) {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.post({
