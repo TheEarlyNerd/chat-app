@@ -33,6 +33,7 @@ export default class ProfileEditScreen extends Component {
         cropperCircleOverlay: true,
         cropping: true,
         useFrontCamera: true,
+        forceJpg: true,
       },
     });
   }

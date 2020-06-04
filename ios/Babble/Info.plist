@@ -75,5 +75,7 @@
 	<string>To take photos and video with your camera, please grant Babble access.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To select photos and videos from your media library, please grant Babble access.</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>To capture audio for videos or voice chat, please grant Babble access.</string>
 </dict>
 </plist>
