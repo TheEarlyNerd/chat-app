@@ -5,7 +5,7 @@ import { BabbleUserAvatar, BabbleSettingField } from '../components';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
-const { interfaceHelper } = maestro.helpers;
+const { attachmentsHelper, interfaceHelper } = maestro.helpers;
 
 export default class ProfileEditScreen extends Component {
   state = {
@@ -18,6 +18,22 @@ export default class ProfileEditScreen extends Component {
   componentDidMount() {
     this.props.navigation.setOptions({
       onRightButtonPress: this._savePress,
+    });
+  }
+
+  _selectAvatarImage = () => {
+    attachmentsHelper.selectMedia({
+      sources: [ 'camera', 'library' ],
+      onMediaSelected: result => this.setState({ avatarImageUri: result.path }),
+      imagePickerOptions: {
+        width: 512,
+        height: 512,
+        mediaType: 'photo',
+        cropperToolbarTitle: 'Pinch To Zoom Or Drag To Crop',
+        cropperCircleOverlay: true,
+        cropping: true,
+        useFrontCamera: true,
+      },
     });
   }
 
@@ -45,7 +61,7 @@ export default class ProfileEditScreen extends Component {
 
   render() {
     const { user } = userManager.store;
-    const { name, username, about } = this.state;
+    const { avatarImageUri, name, username, about } = this.state;
 
     return (
       <KeyboardAwareScrollView
@@ -54,10 +70,11 @@ export default class ProfileEditScreen extends Component {
         contentContainerStyle={styles.contentContainer}
       >
         <BabbleUserAvatar
-          avatarAttachment={user.avatarAttachment}
+          avatarAttachment={(avatarImageUri) ? { url: avatarImageUri } : user.avatarAttachment}
           defaultAvatar={require('../assets/images/upload-photo-placeholder.png')}
+          onPress={this._selectAvatarImage}
           hideActivityIcon
-          showEditIcon={!!user.avatarAttachment}
+          showEditIcon={!!user.avatarAttachment || !!avatarImageUri}
           size={120}
         />
 

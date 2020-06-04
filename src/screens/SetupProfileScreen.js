@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, Dimensions, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import ImagePicker from 'react-native-image-crop-picker';
 import { BabbleTextField, BabbleUsernameField, BabbleButton, BabbleTiledIconsBackground, BabbleUserAvatar } from '../components';
-import { SmileIcon, CameraIcon, ImageIcon } from '../components/icons';
+import { SmileIcon, CameraIcon } from '../components/icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
-const { interfaceHelper } = maestro.helpers;
+const { attachmentsHelper, interfaceHelper } = maestro.helpers;
 
 export default class SetupProfileScreen extends Component {
   state = {
@@ -19,44 +18,20 @@ export default class SetupProfileScreen extends Component {
 
   usernameField = null;
 
-  _showMediaActionSheet = () => {
-    interfaceHelper.showOverlay({
-      name: 'ActionSheet',
-      data: {
-        actions: [
-          {
-            iconComponent: CameraIcon,
-            text: 'Open Camera',
-            onPress: () => this._selectAvatarImage('camera'),
-          },
-          {
-            iconComponent: ImageIcon,
-            text: 'Open Photo Library',
-            onPress: () => this._selectAvatarImage('library'),
-          },
-        ],
+  _selectAvatarImage = () => {
+    attachmentsHelper.selectMedia({
+      sources: [ 'camera', 'library' ],
+      onMediaSelected: result => this.setState({ avatarImageUri: result.path }),
+      imagePickerOptions: {
+        width: 512,
+        height: 512,
+        mediaType: 'photo',
+        cropperToolbarTitle: 'Pinch To Zoom Or Drag To Crop',
+        cropperCircleOverlay: true,
+        cropping: true,
+        useFrontCamera: true,
       },
     });
-  }
-
-  _selectAvatarImage = async source => {
-    const options = {
-      width: 512,
-      height: 512,
-      mediaType: 'photo',
-      cropperToolbarTitle: 'Pinch To Zoom Or Drag To Crop',
-      cropperCircleOverlay: true,
-      cropping: true,
-      useFrontCamera: true,
-    };
-
-    try {
-      const image = (source === 'camera')
-        ? await ImagePicker.openCamera(options)
-        : await ImagePicker.openPicker(options);
-
-      this.setState({ avatarImageUri: image.path });
-    } catch { /* noop */ }
   }
 
   _submit = async () => {
@@ -88,7 +63,7 @@ export default class SetupProfileScreen extends Component {
           <BabbleUserAvatar
             avatarAttachment={(avatarImageUri) ? { url: avatarImageUri } : null}
             defaultAvatar={require('../assets/images/upload-photo-placeholder.png')}
-            onPress={this._showMediaActionSheet}
+            onPress={this._selectAvatarImage}
             hideActivityIcon
             showEditIcon={!!avatarImageUri}
             size={150}
