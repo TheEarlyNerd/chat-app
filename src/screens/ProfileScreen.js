@@ -13,6 +13,8 @@ export default class ProfileScreen extends Component {
   }
 
   async componentDidMount() {
+    maestro.link(this);
+
     const params = this.props.route.params || {};
     const { userId } = params;
 
@@ -25,6 +27,14 @@ export default class ProfileScreen extends Component {
       interfaceHelper.showError({ message: error.message });
       this.props.navigation.pop();
     }
+  }
+
+  componentWillUnmount() {
+    maestro.unlink(this);
+  }
+
+  receiveStoreUpdate({ user }) {
+    this.setState({ user: user.user });
   }
 
   _renderHeader = () => {

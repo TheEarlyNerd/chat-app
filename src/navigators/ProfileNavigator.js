@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { BabbleHeader } from '../components';
 
 import ConversationScreen from '../screens/ConversationScreen';
+import ProfileEditScreen from '../screens/ProfileEditScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
 export default () => {
@@ -23,6 +24,16 @@ export default () => {
         options={{
           backEnabled: true,
           title: <ActivityIndicator color={'#FFFFFF'} />,
+        }}
+      />
+
+      <ProfileStack.Screen
+        name={'ProfileEdit'}
+        component={ProfileEditScreen}
+        options={{
+          backEnabled: true,
+          title: 'Edit Profile',
+          rightButtonTitle: 'Save',
         }}
       />
 

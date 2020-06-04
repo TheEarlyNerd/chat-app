@@ -5,6 +5,7 @@ import { LockIcon, CheckCircleIcon } from '../components/icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
+const { navigationHelper } = maestro.helpers;
 
 export default class PhoneLoginCodeScreen extends Component {
   state = {
@@ -48,7 +49,7 @@ export default class PhoneLoginCodeScreen extends Component {
       });
     }
 
-    this.props.navigation.navigate(userManager.nextRouteNameForUserState());
+    navigationHelper.reset(userManager.nextRouteNameForUserState());
   }
 
   render() {

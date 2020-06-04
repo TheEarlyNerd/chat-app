@@ -18,6 +18,10 @@ export default class BabbleProfileHeader extends Component {
     this.setState({ authUserFollower, followersCount });
   }
 
+  _editProfilePress = () => {
+    navigationHelper.push('ProfileEdit');
+  }
+
   _followUnfollowPress = async () => {
     const userId = this.props.user.id;
     let followersCount = this.state.followersCount;
@@ -70,7 +74,12 @@ export default class BabbleProfileHeader extends Component {
 
         <View style={styles.buttons}>
           {showEdit && (
-            <BabbleButton style={[ styles.button ]}>Edit Profile</BabbleButton>
+            <BabbleButton
+              onPress={this._editProfilePress}
+              style={[ styles.button ]}
+            >
+              Edit Profile
+            </BabbleButton>
           )}
 
           {!showEdit && (

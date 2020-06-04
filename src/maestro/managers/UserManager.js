@@ -146,8 +146,21 @@ export default class UserManager extends Manager {
   logout() {
     const { navigationHelper } = this.maestro.helpers;
 
+    // TODO: maestro should support unlinking all screens..
+    this.maestro._linkedInstances.forEach(linkedInstance => {
+      const instanceName = linkedInstance.constructor.name;
+
+      if (instanceName !== 'App' && !instanceName.includes('Manager')) {
+        this.maestro.unlink(linkedInstance);
+      }
+    });
+
     this._setLoggedInUser(null);
-    this.resetStore();
+
+    // TODO: maestro should support resetting all manager stores..
+    Object.values(this.maestro.managers).forEach(maestroManager => {
+      maestroManager.resetStore();
+    });
 
     navigationHelper.reset('Landing');
   }

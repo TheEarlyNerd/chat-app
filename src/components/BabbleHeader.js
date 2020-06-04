@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { BabbleTiledIconsBackground, BabbleUserAvatar } from './';
 import { ArrowLeftIcon, MessageSquareIcon, HeartIcon, BellIcon, XIcon } from './icons';
 import maestro from '../maestro';
@@ -11,9 +11,8 @@ const BabbleHeader = ({ scene }) => {
   const { route, descriptor } = scene;
   const { navigation, options } = descriptor;
   const params = scene.route.params || {};
-  const title = options.title || params.title || null;
-  const showActivityButton = options.showActivityButton || params.showActivityButton || null;
-  const { backEnabled, closeEnabled } = options;
+  const title = options.title || params.title;
+  const { rightButtonTitle, showRightLoading, onRightButtonPress, showActivityButton, backEnabled, closeEnabled } = options || params || {};
 
   return (
     <SafeAreaView style={styles.container}>
@@ -76,6 +75,18 @@ const BabbleHeader = ({ scene }) => {
               height={23}
               style={styles.activityButtonIcon}
             />
+          </TouchableOpacity>
+        )}
+
+        {!!rightButtonTitle && (
+          <TouchableOpacity disabled={showRightLoading} onPress={onRightButtonPress}>
+            {!showRightLoading && (
+              <Text style={styles.rightButtonText}>{rightButtonTitle}</Text>
+            )}
+
+            {showRightLoading && (
+              <ActivityIndicator color={'#FFFFFF'} />
+            )}
           </TouchableOpacity>
         )}
       </View>
@@ -152,6 +163,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingRight: 15,
+  },
+  rightButtonText: {
+    color: '#FFFFFF',
+    fontFamily: 'NunitoSans-ExtraBold',
+    fontSize: 20,
   },
   text: {
     color: '#FFFFFF',

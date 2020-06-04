@@ -26,6 +26,7 @@ import BabblePhoneField from './BabblePhoneField';
 import BabbleProfileHeader from './BabbleProfileHeader';
 import BabbleReaction from './BabbleReaction';
 import BabbleSearchField from './BabbleSearchField';
+import BabbleSettingField from './BabbleSettingField';
 import BabbleTextField from './BabbleTextField';
 import BabbleTiledIconsBackground from './BabbleTiledIconsBackground';
 import BabbleUserAvatar from './BabbleUserAvatar';
@@ -62,6 +63,7 @@ export {
   BabbleProfileHeader,
   BabbleReaction,
   BabbleSearchField,
+  BabbleSettingField,
   BabbleTextField,
   BabbleTiledIconsBackground,
   BabbleUserAvatar,

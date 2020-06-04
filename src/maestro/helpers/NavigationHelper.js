@@ -1,6 +1,5 @@
 import { Helper } from 'react-native-maestro';
-import { CommonActions, StackActions } from '@react-navigation/native';
-
+import { StackActions } from '@react-navigation/native';
 
 export default class NavigationHelper extends Helper {
   static get instanceKey() {
