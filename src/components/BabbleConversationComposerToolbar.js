@@ -7,9 +7,10 @@ import maestro from '../maestro';
 const { userManager } = maestro.managers;
 const { interfaceHelper } = maestro.helpers;
 
-export default class BabbleUserSelectionToolbar extends Component {
+export default class BabbleConversationComposerToolbar extends Component {
   state = {
     accessLevel: null,
+    title: null,
     selectedUserIndex: null,
     textInputValue: '',
     selectedUsers: [],
@@ -28,6 +29,10 @@ export default class BabbleUserSelectionToolbar extends Component {
 
   get accessLevel() {
     return this.state.accessLevel || 'public';
+  }
+
+  get title() {
+    return this.state.title;
   }
 
   get selectedUsers() {
@@ -135,13 +140,13 @@ export default class BabbleUserSelectionToolbar extends Component {
           {
             iconComponent: UsersIcon,
             text: 'V.I.P.',
-            subtext: 'Only people you invite to this conversation can send messages. Anyone can view this conversation and react to messages.',
+            subtext: 'Only people you invite to this conversation can send messages. Anyone can see this conversation and react to messages.',
             onPress: () => this.setState({ accessLevel: 'protected' }),
           },
           {
             iconComponent: LockIcon,
             text: 'Private',
-            subtext: 'Only people you invite can view this conversation, send messages and react to messages.',
+            subtext: 'Only people you choose can see this conversation, send messages and react to messages.',
             onPress: () => this.setState({ accessLevel: 'private' }),
           },
         ],
@@ -165,7 +170,7 @@ export default class BabbleUserSelectionToolbar extends Component {
 
   render() {
     const { style } = this.props;
-    const { accessLevel, selectedUserIndex, textInputValue, selectedUsers, searchUsers, showSearchUsersList, loadingSearch } = this.state;
+    const { accessLevel, title, selectedUserIndex, textInputValue, selectedUsers, searchUsers, showSearchUsersList, loadingSearch } = this.state;
 
     return (
       <View>
@@ -240,6 +245,20 @@ export default class BabbleUserSelectionToolbar extends Component {
             </TouchableOpacity>
           </View>
         </TouchableWithoutFeedback>
+
+        {accessLevel !== 'private' && (
+          <View style={styles.container}>
+            <Text style={styles.labelText}>Title:</Text>
+
+            <TextInput
+              onChangeText={text => this.setState({ title: text })}
+              placeholder={'What do you want to talk about?'}
+              returnKeyType={'done'}
+              value={title}
+              style={styles.textInput}
+            />
+          </View>
+        )}
 
         {showSearchUsersList && (
           <BabbleUserList

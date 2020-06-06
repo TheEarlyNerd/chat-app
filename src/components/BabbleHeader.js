@@ -147,20 +147,18 @@ const styles = StyleSheet.create({
   },
   headerCenter: {
     alignItems: 'center',
-    flex: 2,
+    flex: 1,
     justifyContent: 'center',
     minHeight: 50,
     paddingVertical: 10,
   },
   headerLeft: {
     alignItems: 'flex-start',
-    flex: 1,
     justifyContent: 'center',
     paddingLeft: 15,
   },
   headerRight: {
     alignItems: 'flex-end',
-    flex: 1,
     justifyContent: 'center',
     paddingRight: 15,
   },

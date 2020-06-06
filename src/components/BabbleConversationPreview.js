@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
 import { BabbleUserAvatar, BabbleUserAvatarGroup, BabbleReaction } from './';
-import { EyeIcon, UsersIcon, UserIcon, MessageCircleIcon } from './icons';
+import { EyeIcon, UsersIcon, UserIcon } from './icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
@@ -56,8 +56,12 @@ export default class BabbleConversationPreview extends Component {
     }
   }
 
-  _getName = () => {
-    const { accessLevel, user } = this.props.conversation;
+  _getTitle = () => {
+    const { accessLevel, user, title } = this.props.conversation;
+
+    if (title) {
+      return title;
+    }
 
     if (accessLevel === 'public') {
       return user.name;
@@ -94,7 +98,7 @@ export default class BabbleConversationPreview extends Component {
   }
 
   _getPreviewText = () => {
-    const { accessLevel, previewConversationMessage } = this.props.conversation;
+    const { previewConversationMessage } = this.props.conversation;
 
     if (!previewConversationMessage) {
       return '(Deleted Message)';
@@ -102,22 +106,14 @@ export default class BabbleConversationPreview extends Component {
 
     const { text, user } = previewConversationMessage;
     const loggedInUserId = userManager.store.user.id;
+    const authorIsLoggedInUser = user.id === loggedInUserId;
+    const name = (authorIsLoggedInUser) ? 'You' : user.name;
 
-    if ([ 'public', 'protected' ].includes(accessLevel)) {
-      return previewConversationMessage.text;
+    if (authorIsLoggedInUser) {
+      return `You: ${text}`;
     }
 
-    if (accessLevel === 'private') {
-      const isGroup = this._getGroupUsers().length > 1;
-      const authorIsLoggedInUser = user.id === loggedInUserId;
-      const name = (authorIsLoggedInUser) ? 'You' : user.name;
-
-      if (isGroup) {
-        return `${name}: ${text}`;
-      }
-
-      return (authorIsLoggedInUser) ? `You: ${text}` : text;
-    }
+    return `${name}: ${text}`;
   }
 
   _getReactions = () => {
@@ -174,7 +170,7 @@ export default class BabbleConversationPreview extends Component {
                 <UsersIcon width={14} height={14} style={styles.protectedIcon} />
               )}
 
-              <Text style={styles.nameText} numberOfLines={1}>{this._getName()}</Text>
+              <Text style={styles.titleText} numberOfLines={1}>{this._getTitle()}</Text>
             </View>
 
             <View style={styles.stats}>
@@ -233,14 +229,6 @@ export default class BabbleConversationPreview extends Component {
               ))}
             </View>
           )}
-
-          {accessLevel !== 'private' && (
-            <View style={styles.chatGlance}>
-              <MessageCircleIcon style={styles.chatGlanceIcon} width={14} height={14} />
-              <Text style={styles.chatGlanceNameText}>Jack Rex: </Text>
-              <Text style={styles.chatGlanceText}>This is a test bro...</Text>
-            </View>
-          )}
         </View>
       </TouchableOpacity>
     );
@@ -248,24 +236,6 @@ export default class BabbleConversationPreview extends Component {
 }
 
 const styles = StyleSheet.create({
-  chatGlance: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 10,
-  },
-  chatGlanceIcon: {
-    color: '#2A99CC',
-  },
-  chatGlanceNameText: {
-    color: '#2A99CC',
-    fontFamily: 'NunitoSans-SemiBoldItalic',
-    fontSize: 12,
-  },
-  chatGlanceText: {
-    color: '#797979',
-    fontFamily: 'NunitoSans-SemiBoldItalic',
-    fontSize: 12,
-  },
   container: {
     alignItems: 'flex-start',
     flexDirection: 'row',
@@ -284,11 +254,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  nameText: {
-    color: '#2A99CC',
-    fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
   },
   preview: {
     flexDirection: 'row',
@@ -353,6 +318,11 @@ const styles = StyleSheet.create({
     fontFamily: 'NunitoSans-Bold',
     fontSize: 12,
     marginTop: 4,
+  },
+  titleText: {
+    color: '#2A99CC',
+    fontFamily: 'NunitoSans-Bold',
+    fontSize: 14,
   },
   unreadBubble: {
     alignItems: 'center',

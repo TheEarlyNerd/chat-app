@@ -2,6 +2,8 @@ import BabbleAutoscaleImage from './BabbleAutoscaleImage';
 import BabbleButton from './BabbleButton';
 import BabbleCodeField from './BabbleCodeField';
 import BabbleConversation from './BabbleConversation';
+import BabbleConversationComposerToolbar from './BabbleConversationComposerToolbar';
+import BabbleConversationHeaderTitle from './BabbleConversationHeaderTitle';
 import BabbleConversationMessage from './BabbleConversationMessage';
 import BabbleConversationMessageAttachment from './BabbleConversationMessageAttachment';
 import BabbleConversationMessageComposerToolbar from './BabbleConversationMessageComposerToolbar';
@@ -10,7 +12,6 @@ import BabbleConversationMessageEmbed from './BabbleConversationMessageEmbed';
 import BabbleConversationMessageOptions from './BabbleConversationMessageOptions';
 import BabbleConversationPreview from './BabbleConversationPreview';
 import BabbleConversationPreviewsList from './BabbleConversationPreviewsList';
-import BabbleConversationUserSelectionToolbar from './BabbleConversationUserSelectionToolbar';
 import BabbleConversationUsersToolbar from './BabbleConversationUsersToolbar';
 import BabbleEmojiSelector from './BabbleEmojiSelector';
 import BabbleFieldLabel from './BabbleFieldLabel';
@@ -39,6 +40,8 @@ export {
   BabbleButton,
   BabbleCodeField,
   BabbleConversation,
+  BabbleConversationComposerToolbar,
+  BabbleConversationHeaderTitle,
   BabbleConversationMessage,
   BabbleConversationMessageAttachment,
   BabbleConversationMessageComposerToolbar,
@@ -47,7 +50,6 @@ export {
   BabbleConversationMessageOptions,
   BabbleConversationPreview,
   BabbleConversationPreviewsList,
-  BabbleConversationUserSelectionToolbar,
   BabbleConversationUsersToolbar,
   BabbleEmojiSelector,
   BabbleFieldLabel,

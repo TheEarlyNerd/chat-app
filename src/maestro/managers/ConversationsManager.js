@@ -64,13 +64,17 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
-  async createConversation({ accessLevel, users, message }) {
+  async createConversation({ accessLevel, title, users, message }) {
     const { apiHelper } = this.maestro.helpers;
     const { userManager } = this.maestro.managers;
+
+    // TODO: handle attachments / embeds on new conversation message.
+
     const response = await apiHelper.post({
       path: '/conversations',
       data: {
         accessLevel,
+        title,
         users,
         message: {
           ...message,
