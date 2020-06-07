@@ -59,7 +59,10 @@ export default class SetupProfileScreen extends Component {
     const { avatarImageUri, name, username, loading } = this.state;
 
     return (
-      <KeyboardAwareScrollView contentContainerStyle={{ minHeight: Dimensions.get('window').height }}>
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps={'handled'}
+        contentContainerStyle={{ minHeight: Dimensions.get('window').height }}
+      >
         <View style={styles.previewContainer}>
           <BabbleUserAvatar
             avatarAttachment={(avatarImageUri) ? { url: avatarImageUri } : null}

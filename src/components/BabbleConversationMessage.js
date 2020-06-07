@@ -13,7 +13,7 @@ export default class BabbleConversationMessage extends Component {
     const { message: { text, embeds } } = this.props;
     const linklessText = embeds.reduce((linklessText, embed) => {
       return linklessText.replace(embed.url, '');
-    }, text).trim();
+    }, text || '').trim();
 
     return (linklessText.length) ? text : '';
   }

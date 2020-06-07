@@ -18,7 +18,7 @@ export default class BabbleConversationPreview extends Component {
   }
 
   _getAvatarAttachment = () => {
-    const { accessLevel, user, conversationUsers } = this.props.conversation;
+    const { accessLevel, user, previewConversationUsers } = this.props.conversation;
     const loggedInUserId = userManager.store.user.id;
 
     if ([ 'public', 'protected' ].includes(accessLevel)) {
@@ -26,7 +26,7 @@ export default class BabbleConversationPreview extends Component {
     }
 
     if (accessLevel === 'private') {
-      const otherUser = conversationUsers.map(conversationUser => (
+      const otherUser = previewConversationUsers.map(conversationUser => (
         conversationUser.user
       )).find(user => user.id !== loggedInUserId);
 
@@ -35,7 +35,8 @@ export default class BabbleConversationPreview extends Component {
   }
 
   _getGroupUsers = () => {
-    const { accessLevel, conversationUsers } = this.props.conversation;
+    console.log(this.props.conversation);
+    const { accessLevel, previewConversationUsers } = this.props.conversation;
     const loggedInUserId = userManager.store.user.id;
 
     if (accessLevel === 'public') {
@@ -43,14 +44,14 @@ export default class BabbleConversationPreview extends Component {
     }
 
     if (accessLevel === 'protected') {
-      return conversationUsers.filter(conversationUser => (
+      return previewConversationUsers.filter(conversationUser => (
         conversationUser.permissions.includes('CONVERSATION_ADMIN') ||
         conversationUser.permissions.includes('CONVERSATION_MESSAGES_CREATE')
       )).map(conversationUser => conversationUser.user);
     }
 
     if (accessLevel === 'private') {
-      return conversationUsers.map(conversationUser => (
+      return previewConversationUsers.map(conversationUser => (
         conversationUser.user
       )).filter(user => user.id !== loggedInUserId);
     }
@@ -134,12 +135,10 @@ export default class BabbleConversationPreview extends Component {
 
   render() {
     const { conversation, style } = this.props;
-    const { accessLevel } = conversation;
+    const { accessLevel, usersCount, impressionsCount } = conversation;
     const groupUsers = this._getGroupUsers();
     const reactions = this._getReactions();
     const previewImageUrl = this._getPreviewImageUrl();
-    const liveCount = 0;
-    const viewCount = 0;
     const unreadCount = 0;
 
     return (
@@ -178,12 +177,12 @@ export default class BabbleConversationPreview extends Component {
                 <>
                   <View style={styles.stat}>
                     <UserIcon width={17} height={17} style={[ styles.statIcon, styles.statLiveColor ]} />
-                    <Text style={[ styles.statText, styles.statLiveColor ]}>{liveCount}</Text>
+                    <Text style={[ styles.statText, styles.statLiveColor ]}>{usersCount}</Text>
                   </View>
 
                   <View style={styles.stat}>
                     <EyeIcon width={17} height={17} style={styles.statIcon} />
-                    <Text style={styles.statText}>{viewCount}</Text>
+                    <Text style={styles.statText}>{impressionsCount}</Text>
                   </View>
                 </>
               )}

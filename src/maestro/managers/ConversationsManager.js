@@ -211,14 +211,11 @@ export default class ConversationsManager extends Manager {
     const activeConversation = (store.activeConversation) ? { ...store.activeConversation } : null;
     const conversations = (store.conversations) ? [ ...store.conversations ] : null;
 
-    const removeOptimistics = conversationMessages => {
-      return conversationMessages.filter(conversationMessage => (
+    if (activeConversation && activeConversation.id === conversationId) {
+      activeConversation.conversationMessages = activeConversation.conversationMessages.filter(conversationMessage => (
         conversationMessage.nonce !== message.nonce
       ));
-    };
 
-    if (activeConversation && activeConversation.id === conversationId) {
-      activeConversation.conversationMessages = removeOptimistics(activeConversation.conversationMessages);
       activeConversation.conversationMessages.push(message);
       activeConversation.conversationMessages.sort(this._conversationMessagesSorter);
     }
@@ -227,9 +224,6 @@ export default class ConversationsManager extends Manager {
       const conversation = conversations.find(conversation => conversation.id === conversationId);
 
       if (conversation) {
-        conversation.conversationMessages = removeOptimistics(conversation.conversationMessages);
-        conversation.conversationMessages.push(message);
-        conversation.conversationMessages.sort(this._conversationMessagesSorter);
         conversation.previewConversationMessage = message;
       }
     }
@@ -242,26 +236,18 @@ export default class ConversationsManager extends Manager {
     const activeConversation = (store.activeConversation) ? { ...store.activeConversation } : null;
     const conversations = (store.conversations) ? [ ...store.conversations ] : null;
 
-    const removeMessage = conversationMessages => {
-      return conversationMessages.filter(conversationMessage => (
+    if (activeConversation && activeConversation.id === conversationId) {
+      activeConversation.conversationMessages = activeConversation.conversationMessages.filter(conversationMessage => (
         (!conversationId || conversationMessage.id !== conversationMessageId) &&
         (!nonce || conversationMessage.nonce !== nonce)
       )).sort(this._conversationMessagesSorter);
-    };
-
-    if (activeConversation && activeConversation.id === conversationId) {
-      activeConversation.conversationMessages = removeMessage(activeConversation.conversationMessages);
     }
 
     if (conversations) {
       const conversation = conversations.find(conversation => conversation.id === conversationId) || {};
 
-      if (conversation) {
-        conversation.conversationMessages = removeMessage(conversation.conversationMessages);
-
-        if (conversation.previewConversationMessage?.id === conversationMessageId) {
-          conversation.previewConversationMessage = null;
-        }
+      if (conversation && conversation.previewConversationMessage?.id === conversationMessageId) {
+        conversation.previewConversationMessage = null;
       }
     }
 
@@ -304,13 +290,16 @@ export default class ConversationsManager extends Manager {
     };
 
     const findMessageInConversationAndAddReaction = conversation => {
-      const { previewConversationMessage } = conversation;
-      const conversationMessage = conversation.conversationMessages.find(conversationMessage => (
-        conversationMessage.id === conversationMessageId
-      ));
+      const { previewConversationMessage, conversationMessages } = conversation;
 
-      if (conversationMessage) {
-        addReactionToConversationMessage(conversationMessage);
+      if (conversationMessages) {
+        const conversationMessage = conversation.conversationMessages.find(conversationMessage => (
+          conversationMessage.id === conversationMessageId
+        ));
+
+        if (conversationMessage) {
+          addReactionToConversationMessage(conversationMessage);
+        }
       }
 
       if (previewConversationMessage && previewConversationMessage.id === conversationMessageId) {
@@ -368,13 +357,16 @@ export default class ConversationsManager extends Manager {
     };
 
     const findMessageInConversationAndRemoveReaction = conversation => {
-      const { previewConversationMessage } = conversation;
-      const conversationMessage = conversation.conversationMessages.find(conversationMessage => (
-        conversationMessage.id === conversationMessageId
-      ));
+      const { previewConversationMessage, conversationMessages } = conversation;
 
-      if (conversationMessage) {
-        removeReactionFromConversationMessage(conversationMessage);
+      if (conversationMessages) {
+        const conversationMessage = conversation.conversationMessages.find(conversationMessage => (
+          conversationMessage.id === conversationMessageId
+        ));
+
+        if (conversationMessage) {
+          removeReactionFromConversationMessage(conversationMessage);
+        }
       }
 
       if (previewConversationMessage && previewConversationMessage.id === conversationMessageId) {

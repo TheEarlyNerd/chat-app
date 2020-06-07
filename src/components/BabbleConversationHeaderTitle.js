@@ -20,29 +20,13 @@ export default class BabbleConversationHeaderTitle extends Component {
   }
 
   _getTitle = () => {
-    const { accessLevel, user, title, conversationUsers } = this.props.conversation;
-    const loggedInUserId = userManager.store.user.id;
+    const { user, title } = this.props.conversation;
 
     if (title) {
       return title;
     }
 
-    if (accessLevel === 'public') {
-      return user.name;
-    }
-
-    if ([ 'protected', 'private' ].includes(accessLevel)) {
-      return conversationUsers.filter(conversationUser => (
-        conversationUser.user.id !== loggedInUserId && (
-          conversationUser.permissions.includes('CONVERSATION_ADMIN') ||
-          conversationUser.permissions.includes('CONVERSATION_MESSAGES_CREATE')
-        )
-      )).map(conversationUser => (
-        conversationUser.user
-      )).map(user => (
-        user.name
-      )).join(', ') || user.name;
-    }
+    return user.name;
   }
 
   _getSubtext = () => {
