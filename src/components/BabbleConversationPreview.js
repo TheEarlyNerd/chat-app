@@ -105,16 +105,16 @@ export default class BabbleConversationPreview extends Component {
       return '(Deleted Message)';
     }
 
-    const { text, user } = previewConversationMessage;
+    const { user, text } = previewConversationMessage;
     const loggedInUserId = userManager.store.user.id;
     const authorIsLoggedInUser = user.id === loggedInUserId;
     const name = (authorIsLoggedInUser) ? 'You' : user.name;
 
     if (authorIsLoggedInUser) {
-      return `You: ${text}`;
+      return (text) ? `You: ${text}` : 'You sent an attachment(s).';
     }
 
-    return `${name}: ${text}`;
+    return (text) ? `${name}: ${text}` : `${name} sent an attachment(s).`;
   }
 
   _getReactions = () => {

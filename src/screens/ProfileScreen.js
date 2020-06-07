@@ -3,13 +3,13 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { BabbleConversationPreviewsList, BabbleProfileHeader } from '../components';
 import maestro from '../maestro';
 
-const { userManager } = maestro.managers;
+const { userManager, conversationsManager } = maestro.managers;
 const { interfaceHelper } = maestro.helpers;
 
 export default class ProfileScreen extends Component {
   state = {
     user: null,
-    loading: true,
+    conversations: null,
   }
 
   async componentDidMount() {
@@ -20,9 +20,11 @@ export default class ProfileScreen extends Component {
 
     try {
       const user = await userManager.getUser(userId);
-
-      this.setState({ user, loading: false });
+      this.setState({ user });
       this.props.navigation.setOptions({ title: `@${user.username}` });
+
+      const conversations = await conversationsManager.getConversationsByUserId(userId);
+      this.setState({ conversations });
     } catch (error) {
       interfaceHelper.showError({ message: error.message });
       this.props.navigation.pop();
@@ -61,17 +63,18 @@ export default class ProfileScreen extends Component {
   }
 
   render() {
-    const { loading } = this.state;
+    const { user, conversations } = this.state;
 
-    if (loading) {
+    if (!user) {
       return this._renderLoading();
     }
 
     return (
       <BabbleConversationPreviewsList
+        conversations={conversations}
         ListHeaderComponent={this._renderHeader}
         ListHeaderComponentStyle={styles.header}
-        ListFooterComponent={this._renderFooter}
+        ListFooterComponent={(conversations === null) ? this._renderFooter : null}
         ListFooterComponentStyle={styles.footer}
         style={styles.container}
       />

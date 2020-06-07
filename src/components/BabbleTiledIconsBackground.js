@@ -8,6 +8,16 @@ export default class BabbleTiledIconsBackground extends Component {
     componentHeight: 0,
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const { componentWidth, componentHeight } = this.state;
+
+    if (componentWidth === nextState.componentWidth && componentHeight === nextState.componentHeight) {
+      return false;
+    }
+
+    return true;
+  }
+
   _generateIcons() {
     const { iconComponents, iconSize, iconStyle, iconSpacing } = this.props;
     const { componentWidth, componentHeight } = this.state;
@@ -58,11 +68,10 @@ export default class BabbleTiledIconsBackground extends Component {
   }
 
   render() {
-    const { iconComponents, linearGradientProps, linearGradientRotationAngle, bottom, key, style } = this.props;
+    const { iconComponents, linearGradientProps, linearGradientRotationAngle, bottom, style } = this.props;
 
     return (
       <View
-        key={key}
         onLayout={this._updateStateDimensions}
         style={[
           styles.container,

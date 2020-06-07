@@ -14,6 +14,17 @@ export default class ConversationsManager extends Manager {
     return 'conversations';
   }
 
+  async getConversationsByUserId(userId) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({ path: `/users/${userId}/conversations` });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    return response.body;
+  }
+
   async loadActiveConversation(conversationId) {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.get({ path: `/conversations/${conversationId}` });

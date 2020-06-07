@@ -10,21 +10,22 @@ const { interfaceHelper } = maestro.helpers;
 export default class BabbleConversationComposerToolbar extends Component {
   state = {
     accessLevel: null,
+    search: null,
     title: null,
     selectedUserIndex: null,
-    textInputValue: '',
     selectedUsers: [],
     searchUsers: [],
     showSearchUsersList: false,
     loadingSearch: false,
   }
 
-  textInput = null;
-  textInputTimeout = null;
+  searchTextInput = null;
+  searchTextInputTimeout = null;
+  titleTextInput = null;
   lastKeyPress = null;
 
   componentWillUnmount() {
-    clearTimeout(this.textInputTimeout);
+    clearTimeout(this.searchTextInputTimeout);
   }
 
   get accessLevel() {
@@ -50,7 +51,7 @@ export default class BabbleConversationComposerToolbar extends Component {
 
     this.setState({
       accessLevel,
-      textInputValue: '',
+      search: '',
       selectedUsers,
       searchUsers: [],
     });
@@ -75,27 +76,27 @@ export default class BabbleConversationComposerToolbar extends Component {
 
   _onKeyPress = ({ nativeEvent }) => {
     const { key } = nativeEvent;
-    const { textInputValue } = this.state;
+    const { search } = this.state;
 
     this.lastKeyPress = key;
 
-    if (key === 'Backspace' && !textInputValue.length) {
-      this._onChangeText(textInputValue);
+    if (key === 'Backspace' && !search.length) {
+      this._onChangeText(search);
     }
   }
 
   _onChangeText = text => {
-    const { selectedUserIndex, textInputValue, selectedUsers } = this.state;
+    const { selectedUserIndex, search, selectedUsers } = this.state;
     const state = {
-      textInputValue: text,
+      search: text,
       selectedUserIndex: null,
       searchUsers: [],
     };
 
-    if (this.lastKeyPress === 'Backspace' && (!textInputValue.length || selectedUserIndex !== null)) {
+    if (this.lastKeyPress === 'Backspace' && (!search.length || selectedUserIndex !== null)) {
       if (selectedUserIndex !== null) {
         this.removeUser({ selectedUserIndex });
-        state.textInputValue = '';
+        state.search = '';
       } else if (selectedUsers.length > 0) {
         state.selectedUserIndex = selectedUsers.length - 1;
       }
@@ -107,7 +108,7 @@ export default class BabbleConversationComposerToolbar extends Component {
   }
 
   _search = search => {
-    clearTimeout(this.textInputTimeout);
+    clearTimeout(this.searchTextInputTimeout);
 
     if (!search) {
       return this.setState({ loadingSearch: false });
@@ -115,7 +116,7 @@ export default class BabbleConversationComposerToolbar extends Component {
 
     this.setState({ loadingSearch: true });
 
-    this.textInputTimeout = setTimeout(async () => {
+    this.searchTextInputTimeout = setTimeout(async () => {
       const { selectedUsers } = this.state;
       const selectedUserIds = selectedUsers.map(selectedUser => selectedUser.id);
       const searchUsers = (await userManager.getSearchUsers(search)).filter(searchUser => {
@@ -155,12 +156,12 @@ export default class BabbleConversationComposerToolbar extends Component {
   }
 
   _userPress = userIndex => {
-    this.textInput.focus();
+    this.searchTextInput.focus();
     this.setState({ selectedUserIndex: userIndex });
   }
 
   _toolbarPress = () => {
-    this.textInput.focus();
+    this.searchTextInput.focus();
     this.setState({ selectedUserIndex: null });
   }
 
@@ -170,7 +171,7 @@ export default class BabbleConversationComposerToolbar extends Component {
 
   render() {
     const { style } = this.props;
-    const { accessLevel, title, selectedUserIndex, textInputValue, selectedUsers, searchUsers, showSearchUsersList, loadingSearch } = this.state;
+    const { accessLevel, title, selectedUserIndex, search, selectedUsers, searchUsers, showSearchUsersList, loadingSearch } = this.state;
 
     return (
       <View>
@@ -214,9 +215,9 @@ export default class BabbleConversationComposerToolbar extends Component {
               onBlur={() => this._toggleSearchUsersList(false)}
               placeholder={(!selectedUsers.length && (!accessLevel || accessLevel === 'public')) ? 'The World' : ''}
               returnKeyType={'done'}
-              value={textInputValue}
+              value={search}
               style={styles.textInput}
-              ref={component => this.textInput = component}
+              ref={component => this.searchTextInput = component}
             />
 
             <TouchableOpacity onPress={this._accessLevelPress} style={styles.accessLevelButton}>
@@ -247,24 +248,27 @@ export default class BabbleConversationComposerToolbar extends Component {
         </TouchableWithoutFeedback>
 
         {accessLevel !== 'private' && (
-          <View style={styles.container}>
-            <Text style={styles.labelText}>Title:</Text>
+          <TouchableWithoutFeedback onPress={() => this.titleTextInput.focus()}>
+            <View style={styles.container}>
+              <Text style={styles.labelText}>Title:</Text>
 
-            <TextInput
-              onChangeText={text => this.setState({ title: text })}
-              placeholder={'What do you want to talk about?'}
-              returnKeyType={'done'}
-              value={title}
-              style={styles.textInput}
-            />
-          </View>
+              <TextInput
+                onChangeText={text => this.setState({ title: text })}
+                placeholder={'What do you want to talk about?'}
+                returnKeyType={'done'}
+                value={title}
+                style={styles.textInput}
+                ref={component => this.titleTextInput = component}
+              />
+            </View>
+          </TouchableWithoutFeedback>
         )}
 
         {showSearchUsersList && (
           <BabbleUserList
             loading={loadingSearch}
             users={searchUsers}
-            disableNoResultsMessage={!textInputValue}
+            disableNoResultsMessage={!search}
             noResultsMessage={'No users found'}
             onPress={this.addUser}
             keyboardShouldPersistTaps={'always'}

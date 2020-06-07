@@ -155,11 +155,13 @@ const styles = StyleSheet.create({
   headerLeft: {
     alignItems: 'flex-start',
     justifyContent: 'center',
+    minWidth: 40,
     paddingLeft: 15,
   },
   headerRight: {
     alignItems: 'flex-end',
     justifyContent: 'center',
+    minWidth: 40,
     paddingRight: 15,
   },
   rightButtonText: {
