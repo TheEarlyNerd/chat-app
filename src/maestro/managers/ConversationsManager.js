@@ -76,7 +76,7 @@ export default class ConversationsManager extends Manager {
       throw new Error(response.body);
     }
 
-    this.updateStore({ conversations: response.body });
+    this.updateStore({ recentConversations: response.body });
 
     return response.body;
   }

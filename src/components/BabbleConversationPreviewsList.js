@@ -12,7 +12,7 @@ export default class BabbleConversationPreviewsList extends Component {
   render() {
     const { conversations, style, ...props } = this.props;
 
-    return (!!conversations && conversations.length) ? (
+    return (
       <FlatList
         data={conversations}
         renderItem={this._renderConversationPreview}
@@ -21,7 +21,7 @@ export default class BabbleConversationPreviewsList extends Component {
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         {...props}
       />
-    ) : null;
+    );
   }
 }
 
@@ -30,7 +30,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   separator: {
-    marginBottom: 10,
-    paddingTop: 10,
+    borderBottomColor: '#E8E8E8',
+    borderBottomWidth: 0.5,
+    marginBottom: 15,
+    paddingTop: 15,
   },
 });

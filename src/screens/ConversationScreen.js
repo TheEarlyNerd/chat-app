@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { BabbleConversationComposerToolbar, BabbleConversationHeaderTitle, BabbleConversation, BabbleConversationMessageComposerToolbar } from '../components';
+import { AlertTriangleIcon } from '../components/icons';
 import maestro from '../maestro';
 
 const { conversationsManager } = maestro.managers;
+const { interfaceHelper } = maestro.helpers;
 
 export default class ConversationScreen extends Component {
   conversationComposer = null;
@@ -60,10 +62,19 @@ export default class ConversationScreen extends Component {
         embeds,
       });
     } else {
+      const { accessLevel, title, selectedUsers } = this.conversationComposer;
+
+      if (!title && accessLevel !== 'private') {
+        return interfaceHelper.showError({
+          message: 'Please provide a title.',
+          iconComponent: AlertTriangleIcon,
+        });
+      }
+
       const createdConversation = await conversationsManager.createConversation({
-        accessLevel: this.conversationComposer.accessLevel,
-        title: this.conversationComposer.title,
-        users: this.conversationComposer.selectedUsers.map(selectedUser => selectedUser.id),
+        accessLevel,
+        title,
+        users: selectedUsers.map(selectedUser => selectedUser.id),
         message: { text, attachments },
       });
 

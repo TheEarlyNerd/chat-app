@@ -23,7 +23,7 @@ export default class BabbleOverlayError extends Component {
         toValue: -250,
         duration: 500,
         useNativeDriver: true,
-        delay: 5000,
+        delay: 4000,
       }),
     ]).start(() => {
       maestro.dispatchEvent('OVERLAYS:HIDE', { name: 'Error' });
