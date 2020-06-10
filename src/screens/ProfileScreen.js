@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { BabbleConversationPreviewsList, BabbleProfileHeader } from '../components';
 import maestro from '../maestro';
 
@@ -48,6 +48,16 @@ export default class ProfileScreen extends Component {
     );
   }
 
+  _renderNoConversations = () => {
+    const { user } = this.state;
+
+    return (
+      <View style={styles.noConversationsContainer}>
+        <Text style={styles.noConversationsText}>{user.name} hasn't started or shared any public conversations.</Text>
+      </View>
+    );
+  }
+
   _renderFooter = () => {
     return (
       <ActivityIndicator size={'large'} />
@@ -76,6 +86,7 @@ export default class ProfileScreen extends Component {
         ListHeaderComponentStyle={styles.header}
         ListFooterComponent={(conversations === null) ? this._renderFooter : null}
         ListFooterComponentStyle={styles.footer}
+        ListEmptyComponent={this._renderNoConversations}
         style={styles.container}
       />
     );
@@ -99,5 +110,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+  },
+  noConversationsContainer: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: '80%',
+  },
+  noConversationsText: {
+    color: '#4F4F4F',
+    fontFamily: 'NunitoSans-SemiBold',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });

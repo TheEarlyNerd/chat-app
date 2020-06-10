@@ -9,13 +9,19 @@ const { conversationsManager } = maestro.managers;
 
 export default class HomeScreen extends Component {
   state = {
-    conversations: null,
+    exploreConversations: null,
+    feedConversations: null,
+    privateConversations: null,
+    recentConversations: null,
   }
 
   componentDidMount() {
     maestro.link(this);
 
-    conversationsManager.loadConversations();
+    conversationsManager.loadExploreConversations();
+    conversationsManager.loadFeedConversations();
+    conversationsManager.loadPrivateConversations();
+    conversationsManager.loadRecentConversations();
   }
 
   componentWillUnmount() {
@@ -23,11 +29,16 @@ export default class HomeScreen extends Component {
   }
 
   receiveStoreUpdate({ conversations, user }) {
-    this.setState({ conversations: conversations.conversations });
+    this.setState({
+      exploreConversations: conversations.exploreConversations,
+      feedConversations: conversations.feedConversations,
+      privateConversations: conversations.privateConversations,
+      recentConversations: conversations.recentConversations,
+    });
   }
 
   render() {
-    const { conversations } = this.state;
+    const { exploreConversations, feedConversations, privateConversations, recentConversations } = this.state;
 
     return (
       <View style={styles.container}>
@@ -38,12 +49,35 @@ export default class HomeScreen extends Component {
           />
 
           <BabbleConversationPreviewsList
-            conversations={conversations}
+            conversations={recentConversations}
             ListHeaderComponentStyle={{ marginBottom: 20 /*temp*/ }}
             ListHeaderComponent={() => (
-              <Text style={styles.headingText}>Messages</Text>
+              <Text style={styles.headingText}>Recent Conversations</Text>
             )}
-            style={{ paddingBottom: 80 }}
+          />
+
+          <BabbleConversationPreviewsList
+            conversations={privateConversations}
+            ListHeaderComponentStyle={{ marginBottom: 20 /*temp*/ }}
+            ListHeaderComponent={() => (
+              <Text style={styles.headingText}>Direct Messages</Text>
+            )}
+          />
+
+          <BabbleConversationPreviewsList
+            conversations={feedConversations}
+            ListHeaderComponentStyle={{ marginBottom: 20 /*temp*/ }}
+            ListHeaderComponent={() => (
+              <Text style={styles.headingText}>Feed</Text>
+            )}
+          />
+
+          <BabbleConversationPreviewsList
+            conversations={exploreConversations}
+            ListHeaderComponentStyle={{ marginBottom: 20 /*temp*/ }}
+            ListHeaderComponent={() => (
+              <Text style={styles.headingText}>Explore</Text>
+            )}
           />
         </ScrollView>
 

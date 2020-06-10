@@ -30,14 +30,15 @@ export default class BabbleConversationHeaderTitle extends Component {
   }
 
   _getSubtext = () => {
-    const { accessLevel, user } = this.props.conversation;
+    const { accessLevel, user, usersCount } = this.props.conversation;
     const loggedInUserId = userManager.store.user.id;
     const username = (user.id === loggedInUserId) ? 'You' : `@${user.username}`;
-    const permission = (accessLevel === 'protected')
-      ? 'V.I.P.'
-      : accessLevel.charAt(0).toUpperCase() + accessLevel.slice(1);
+    const permission = (accessLevel === 'protected') ? 'V.I.P.' : accessLevel.charAt(0).toUpperCase() + accessLevel.slice(1);
+    const count = (usersCount > 1) ? `${usersCount} others` : '1 other';
 
-    return `${permission} | ${username} & 1 other`;
+    return (usersCount === 1)
+      ? `${permission} | ${username}`
+      : `${permission} | ${username} & ${count}`;
   }
 
   _toggleSubtext = show => {

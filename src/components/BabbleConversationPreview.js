@@ -35,7 +35,6 @@ export default class BabbleConversationPreview extends Component {
   }
 
   _getGroupUsers = () => {
-    console.log(this.props.conversation);
     const { accessLevel, previewConversationUsers } = this.props.conversation;
     const loggedInUserId = userManager.store.user.id;
 
@@ -204,7 +203,7 @@ export default class BabbleConversationPreview extends Component {
 
           <View style={styles.preview}>
             <View style={styles.previewTexts}>
-              <Text numberOfLines={3} style={[ styles.previewText, (unreadCount > 0) ? styles.previewUnreadColor : null ]}>{this._getPreviewText()}</Text>
+              <Text numberOfLines={1} style={[ styles.previewText, (unreadCount > 0) ? styles.previewUnreadColor : null ]}>{this._getPreviewText()}</Text>
               <Text style={styles.timeText}>{this._getTime()}</Text>
             </View>
 

@@ -156,11 +156,6 @@ const styles = StyleSheet.create({
     fontFamily: 'NunitoSans-Bold',
     fontSize: 16,
   },
-  linkText: {
-    color: '#2A99CC',
-    fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 14,
-  },
   nameText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',

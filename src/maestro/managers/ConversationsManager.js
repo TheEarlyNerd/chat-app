@@ -7,7 +7,10 @@ export default class ConversationsManager extends Manager {
 
   static initialStore = {
     activeConversation: null,
-    conversations: null,
+    exploreConversations: null,
+    feedConversations: null,
+    privateConversations: null,
+    recentConversations: null,
   }
 
   get storeName() {
@@ -62,7 +65,55 @@ export default class ConversationsManager extends Manager {
     return activeConversation;
   }
 
-  async loadConversations() {
+  async loadRecentConversations() {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({
+      path: '/conversations',
+      queryParams: { accessLevels: [ 'public', 'protected' ] },
+    });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    this.updateStore({ conversations: response.body });
+
+    return response.body;
+  }
+
+  async loadPrivateConversations() {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({
+      path: '/conversations',
+      queryParams: { accessLevels: [ 'private' ] },
+    });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    this.updateStore({ privateConversations: response.body });
+
+    return response.body;
+  }
+
+  async loadFeedConversations() {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({
+      path: '/conversations',
+      queryParams: { feed: true },
+    });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    this.updateStore({ feedConversations: response.body });
+
+    return response.body;
+  }
+
+  async loadExploreConversations() {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.get({ path: '/conversations' });
 
@@ -70,7 +121,7 @@ export default class ConversationsManager extends Manager {
       throw new Error(response.body);
     }
 
-    this.updateStore({ conversations: response.body });
+    this.updateStore({ exploreConversations: response.body });
 
     return response.body;
   }
