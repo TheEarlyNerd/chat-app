@@ -5,7 +5,7 @@ import { BabbleUserAvatar } from './';
 export default class BabbleUserAvatarGroup extends Component {
   render() {
     const { users, usersCount, size, disabled, onPress } = this.props;
-    const avatarSize = (users.length > 2) ? size / 2 : size / 1.4;
+    const avatarSize = (users.length > 2) ? size / 2.1 : size / 1.4;
 
     return (
       <TouchableOpacity
@@ -45,6 +45,14 @@ export default class BabbleUserAvatarGroup extends Component {
             disabled
             hideActivityIcon
             size={avatarSize}
+            style={[
+              (users.length === 3) ? {
+                marginTop: avatarSize / 2,
+              } : null,
+              (users.length === 4) ? {
+                paddingLeft: size - avatarSize * 2,
+              } : null,
+            ]}
           />
         )}
 
@@ -54,10 +62,10 @@ export default class BabbleUserAvatarGroup extends Component {
             {
               width: avatarSize,
               height: avatarSize,
+              paddingLeft: size - avatarSize * 2,
             },
           ]}>
             <Text style={styles.countText}>+{usersCount - 3}</Text>
-
           </View>
         )}
       </TouchableOpacity>
@@ -68,7 +76,7 @@ export default class BabbleUserAvatarGroup extends Component {
 const styles = StyleSheet.create({
   container: {
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
   countContainer: {
     alignItems: 'center',
@@ -76,7 +84,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   countText: {
-    color: '#1ACCB4',
+    color: '#797979',
     fontFamily: 'NunitoSans-Bold',
     fontSize: 12,
     marginTop: 3,

@@ -48,29 +48,35 @@ export default class HomeScreen extends Component {
             containerStyle={styles.searchField}
           />
 
-          <BabbleConversationPreviewsList
-            conversations={recentConversations}
-            ListHeaderComponentStyle={{ marginBottom: 20 /*temp*/ }}
-            ListHeaderComponent={() => (
-              <Text style={styles.headingText}>Recent Conversations</Text>
-            )}
-          />
+          {!!recentConversations && !!recentConversations.length && (
+            <BabbleConversationPreviewsList
+              conversations={recentConversations}
+              ListHeaderComponentStyle={{ marginBottom: 20 /*temp*/ }}
+              ListHeaderComponent={() => (
+                <Text style={styles.headingText}>Recent Conversations</Text>
+              )}
+            />
+          )}
 
-          <BabbleConversationPreviewsList
-            conversations={privateConversations}
-            ListHeaderComponentStyle={{ marginBottom: 20 /*temp*/ }}
-            ListHeaderComponent={() => (
-              <Text style={styles.headingText}>Direct Messages</Text>
-            )}
-          />
+          {!!privateConversations && !!privateConversations.length && (
+            <BabbleConversationPreviewsList
+              conversations={privateConversations}
+              ListHeaderComponentStyle={{ marginBottom: 20 /*temp*/ }}
+              ListHeaderComponent={() => (
+                <Text style={styles.headingText}>Direct Messages</Text>
+              )}
+            />
+          )}
 
-          <BabbleConversationPreviewsList
-            conversations={feedConversations}
-            ListHeaderComponentStyle={{ marginBottom: 20 /*temp*/ }}
-            ListHeaderComponent={() => (
-              <Text style={styles.headingText}>Feed</Text>
-            )}
-          />
+          {!!feedConversations && !!feedConversations.length && (
+            <BabbleConversationPreviewsList
+              conversations={feedConversations}
+              ListHeaderComponentStyle={{ marginBottom: 20 /*temp*/ }}
+              ListHeaderComponent={() => (
+                <Text style={styles.headingText}>Feed</Text>
+              )}
+            />
+          )}
 
           <BabbleConversationPreviewsList
             conversations={exploreConversations}

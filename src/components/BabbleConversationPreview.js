@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import LinearGradient from 'react-native-linear-gradient';
-import moment from 'moment';
 import { BabbleUserAvatar, BabbleUserAvatarGroup, BabbleReaction } from './';
 import { EyeIcon, UsersIcon, UserIcon } from './icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
-const { navigationHelper } = maestro.helpers;
+const { navigationHelper, timeHelper } = maestro.helpers;
 
 export default class BabbleConversationPreview extends Component {
   _onPress = () => {
@@ -39,10 +37,10 @@ export default class BabbleConversationPreview extends Component {
     const loggedInUserId = userManager.store.user.id;
 
     if (accessLevel === 'public') {
-      return [];
+//      return [];
     }
 
-    if (accessLevel === 'protected') {
+    if (['public','protected'].includes(accessLevel)) {
       return previewConversationUsers.filter(conversationUser => (
         conversationUser.permissions.includes('CONVERSATION_ADMIN') ||
         conversationUser.permissions.includes('CONVERSATION_MESSAGES_CREATE')
@@ -128,7 +126,7 @@ export default class BabbleConversationPreview extends Component {
     const { previewConversationMessage } = this.props.conversation;
 
     return (previewConversationMessage)
-      ? moment(previewConversationMessage.createdAt).calendar()
+      ? timeHelper.fromNow(previewConversationMessage.createdAt)
       : null;
   }
 
@@ -156,84 +154,41 @@ export default class BabbleConversationPreview extends Component {
         {groupUsers.length >= 2 && (
           <BabbleUserAvatarGroup
             users={groupUsers}
+            usersCount={usersCount}
             disabled
             size={50}
           />
         )}
 
         <View style={styles.content}>
-          <View style={styles.metadata}>
-            <View style={styles.heading}>
-              {accessLevel === 'protected' && (
-                <UsersIcon width={14} height={14} style={styles.protectedIcon} />
-              )}
+          <Text style={styles.titleText} numberOfLines={1}>{this._getTitle()}</Text>
 
-              <Text style={styles.titleText} numberOfLines={1}>{this._getTitle()}</Text>
-            </View>
-
-            <View style={styles.stats}>
-              {accessLevel !== 'private' && (
-                <>
-                  <View style={styles.stat}>
-                    <UserIcon width={17} height={17} style={[ styles.statIcon, styles.statLiveColor ]} />
-                    <Text style={[ styles.statText, styles.statLiveColor ]}>{usersCount}</Text>
-                  </View>
-
-                  <View style={styles.stat}>
-                    <EyeIcon width={17} height={17} style={styles.statIcon} />
-                    <Text style={styles.statText}>{impressionsCount}</Text>
-                  </View>
-                </>
-              )}
-
-              {unreadCount > 0 && (
-                <View style={styles.unreadBubble}>
-                  <Text style={styles.unreadCountText}>{unreadCount}</Text>
-
-                  <LinearGradient
-                    useAngle
-                    angle={36}
-                    colors={[ '#299BCB', '#1ACCB4' ]}
-                    style={styles.unreadBubbleBackground}
-                  />
-                </View>
-              )}
-            </View>
+          <View style={styles.previewTexts}>
+            <Text numberOfLines={1} style={[ styles.previewText, styles.previewMessageText ]}>
+              {this._getPreviewText()}
+            </Text>
+            <Text style={[ styles.previewText, styles.previewBulletText, styles.inflexibleText ]}>•</Text>
+            <Text style={[ styles.previewText, styles.inflexibleText ]}>{this._getTime()}</Text>
           </View>
-
-          <View style={styles.preview}>
-            <View style={styles.previewTexts}>
-              <Text numberOfLines={1} style={[ styles.previewText, (unreadCount > 0) ? styles.previewUnreadColor : null ]}>{this._getPreviewText()}</Text>
-              <Text style={styles.timeText}>{this._getTime()}</Text>
-            </View>
-
-            {!!previewImageUrl && (
-              <FastImage
-                source={{ uri: previewImageUrl }}
-                style={styles.previewImage}
-              />
-            )}
-          </View>
-
-          {accessLevel !== 'private' && !!reactions?.length && (
-            <View style={styles.reactions}>
-              {reactions.map((reaction, index) => (
-                <BabbleReaction
-                  reaction={reaction}
-                  count={reaction.count}
-                  style={styles.reaction}
-                  key={index}
-                />
-              ))}
-            </View>
-          )}
         </View>
+
+        {!!previewImageUrl && (
+          <View style={styles.attachment}>
+            <FastImage
+              source={{ uri: previewImageUrl }}
+              style={styles.previewImage}
+            />
+          </View>
+        )}
       </TouchableOpacity>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  attachment: {
+    marginLeft: 5,
+  },
   container: {
     alignItems: 'flex-start',
     flexDirection: 'row',
@@ -242,102 +197,42 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 15,
   },
-  heading: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'row',
-    marginRight: 20,
+  inflexibleText: {
+    flex: 0,
   },
-  metadata: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  preview: {
-    flexDirection: 'row',
-    marginTop: 4,
+  previewBulletText: {
+    fontSize: 10,
+    paddingHorizontal: 3,
+    paddingTop: 2.5,
   },
   previewImage: {
     alignSelf: 'flex-start',
     borderRadius: 4,
     height: 50,
     marginLeft: 10,
-    marginTop: 4,
     width: 50,
+  },
+  previewMessageText: {
+    flexShrink: 1,
   },
   previewText: {
     color: '#797979',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 14,
+    fontSize: 13,
+  },
+  previewTextUnread: {
+    color: '#404040',
+    fontFamily: 'NunitoSans-Bold',
   },
   previewTexts: {
     flex: 1,
-  },
-  previewUnreadColor: {
-    color: '#404040',
-  },
-  protectedIcon: {
-    color: '#2A99CC',
-    marginRight: 5,
-    marginTop: -1.5,
-  },
-  reaction: {
-    marginRight: 10,
-    marginTop: 8,
-  },
-  reactions: {
-    alignItems: 'center',
-    flex: 1,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  stat: {
-    flexDirection: 'row',
-    marginLeft: 10,
-  },
-  statIcon: {
-    color: '#797979',
-    marginRight: 3,
-  },
-  statLiveColor: {
-    color: '#FF4444',
-  },
-  statText: {
-    color: '#797979',
-    fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 12,
-  },
-  stats: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  timeText: {
-    color: '#97A1A4',
-    fontFamily: 'NunitoSans-Bold',
-    fontSize: 12,
-    marginTop: 4,
   },
   titleText: {
-    color: '#2A99CC',
-    fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
-  },
-  unreadBubble: {
-    alignItems: 'center',
-    borderRadius: 10,
-    height: 20,
-    justifyContent: 'center',
-    marginLeft: 10,
-    width: 20,
-  },
-  unreadBubbleBackground: {
-    ...StyleSheet.absoluteFillObject,
-    borderRadius: 10,
-    zIndex: -1,
-  },
-  unreadCountText: {
-    color: '#FFFFFF',
-    fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 12,
+    color: '#404040',
+    fontFamily: 'NunitoSans-ExtraBold',
+    fontSize: 15,
+    marginBottom: 2,
+    marginTop: 5,
   },
 });
