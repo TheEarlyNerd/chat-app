@@ -55,7 +55,7 @@ export default class BabbleTextField extends Component {
           {inputPrefix}
 
           <TextInput
-            placeholderColor={'#909090'}
+            placeholderTextColor={'#909090'}
             onChangeText={this._onChangeText}
             style={[
               styles.textInput,

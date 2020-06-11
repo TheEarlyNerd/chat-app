@@ -29,8 +29,8 @@ export default BabbleSearchField;
 
 const styles = StyleSheet.create({
   searchIcon: {
+    color: '#C7C7CC',
     marginLeft: 15,
     marginRight: 5,
-    color: '#C7C7CC',
   },
 });
