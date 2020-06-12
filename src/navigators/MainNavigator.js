@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { BabbleHeader } from '../components';
 
 import ConversationScreen from '../screens/ConversationScreen';
+import ConversationsListScreen from '../screens/ConversationsListScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LandingScreen from '../screens/LandingScreen';
 import PhoneLoginCodeScreen from '../screens/PhoneLoginCodeScreen';
@@ -28,6 +29,12 @@ export default initialRouteName => {
           backEnabled: true,
           title: <ActivityIndicator color={'#FFFFFF'} />,
         }}
+      />
+
+      <MainStack.Screen
+        name={'ConversationsList'}
+        component={ConversationsListScreen}
+        options={{ backEnabled: true }}
       />
 
       <MainStack.Screen

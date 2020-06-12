@@ -6,6 +6,7 @@ import { ChevronRightIcon, EditIcon } from '../components/icons';
 import maestro from '../maestro';
 
 const { conversationsManager } = maestro.managers;
+const { navigationHelper } = maestro.helpers;
 
 export default class HomeScreen extends Component {
   state = {
@@ -37,9 +38,16 @@ export default class HomeScreen extends Component {
     });
   }
 
-  _renderHeader = ({ title }) => {
+  _openConversationsList = ({ title, type }) => {
+    navigationHelper.push('ConversationsList', { title, type });
+  }
+
+  _renderHeader = ({ title, type }) => {
     return (
-      <TouchableOpacity style={styles.header}>
+      <TouchableOpacity
+        onPress={() => this._openConversationsList({ title, type })}
+        style={styles.header}
+      >
         <Text style={styles.headerText}>{title}</Text>
         <ChevronRightIcon width={32} height={32} style={styles.headerIcon} />
       </TouchableOpacity>
@@ -94,7 +102,7 @@ export default class HomeScreen extends Component {
       { id: 'search', search: true },
 
       ...((!!recentConversations && recentConversations.length) ? [
-        { id: 'recentConversations', title: 'Recent Conversations', header: true },
+        { id: 'recentConversations', title: 'Recent Conversations', type: 'recent', header: true },
         ...(recentConversations.map((conversation, index) => {
           if (index === recentConversations.length - 1) {
             conversation.last = true;
@@ -105,7 +113,7 @@ export default class HomeScreen extends Component {
       ] : []),
 
       ...((!!privateConversations && privateConversations.length) ? [
-        { id: 'directMessages', title: 'Direct Messages', header: true },
+        { id: 'directMessages', title: 'Direct Messages', type: 'private', header: true },
         ...(privateConversations.map((conversation, index) => {
           if (index === privateConversations.length - 1) {
             conversation.last = true;
@@ -116,7 +124,7 @@ export default class HomeScreen extends Component {
       ] : []),
 
       ...((!!feedConversations && feedConversations.length) ? [
-        { id: 'feed', title: 'Feed', header: true },
+        { id: 'feed', title: 'Feed', type: 'feed', header: true },
         ...(feedConversations.map((conversation, index) => {
           if (index === feedConversations.length - 1) {
             conversation.last = true;
@@ -127,7 +135,7 @@ export default class HomeScreen extends Component {
       ] : []),
 
       ...((!!exploreConversations && exploreConversations.length) ? [
-        { id: 'explore', title: 'Explore', header: true },
+        { id: 'explore', title: 'Explore', type: 'explore', header: true },
         ...(exploreConversations.map((conversation, index) => {
           if (index === exploreConversations.length - 1) {
             conversation.last = true;

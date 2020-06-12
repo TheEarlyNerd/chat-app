@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontFamily: 'NunitoSans-Black',
-    fontSize: 20,
+    fontSize: 22,
   },
   userButton: {
     borderColor: '#FFFFFF',

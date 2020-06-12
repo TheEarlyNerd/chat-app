@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: '#404040',
-    fontFamily: 'NunitoSans-ExtraBold',
+    fontFamily: 'NunitoSans-Bold',
     fontSize: 15,
     marginBottom: 2,
     marginTop: 5,

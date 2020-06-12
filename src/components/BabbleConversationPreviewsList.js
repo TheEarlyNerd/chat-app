@@ -30,9 +30,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   separator: {
-    borderBottomColor: '#E8E8E8',
-    borderBottomWidth: 0.5,
-    marginBottom: 15,
-    paddingTop: 15,
+    marginBottom: 10,
+    paddingTop: 10,
   },
 });
