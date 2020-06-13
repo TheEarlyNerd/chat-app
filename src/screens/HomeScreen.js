@@ -146,21 +146,12 @@ export default class HomeScreen extends Component {
       ] : []),
     ];
 
-    const stickyHeaderIndices = data.reduce((indexes, item, index) => {
-      if (item.header) {
-        indexes.push(index);
-      }
-
-      return indexes;
-    }, []);
-
     return (
       <View style={styles.container}>
         <FlatList
           data={data}
           contentContainerStyle={styles.contentContainer}
           renderItem={this._renderItem}
-          stickyHeaderIndices={stickyHeaderIndices}
           keyExtractor={(item, index) => `${item.id}.${index}`}
           ItemSeparatorComponent={this._renderItemSeparator}
           style={styles.container}
@@ -238,9 +229,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   separator: {
-    marginBottom: 10,
+    borderBottomColor: '#E8E8E8',
+    borderBottomWidth: 0.5,
+    marginBottom: 15,
     marginHorizontal: 15,
-    paddingTop: 10,
+    paddingTop: 15,
   },
   spacer: {
     height: 40,

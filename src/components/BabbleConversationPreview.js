@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { BabbleUserAvatar, BabbleUserAvatarGroup, BabbleReaction } from './';
-import { EyeIcon, UsersIcon, UserIcon } from './icons';
+import { BabbleUserAvatar, BabbleUserAvatarGroup } from './';
+import { MessageCircleIcon, UsersIcon, LockIcon, ChevronRightIcon } from './icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
@@ -114,14 +114,6 @@ export default class BabbleConversationPreview extends Component {
     return (text) ? `${name}: ${text}` : `${name} sent an attachment(s).`;
   }
 
-  _getReactions = () => {
-    const { previewConversationMessage } = this.props.conversation;
-
-    return (previewConversationMessage)
-      ? previewConversationMessage.conversationMessageReactions
-      : null;
-  }
-
   _getTime = () => {
     const { previewConversationMessage } = this.props.conversation;
 
@@ -132,11 +124,9 @@ export default class BabbleConversationPreview extends Component {
 
   render() {
     const { conversation, style } = this.props;
-    const { accessLevel, usersCount, impressionsCount } = conversation;
+    const { accessLevel, usersCount } = conversation;
     const groupUsers = this._getGroupUsers();
-    const reactions = this._getReactions();
     const previewImageUrl = this._getPreviewImageUrl();
-    const unreadCount = 0;
 
     return (
       <TouchableOpacity
@@ -161,62 +151,75 @@ export default class BabbleConversationPreview extends Component {
         )}
 
         <View style={styles.content}>
-          <Text style={styles.titleText} numberOfLines={1}>{this._getTitle()}</Text>
+          <View style={styles.heading}>
+            <Text style={styles.titleText} numberOfLines={1}>{this._getTitle()}</Text>
 
-          <View style={styles.previewTexts}>
-            <Text numberOfLines={1} style={[ styles.previewText, styles.previewMessageText ]}>
-              {this._getPreviewText()}
-            </Text>
-            <Text style={[ styles.previewText, styles.previewBulletText, styles.inflexibleText ]}>•</Text>
-            <Text style={[ styles.previewText, styles.inflexibleText ]}>{this._getTime()}</Text>
+            <View style={styles.headingRight}>
+              {accessLevel === 'public' && (
+                <MessageCircleIcon width={15} height={15} style={styles.accessLevelIcon} />
+              )}
+
+              {accessLevel === 'protected' && (
+                <UsersIcon width={15} height={15} style={styles.accessLevelIcon} />
+              )}
+
+              {accessLevel === 'private' && (
+                <LockIcon width={15} height={15} style={styles.accessLevelIcon} />
+              )}
+
+              <Text style={[ styles.headingRightText, styles.bulletText ]}>•</Text>
+              <Text style={[ styles.headingRightText ]}>{this._getTime()}</Text>
+            </View>
+          </View>
+
+          <View style={styles.preview}>
+            <Text numberOfLines={2} style={styles.previewText}>{this._getPreviewText()}</Text>
           </View>
         </View>
-
-        {!!previewImageUrl && (
-          <View style={styles.attachment}>
-            <FastImage
-              source={{ uri: previewImageUrl }}
-              style={styles.previewImage}
-            />
-          </View>
-        )}
       </TouchableOpacity>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  attachment: {
-    marginLeft: 5,
+  accessLevelIcon: {
+    color: '#797979',
+    marginTop: 1,
+  },
+  bulletText: {
+    fontSize: 10,
+    paddingHorizontal: 3,
+    paddingTop: 1.5,
   },
   container: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
     flexDirection: 'row',
   },
   content: {
     flex: 1,
     marginLeft: 15,
   },
-  inflexibleText: {
-    flex: 0,
+  heading: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  previewBulletText: {
-    fontSize: 10,
-    paddingHorizontal: 3,
-    paddingTop: 2.5,
+  headingRight: {
+    flexDirection: 'row',
+    marginLeft: 5,
   },
-  previewImage: {
-    alignSelf: 'flex-start',
-    borderRadius: 4,
-    height: 50,
-    marginLeft: 10,
-    width: 50,
+  headingRightText: {
+    color: '#797979',
+    fontFamily: 'NunitoSans-SemiBold',
+    fontSize: 13,
   },
-  previewMessageText: {
-    flexShrink: 1,
+  preview: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   previewText: {
     color: '#797979',
+    flexShrink: 1,
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: 13,
   },
@@ -224,15 +227,11 @@ const styles = StyleSheet.create({
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
   },
-  previewTexts: {
-    flex: 1,
-    flexDirection: 'row',
-  },
   titleText: {
     color: '#404040',
+    flex: 1,
     fontFamily: 'NunitoSans-Bold',
     fontSize: 15,
-    marginBottom: 2,
-    marginTop: 5,
+    marginBottom: 1,
   },
 });
