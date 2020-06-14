@@ -131,9 +131,8 @@ export default class ConversationsManager extends Manager {
   async createConversation({ accessLevel, title, users, message }) {
     const { apiHelper } = this.maestro.helpers;
     const { userManager } = this.maestro.managers;
-
-    // TODO: handle attachments / embeds on new conversation message.
-
+    const attachments = await this._createAttachments(message.attachments);
+    const embeds = await this._createEmbedsFromText(message.text);
     const response = await apiHelper.post({
       path: '/conversations',
       data: {
@@ -142,6 +141,8 @@ export default class ConversationsManager extends Manager {
         users,
         message: {
           ...message,
+          attachments: attachments.map(attachment => attachment.id),
+          embeds: embeds.map(embed => embed.id),
           nonce: `n-${userManager.store.user.id}-${Date.now()}`,
         },
       },
@@ -156,7 +157,7 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
-  async createConversationMessage({ conversationId, text, attachments = [], embeds = [] }) {
+  async createConversationMessage({ conversationId, text, attachments, embeds }) {
     const { apiHelper } = this.maestro.helpers;
     const { userManager } = this.maestro.managers;
     const message = {
@@ -178,7 +179,7 @@ export default class ConversationsManager extends Manager {
     });
 
     attachments = await this._createAttachments(attachments);
-    embeds = await this._createEmbedsFromText(text); // OPTIMIZATION: maybe better to post message, then patch with embeds?
+    embeds = await this._createEmbedsFromText(text);
 
     const response = await apiHelper.post({
       path: `/conversations/${conversationId}/messages`,
@@ -512,6 +513,11 @@ export default class ConversationsManager extends Manager {
 
   _createEmbedsFromText = async text => {
     const { apiHelper } = this.maestro.helpers;
+
+    if (typeof text !== 'string') {
+      return [];
+    }
+
     const urls = text.match(/(https?:\/\/|www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&/=]*[-a-zA-Z0-9@:%_+~#?&/=])*/ig);
     const embedPromises = [];
 
@@ -540,6 +546,10 @@ export default class ConversationsManager extends Manager {
   _createAttachments = async attachments => {
     const { attachmentsHelper } = this.maestro.helpers;
     const attachmentPromises = [];
+
+    if (!Array.isArray(attachments)) {
+      return [];
+    }
 
     attachments.forEach(attachment => {
       attachmentPromises.push(attachmentsHelper.uploadAttachment(attachment.url));

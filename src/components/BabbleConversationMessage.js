@@ -10,7 +10,7 @@ const { navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationMessage extends Component {
   _getText = () => {
-    const { message: { text, embeds } } = this.props;
+    const { message: { text, embeds = [] } } = this.props;
     const linklessText = embeds.reduce((linklessText, embed) => {
       return linklessText.replace(embed.url, '');
     }, text || '').trim();

@@ -100,7 +100,7 @@ export default class ConversationScreen extends Component {
         accessLevel,
         title,
         users: selectedUsers.map(selectedUser => selectedUser.id),
-        message: { text, attachments },
+        message: { text, attachments, embeds },
       });
     } catch (error) {
       this.setState({ loading: false });

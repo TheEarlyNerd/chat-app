@@ -138,6 +138,7 @@ export default class BabbleMessageComposerToolbar extends Component {
                   {attachments.map((attachment, index) => (
                     <BabbleConversationMessageComposerToolbarAttachment
                       attachment={attachment}
+                      editable={!loading}
                       style={styles.attachment}
                       key={`${attachment.filename}-${attachment.bytes}`}
                     />
@@ -150,6 +151,7 @@ export default class BabbleMessageComposerToolbar extends Component {
                 placeholderColor={'#909090'}
                 placeholder={'Message...'}
                 onChangeText={text => this.setState({ text })}
+                editable={!loading}
                 value={text}
                 style={styles.textInput}
               />
