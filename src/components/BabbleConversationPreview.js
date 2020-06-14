@@ -40,7 +40,7 @@ export default class BabbleConversationPreview extends Component {
 //      return [];
     }
 
-    if (['public','protected'].includes(accessLevel)) {
+    if ([ 'public', 'protected' ].includes(accessLevel)) {
       return previewConversationUsers.filter(conversationUser => (
         conversationUser.permissions.includes('CONVERSATION_ADMIN') ||
         conversationUser.permissions.includes('CONVERSATION_MESSAGES_CREATE')

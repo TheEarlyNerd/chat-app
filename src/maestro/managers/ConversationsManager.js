@@ -6,7 +6,7 @@ export default class ConversationsManager extends Manager {
   }
 
   static initialStore = {
-    activeConversation: null,
+    activeConversations: null,
     exploreConversations: null,
     feedConversations: null,
     privateConversations: null,
@@ -28,22 +28,7 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
-  async loadActiveConversation(conversationId) {
-    const { apiHelper } = this.maestro.helpers;
-    const response = await apiHelper.get({ path: `/conversations/${conversationId}` });
-
-    if (response.code !== 200) {
-      throw new Error(response.body);
-    }
-
-    response.body.conversationMessages.sort(this._conversationMessagesSorter);
-
-    this.updateStore({ activeConversation: response.body });
-
-    return response.body;
-  }
-
-  async loadActivePrivateConversationByUserIds(userIds) {
+  async getPrivateConversationByUserIds(userIds) { // TODO: review implementation
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.get({
       path: '/conversations',
@@ -54,22 +39,39 @@ export default class ConversationsManager extends Manager {
       throw new Error(response.body);
     }
 
-    const activeConversation = response.body || null;
+    const conversation = response.body || null;
 
-    if (activeConversation) {
-      activeConversation.conversationMessages.sort(this._conversationMessagesSorter);
+    if (conversation) {
+      conversation.conversationMessages.sort(this._conversationMessagesSorter);
     }
 
-    this.updateStore({ activeConversation: activeConversation });
+    return conversation;
+  }
 
-    return activeConversation;
+  async loadActiveConversation(conversationId) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({ path: `/conversations/${conversationId}` });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    response.body.conversationMessages.sort(this._conversationMessagesSorter);
+
+    this.updateStore({
+      activeConversations: (this.store.activeConversations)
+        ? [ ...this.store.activeConversations, response.body ]
+        : [ response.body ],
+    });
+
+    return response.body;
   }
 
   async loadRecentConversations() {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.get({
       path: '/conversations',
-      queryParams: { accessLevels: [ 'public', 'protected' ] },
+      queryParams: { accessLevels: [ 'public', 'protected', 'private' ] },
     });
 
     if (response.code !== 200) {
@@ -148,6 +150,8 @@ export default class ConversationsManager extends Manager {
     if (![ 200, 409 ].includes(response.code)) {
       throw new Error(response.body);
     }
+
+    this._addConversationToRecentConversations(response.body);
 
     return response.body;
   }
@@ -260,8 +264,16 @@ export default class ConversationsManager extends Manager {
     }
   }
 
-  resetActiveConversation() {
-    this.updateStore({ activeConversation: null });
+  removeActiveConversation(conversationId) {
+    const { activeConversations } = this.store;
+
+    if (activeConversations) {
+      this.updateStore({
+        activeConversations: activeConversations.filter(conversation => {
+          return conversation.id !== conversationId;
+        }),
+      });
+    }
   }
 
   /*
@@ -269,186 +281,221 @@ export default class ConversationsManager extends Manager {
    */
 
   _addMessageToConversation({ conversationId, message }) {
-    const { store } = this;
-    const activeConversation = (store.activeConversation) ? { ...store.activeConversation } : null;
-    const conversations = (store.conversations) ? [ ...store.conversations ] : null;
+    const { userManager } = this.maestro.managers;
+    let newRecentConversation = null;
 
-    if (activeConversation && activeConversation.id === conversationId) {
-      activeConversation.conversationMessages = activeConversation.conversationMessages.filter(conversationMessage => (
-        conversationMessage.nonce !== message.nonce
-      ));
+    this._iterateConversationTypes(({ conversations, type }) => {
+      conversations.forEach(conversation => {
+        if (conversation.id !== conversationId) {
+          return;
+        }
 
-      activeConversation.conversationMessages.push(message);
-      activeConversation.conversationMessages.sort(this._conversationMessagesSorter);
+        if (type === 'active') {
+          conversation.conversationMessages = conversation.conversationMessages.filter(conversationMessage => (
+            conversationMessage.nonce !== message.nonce
+          ));
+
+          conversation.conversationMessages.push(message);
+          conversation.conversationMessages.sort(this._conversationMessagesSorter);
+        } else {
+          conversation.previewConversationMessage = message;
+        }
+
+        // this may need revisiting when we add in MQTT?
+        if (type !== 'active' && (message.user.id === userManager.store.user.id || [ 'recent', 'private' ].includes(type))) {
+          newRecentConversation = conversation;
+        }
+      });
+    });
+
+    if (newRecentConversation) {
+      this._addConversationToRecentConversations(newRecentConversation);
     }
-
-    if (conversations) {
-      const conversation = conversations.find(conversation => conversation.id === conversationId);
-
-      if (conversation) {
-        conversation.previewConversationMessage = message;
-      }
-    }
-
-    this.updateStore({ activeConversation, conversations });
   }
 
-  _removeMessageFromConversation({ conversationId, conversationMessageId, nonce }) {
-    const { store } = this;
-    const activeConversation = (store.activeConversation) ? { ...store.activeConversation } : null;
-    const conversations = (store.conversations) ? [ ...store.conversations ] : null;
+  _removeMessageFromConversation({ conversationId, conversationMessageId }) {
+    this._iterateConversationTypes(({ conversations, type }) => {
+      conversations.forEach(conversation => {
+        if (conversation.id !== conversationId) {
+          return;
+        }
 
-    if (activeConversation && activeConversation.id === conversationId) {
-      activeConversation.conversationMessages = activeConversation.conversationMessages.filter(conversationMessage => (
-        (!conversationId || conversationMessage.id !== conversationMessageId) &&
-        (!nonce || conversationMessage.nonce !== nonce)
-      )).sort(this._conversationMessagesSorter);
-    }
-
-    if (conversations) {
-      const conversation = conversations.find(conversation => conversation.id === conversationId) || {};
-
-      if (conversation && conversation.previewConversationMessage?.id === conversationMessageId) {
-        conversation.previewConversationMessage = null;
-      }
-    }
-
-    this.updateStore({ activeConversation, conversations });
+        if (type === 'active') {
+          conversation.conversationMessages = conversation.conversationMessages.filter(conversationMessage => (
+            (conversationMessage.id !== conversationMessageId)
+          )).sort(this._conversationMessagesSorter);
+        } else {
+          conversation.previewConversationMessage = null;
+        }
+      });
+    });
   }
 
   _addReactionToConversationMessage({ conversationId, conversationMessageId, reaction }) {
-    const { store } = this;
-    const activeConversation = (store.activeConversation) ? { ...store.activeConversation } : null;
-    const conversations = (store.conversations) ? [ ...store.conversations ] : null;
-
-    const addReactionToConversationMessage = conversationMessage => {
-      conversationMessage.authUserConversationMessageReactions = conversationMessage.authUserConversationMessageReactions || [];
-      conversationMessage.conversationMessageReactions = conversationMessage.conversationMessageReactions || [];
-
-      const { authUserConversationMessageReactions, conversationMessageReactions } = conversationMessage;
-
-      const authUserConversationMessageReactionIndex = authUserConversationMessageReactions.findIndex(conversationMessageReaction => (
-        conversationMessageReaction.reaction === reaction.reaction
-      ));
-
-      if (authUserConversationMessageReactionIndex !== -1) {
-        authUserConversationMessageReactions[authUserConversationMessageReactionIndex] = reaction;
-      } else {
-        authUserConversationMessageReactions.push(reaction);
-      }
-
-      const conversationMessageReaction = conversationMessageReactions.find(conversationMessageReaction => (
-        conversationMessageReaction.reaction === reaction.reaction
-      ));
-
-      if (authUserConversationMessageReactionIndex === -1 && conversationMessageReaction) {
-        conversationMessageReaction.count++;
-      } else if (!conversationMessageReaction) {
-        conversationMessageReactions.push({
-          ...reaction,
-          count: 1,
-        });
-      }
-    };
-
-    const findMessageInConversationAndAddReaction = conversation => {
-      const { previewConversationMessage, conversationMessages } = conversation;
-
-      if (conversationMessages) {
-        const conversationMessage = conversation.conversationMessages.find(conversationMessage => (
-          conversationMessage.id === conversationMessageId
-        ));
-
-        if (conversationMessage) {
-          addReactionToConversationMessage(conversationMessage);
-        }
-      }
-
-      if (previewConversationMessage && previewConversationMessage.id === conversationMessageId) {
-        addReactionToConversationMessage(previewConversationMessage);
-      }
-    };
-
-    if (activeConversation && activeConversation.id === conversationId) {
-      findMessageInConversationAndAddReaction(activeConversation);
-    }
-
-    if (conversations) {
-      const conversation = conversations.find(conversation => conversation.id === conversationId);
-
-      if (conversation) {
-        findMessageInConversationAndAddReaction(conversation);
-      }
-    }
-
-    this.updateStore({ activeConversation, conversations });
-  }
-
-  _removeReactionFromConversationMessage({ conversationId, conversationMessageId, conversationMessageReactionId, reaction }) {
-    const { store } = this;
-    const activeConversation = (store.activeConversation) ? { ...store.activeConversation } : null;
-    const conversations = (store.conversations) ? [ ...store.conversations ] : null;
-
-    const removeReactionFromConversationMessage = conversationMessage => {
-      const authUserConversationMessageReactions = conversationMessage.authUserConversationMessageReactions || [];
-      const conversationMessageReactions = conversationMessage.conversationMessageReactions || [];
-      const removedConversationMessageReaction = authUserConversationMessageReactions.find(conversationMessageReaction => (
-        (conversationMessageReactionId && conversationMessageReaction.id === conversationMessageReactionId) ||
-        (reaction && conversationMessageReaction.reaction === reaction)
-      ));
-
-      if (!removedConversationMessageReaction) {
+    this._iterateConversationTypes(({ conversations, type }) => {
+      if (type !== 'active') {
         return;
       }
 
-      conversationMessage.authUserConversationMessageReactions = authUserConversationMessageReactions.filter(conversationMessageReaction => (
-        conversationMessageReaction.id !== removedConversationMessageReaction.id
-      ));
+      conversations.forEach(conversation => {
+        if (conversation.id !== conversationId) {
+          return;
+        }
 
-      const conversationMessageReaction = conversationMessageReactions.find(conversationMessageReaction => (
-        conversationMessageReaction.reaction === removedConversationMessageReaction.reaction
-      ));
-
-      if (conversationMessageReaction.count > 1) {
-        conversationMessageReaction.count--;
-      } else {
-        conversationMessage.conversationMessageReactions = conversationMessageReactions.filter(conversationMessageReaction => (
-          conversationMessageReaction.reaction !== removedConversationMessageReaction.reaction
-        ));
-      }
-    };
-
-    const findMessageInConversationAndRemoveReaction = conversation => {
-      const { previewConversationMessage, conversationMessages } = conversation;
-
-      if (conversationMessages) {
         const conversationMessage = conversation.conversationMessages.find(conversationMessage => (
           conversationMessage.id === conversationMessageId
         ));
 
-        if (conversationMessage) {
-          removeReactionFromConversationMessage(conversationMessage);
+        if (!conversationMessage) {
+          return;
         }
+
+        conversationMessage.authUserConversationMessageReactions = conversationMessage.authUserConversationMessageReactions || [];
+        conversationMessage.conversationMessageReactions = conversationMessage.conversationMessageReactions || [];
+
+        const { authUserConversationMessageReactions, conversationMessageReactions } = conversationMessage;
+
+        const authUserConversationMessageReactionIndex = authUserConversationMessageReactions.findIndex(conversationMessageReaction => (
+          conversationMessageReaction.reaction === reaction.reaction
+        ));
+
+        if (authUserConversationMessageReactionIndex !== -1) {
+          authUserConversationMessageReactions[authUserConversationMessageReactionIndex] = reaction;
+        } else {
+          authUserConversationMessageReactions.push(reaction);
+        }
+
+        const conversationMessageReaction = conversationMessageReactions.find(conversationMessageReaction => (
+          conversationMessageReaction.reaction === reaction.reaction
+        ));
+
+        if (authUserConversationMessageReactionIndex === -1 && conversationMessageReaction) {
+          conversationMessageReaction.count++;
+        } else if (!conversationMessageReaction) {
+          conversationMessageReactions.push({
+            ...reaction,
+            count: 1,
+          });
+        }
+      });
+    });
+  }
+
+  _removeReactionFromConversationMessage({ conversationId, conversationMessageId, conversationMessageReactionId }) {
+    this._iterateConversationTypes(({ conversations, type }) => {
+      if (type !== 'active') {
+        return;
       }
 
-      if (previewConversationMessage && previewConversationMessage.id === conversationMessageId) {
-        removeReactionFromConversationMessage(previewConversationMessage);
-      }
-    };
+      conversations.forEach(conversation => {
+        if (conversation.id !== conversationId) {
+          return;
+        }
 
-    if (activeConversation && activeConversation.id === conversationId) {
-      findMessageInConversationAndRemoveReaction(activeConversation);
+        const conversationMessage = conversation.conversationMessages.find(conversationMessage => (
+          conversationMessage.id === conversationMessageId
+        ));
+
+        if (!conversationMessage) {
+          return;
+        }
+
+        const authUserConversationMessageReactions = conversationMessage.authUserConversationMessageReactions || [];
+        const conversationMessageReactions = conversationMessage.conversationMessageReactions || [];
+        const removedConversationMessageReaction = authUserConversationMessageReactions.find(conversationMessageReaction => (
+          (conversationMessageReactionId && conversationMessageReaction.id === conversationMessageReactionId)
+        ));
+
+        if (!removedConversationMessageReaction) {
+          return;
+        }
+
+        conversationMessage.authUserConversationMessageReactions = authUserConversationMessageReactions.filter(conversationMessageReaction => (
+          conversationMessageReaction.id !== removedConversationMessageReaction.id
+        ));
+
+        const conversationMessageReaction = conversationMessageReactions.find(conversationMessageReaction => (
+          conversationMessageReaction.reaction === removedConversationMessageReaction.reaction
+        ));
+
+        if (conversationMessageReaction.count > 1) {
+          conversationMessageReaction.count--;
+        } else {
+          conversationMessage.conversationMessageReactions = conversationMessageReactions.filter(conversationMessageReaction => (
+            conversationMessageReaction.reaction !== removedConversationMessageReaction.reaction
+          ));
+        }
+      });
+    });
+  }
+
+  _addConversationToRecentConversations(conversation) {
+    const { store } = this;
+    let recentConversations = (store.recentConversations) ? [ ...store.recentConversations ] : [];
+
+    recentConversations = recentConversations.filter(recentConversation => (
+      recentConversation.id !== conversation.id
+    ));
+
+    if (recentConversations.length === 5) {
+      recentConversations.pop();
     }
 
-    if (conversations) {
-      const conversation = conversations.find(conversation => conversation.id === conversationId);
+    recentConversations.unshift(conversation);
 
-      if (conversation) {
-        findMessageInConversationAndRemoveReaction(conversation);
-      }
+    this.updateStore({ recentConversations });
+  }
+
+  _iterateConversationTypes = modifierFunction => {
+    const { store } = this;
+    const activeConversations = (store.activeConversations) ? [ ...store.activeConversations ] : null;
+    const exploreConversations = (store.exploreConversations) ? [ ...store.exploreConversations ] : null;
+    const feedConversations = (store.feedConversations) ? [ ...store.feedConversations ] : null;
+    const privateConversations = (store.privateConversations) ? [ ...store.privateConversations ] : null;
+    const recentConversations = (store.recentConversations) ? [ ...store.recentConversations ] : null;
+
+    if (Array.isArray(activeConversations)) {
+      modifierFunction({
+        conversations: activeConversations,
+        type: 'active',
+      });
     }
 
-    this.updateStore({ activeConversation, conversations });
+    if (Array.isArray(exploreConversations)) {
+      modifierFunction({
+        conversations: exploreConversations,
+        type: 'explore',
+      });
+    }
+
+    if (Array.isArray(feedConversations)) {
+      modifierFunction({
+        conversations: feedConversations,
+        type: 'feed',
+      });
+    }
+
+    if (Array.isArray(privateConversations)) {
+      modifierFunction({
+        conversations: privateConversations,
+        type: 'private',
+      });
+    }
+
+    if (Array.isArray(recentConversations)) {
+      modifierFunction({
+        conversations: recentConversations,
+        type: 'recent',
+      });
+    }
+
+    this.updateStore({
+      activeConversations,
+      exploreConversations,
+      feedConversations,
+      privateConversations,
+      recentConversations,
+    });
   }
 
   _conversationMessagesSorter = (conversationMessageA, conversationMessageB) => {

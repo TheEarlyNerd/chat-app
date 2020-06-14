@@ -1,5 +1,4 @@
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BabbleHeader } from '../components';
 
@@ -27,7 +26,6 @@ export default initialRouteName => {
         component={ConversationScreen}
         options={{
           backEnabled: true,
-          title: <ActivityIndicator color={'#FFFFFF'} />,
         }}
       />
 

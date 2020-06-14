@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, View, TextInput, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { KeyboardAvoidingView, View, TextInput, Text, ScrollView, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { HeaderHeightContext } from '@react-navigation/stack';
 import ImagePicker from 'react-native-image-crop-picker';
 import { BabbleConversationMessageComposerToolbarAttachment } from './';
@@ -100,7 +100,7 @@ export default class BabbleMessageComposerToolbar extends Component {
   }
 
   render() {
-    const { onSubmit, style } = this.props;
+    const { onSubmit, loading, style } = this.props;
     const { text, attachments } = this.state;
 
     return (
@@ -157,17 +157,23 @@ export default class BabbleMessageComposerToolbar extends Component {
 
             <TouchableOpacity
               onPress={() => onSubmit({ text, attachments })}
-              disabled={!text.length && !attachments?.length}
+              disabled={loading || (!text.length && !attachments?.length)}
               style={styles.sendButton}
             >
-              <ArrowUpIcon
-                width={21}
-                height={21}
-                style={[
-                  styles.buttonIcon,
-                  (!text.length && !attachments?.length) ? styles.buttonIconDisabled : null,
-                ]}
-              />
+              {loading && (
+                <ActivityIndicator color={'#2A99CC'} />
+              )}
+
+              {!loading && (
+                <ArrowUpIcon
+                  width={21}
+                  height={21}
+                  style={[
+                    styles.buttonIcon,
+                    (!text.length && !attachments?.length) ? styles.buttonIconDisabled : null,
+                  ]}
+                />
+              )}
             </TouchableOpacity>
           </KeyboardAvoidingView>
         )}

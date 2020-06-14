@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, ActivityIndicator, StyleSheet } from 'react-native';
 import { BabbleConversationComposerToolbar, BabbleConversationHeaderTitle, BabbleConversation, BabbleConversationMessageComposerToolbar } from '../components';
 import { AlertTriangleIcon } from '../components/icons';
 import maestro from '../maestro';
@@ -14,6 +14,7 @@ export default class ConversationScreen extends Component {
   state = {
     conversation: null,
     showConversationComposer: !this.props.route?.params?.conversationId,
+    loading: false,
   }
 
   componentDidMount() {
@@ -22,10 +23,12 @@ export default class ConversationScreen extends Component {
     const conversationId = this.props.route?.params?.conversationId;
     const toUsers = this.props.route?.params?.toUsers;
 
+    this.props.navigation.setOptions({
+      title: (conversationId) ? <ActivityIndicator color={'#FFFFFF'} /> : 'New Conversation',
+    });
+
     if (conversationId) {
-      conversationsManager.loadActiveConversation(conversationId);
-    } else {
-      this.props.navigation.setOptions({ title: 'New Conversation' });
+      conversationsManager.loadActiveConversation(conversationId); // handle non existent convos?
     }
 
     if (Array.isArray(toUsers)) {
@@ -35,65 +38,97 @@ export default class ConversationScreen extends Component {
 
   componentWillUnmount() {
     maestro.unlink(this);
+
+    const conversationId = this.props.route?.params?.conversationId;
+
+    if (conversationId) {
+      conversationsManager.removeActiveConversation(conversationId);
+    }
   }
 
   receiveStoreUpdate({ conversations, user }) {
-    const { activeConversation } = conversations;
+    const { activeConversations } = conversations;
+    const conversationId = this.state.conversation?.id || this.props.route?.params?.conversationId;
 
-    if (activeConversation) {
+    if (!Array.isArray(activeConversations) || !conversationId) {
+      return;
+    }
+
+    const conversation = activeConversations.find(conversation => conversation.id === conversationId);
+
+    this._setConversation(conversation);
+  }
+
+  _setConversation = conversation => {
+    if (conversation) {
       this.props.navigation.setOptions({
-        title: <BabbleConversationHeaderTitle conversation={activeConversation} />,
+        title: <BabbleConversationHeaderTitle conversation={conversation} />,
       });
     }
 
-    this.setState({ conversation: activeConversation });
+    this.setState({ conversation });
   }
 
   _onMessageSubmit = async ({ text, attachments, embeds }) => {
     const { conversation } = this.state;
-
-    this.messageComposer.clear();
+    const { accessLevel, title, selectedUsers } = this.conversationComposer || {};
 
     if (conversation) {
-      await conversationsManager.createConversationMessage({
+      this.messageComposer.clear();
+
+      return await conversationsManager.createConversationMessage({
         conversationId: conversation.id,
         text,
         attachments,
         embeds,
       });
-    } else {
-      const { accessLevel, title, selectedUsers } = this.conversationComposer;
+    }
 
-      if (!title && accessLevel !== 'private') {
-        return interfaceHelper.showError({
-          message: 'Please provide a title.',
-          iconComponent: AlertTriangleIcon,
-        });
-      }
+    if (!title && accessLevel !== 'private') {
+      return interfaceHelper.showError({
+        message: 'Please provide a title.',
+        iconComponent: AlertTriangleIcon,
+      });
+    }
 
-      const createdConversation = await conversationsManager.createConversation({
+    let createdConversation = null;
+
+    this.setState({ loading: true });
+
+    try {
+      createdConversation = await conversationsManager.createConversation({
         accessLevel,
         title,
         users: selectedUsers.map(selectedUser => selectedUser.id),
         message: { text, attachments },
       });
+    } catch (error) {
+      this.setState({ loading: false });
 
-      this.setState({ conversation: createdConversation });
+      return interfaceHelper.showError({ message: error.message });
     }
 
-    this.setState({ showConversationComposer: false });
+    this.messageComposer.clear();
+    this._setConversation(createdConversation);
+    this.setState({
+      showConversationComposer: false,
+      loading: false,
+    });
   }
 
-  _onUserSelectionChange = ({ selectedUsers, accessLevel }) => {
-    conversationsManager.resetActiveConversation();
+  _onUserSelectionChange = async ({ selectedUsers, accessLevel }) => {
+    this._setConversation(null);
 
     if (accessLevel === 'private' && selectedUsers.length) {
-      conversationsManager.loadActivePrivateConversationByUserIds(selectedUsers.map(user => user.id));
+      const userIds = selectedUsers.map(user => user.id);
+      const conversation = await conversationsManager.getPrivateConversationByUserIds(userIds);
+
+      this.setState({ conversation });
     }
   }
 
   render() {
-    const { conversation, showConversationComposer } = this.state;
+    const { conversation, showConversationComposer, loading } = this.state;
     const { conversationMessages } = conversation || {};
 
     return (
@@ -111,6 +146,7 @@ export default class ConversationScreen extends Component {
 
         <BabbleConversationMessageComposerToolbar
           onSubmit={this._onMessageSubmit}
+          loading={loading}
           ref={component => this.messageComposer = component}
         />
       </SafeAreaView>
