@@ -170,7 +170,7 @@ export default class BabbleConversationComposerToolbar extends Component {
   }
 
   render() {
-    const { style } = this.props;
+    const { editable, style } = this.props;
     const { accessLevel, title, selectedUserIndex, search, selectedUsers, searchUsers, showSearchUsersList, loadingSearch } = this.state;
 
     return (
@@ -182,6 +182,7 @@ export default class BabbleConversationComposerToolbar extends Component {
             {selectedUsers.map((selectedUser, index) => (
               <TouchableOpacity
                 onPress={() => this._userPress(index)}
+                disabled={!editable}
                 key={index}
                 style={[
                   styles.user,
@@ -213,6 +214,7 @@ export default class BabbleConversationComposerToolbar extends Component {
               onChangeText={this._onChangeText}
               onFocus={() => this._toggleSearchUsersList(true)}
               onBlur={() => this._toggleSearchUsersList(false)}
+              editable={editable !== undefined ? editable : true}
               placeholder={(!selectedUsers.length && (!accessLevel || accessLevel === 'public')) ? 'The World' : ''}
               returnKeyType={'done'}
               value={search}
@@ -220,7 +222,7 @@ export default class BabbleConversationComposerToolbar extends Component {
               ref={component => this.searchTextInput = component}
             />
 
-            <TouchableOpacity onPress={this._accessLevelPress} style={styles.accessLevelButton}>
+            <TouchableOpacity disabled={!editable} onPress={this._accessLevelPress} style={styles.accessLevelButton}>
               {(!accessLevel || accessLevel === 'public') && (
                 <>
                   <MessageCircleIcon width={16} height={16} style={styles.accessLevelButtonIcon} />
@@ -256,6 +258,7 @@ export default class BabbleConversationComposerToolbar extends Component {
                 onChangeText={text => this.setState({ title: text })}
                 placeholder={'What do you want to talk about?'}
                 returnKeyType={'done'}
+                editable={editable !== undefined ? editable : true}
                 value={title}
                 style={styles.textInput}
                 ref={component => this.titleTextInput = component}

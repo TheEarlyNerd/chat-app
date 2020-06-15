@@ -12,7 +12,6 @@ import BabbleConversationMessageEmbed from './BabbleConversationMessageEmbed';
 import BabbleConversationMessageOptions from './BabbleConversationMessageOptions';
 import BabbleConversationPreview from './BabbleConversationPreview';
 import BabbleConversationPreviewsList from './BabbleConversationPreviewsList';
-import BabbleConversationUsersToolbar from './BabbleConversationUsersToolbar';
 import BabbleEmojiSelector from './BabbleEmojiSelector';
 import BabbleFieldLabel from './BabbleFieldLabel';
 import BabbleHeader from './BabbleHeader';
@@ -50,7 +49,6 @@ export {
   BabbleConversationMessageOptions,
   BabbleConversationPreview,
   BabbleConversationPreviewsList,
-  BabbleConversationUsersToolbar,
   BabbleEmojiSelector,
   BabbleFieldLabel,
   BabbleHeader,

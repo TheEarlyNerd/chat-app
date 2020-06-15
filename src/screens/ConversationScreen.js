@@ -39,7 +39,7 @@ export default class ConversationScreen extends Component {
   componentWillUnmount() {
     maestro.unlink(this);
 
-    const conversationId = this.props.route?.params?.conversationId;
+    const conversationId = this.state.conversation?.id || this.props.route?.params?.conversationId;
 
     if (conversationId) {
       conversationsManager.removeActiveConversation(conversationId);
@@ -135,6 +135,7 @@ export default class ConversationScreen extends Component {
       <SafeAreaView style={styles.container}>
         {showConversationComposer && (
           <BabbleConversationComposerToolbar
+            editable={!loading}
             onUserSelectionChange={this._onUserSelectionChange}
             ref={component => this.conversationComposer = component}
           />

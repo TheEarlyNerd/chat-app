@@ -58,11 +58,7 @@ export default class ConversationsManager extends Manager {
 
     response.body.conversationMessages.sort(this._conversationMessagesSorter);
 
-    this.updateStore({
-      activeConversations: (this.store.activeConversations)
-        ? [ ...this.store.activeConversations, response.body ]
-        : [ response.body ],
-    });
+    this._addActiveConversation(response.body);
 
     return response.body;
   }
@@ -152,6 +148,7 @@ export default class ConversationsManager extends Manager {
       throw new Error(response.body);
     }
 
+    this._addActiveConversation(response.body);
     this._addConversationToRecentConversations(response.body);
 
     return response.body;
@@ -280,6 +277,14 @@ export default class ConversationsManager extends Manager {
   /*
    * Helpers
    */
+
+  _addActiveConversation(conversation) {
+    this.updateStore({
+      activeConversations: (this.store.activeConversations)
+        ? [ ...this.store.activeConversations, conversation ]
+        : [ conversation ],
+    });
+  }
 
   _addMessageToConversation({ conversationId, message }) {
     const { userManager } = this.maestro.managers;

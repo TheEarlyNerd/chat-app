@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
-import { BabbleAutoscaleImage } from './'
+import { BabbleAutoscaleImage } from './';
 import { XIcon } from './icons';
 
 export default class BabbleConversationMessageComposerToolbarAttachment extends Component {

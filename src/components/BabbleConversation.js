@@ -87,7 +87,7 @@ export default class BabbleConversation extends Component {
 
   render() {
     const { messages, style } = this.props;
-
+ // maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: 0 }} /* TODO: This will not work on Android, new messages will cause chat to jump. */
     return (
       <View style={styles.container}>
         <SwipeListView
@@ -107,7 +107,6 @@ export default class BabbleConversation extends Component {
           closeOnScroll={false}
           rightOpenValue={-145}
           recalculateHiddenLayout
-          maintainVisibleContentPosition={{ minIndexForVisible: 0 }} /* TODO: This will not work on Android, new messages will cause chat to jump. */
           contentContainerStyle={styles.contentContainer}
           style={[ styles.container, style ]}
           listViewRef={component => this.swipeListView = component}
