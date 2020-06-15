@@ -111,9 +111,10 @@ export default class HomeScreen extends Component {
     return null;
   }
 
-  render() {
+  _generateData = () => {
     const { exploreConversations, feedConversations, privateConversations, recentConversations } = this.state;
-    const data = [
+
+    return [
       { id: 'search', search: true },
 
       ...((!!recentConversations && recentConversations.length) ? [
@@ -164,11 +165,13 @@ export default class HomeScreen extends Component {
         { viewMore: true, title: 'Explore', type: 'explore' },
       ] : []),
     ];
+  }
 
+  render() {
     return (
       <View style={styles.container}>
         <FlatList
-          data={data}
+          data={this._generateData()}
           contentContainerStyle={styles.contentContainer}
           renderItem={this._renderItem}
           keyExtractor={(item, index) => `${item.id}.${index}`}
