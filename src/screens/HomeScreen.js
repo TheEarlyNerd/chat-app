@@ -10,11 +10,14 @@ const { navigationHelper } = maestro.helpers;
 
 export default class HomeScreen extends Component {
   state = {
+    search: null,
     exploreConversations: null,
     feedConversations: null,
     privateConversations: null,
     recentConversations: null,
   }
+
+  searchTextInputTimeout = null;
 
   componentDidMount() {
     maestro.link(this);
@@ -27,6 +30,8 @@ export default class HomeScreen extends Component {
 
   componentWillUnmount() {
     maestro.unlink(this);
+
+    clearTimeout(this.searchTextInputTimeout);
   }
 
   receiveStoreUpdate({ conversations, user }) {
@@ -42,77 +47,14 @@ export default class HomeScreen extends Component {
     navigationHelper.push('ConversationsList', { title, type });
   }
 
-  _renderHeader = ({ title, type }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => this._openConversationsList({ title, type })}
-        style={styles.headerButton}
-      >
-        <Text style={styles.headerText}>{title}</Text>
-        <ChevronRightIcon width={32} height={32} style={styles.headerIcon} />
-      </TouchableOpacity>
-    );
-  }
-
-  _renderSearch = () => {
-    return (
-      <BabbleSearchField
-        placeholder={'Search users and conversations...'}
-        containerStyle={styles.searchField}
-      />
-    );
-  }
-
-  _renderViewMore = ({ title, type }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => this._openConversationsList({ title, type })}
-        style={styles.viewMoreButton}
-      >
-        <Text style={styles.viewMoreText}>View More</Text>
-      </TouchableOpacity>
-    );
-  }
-
-  _renderConversationPreview = conversation => {
-    return (
-      <BabbleConversationPreview
-        conversation={conversation}
-        style={styles.conversationPreview}
-      />
-    );
-  }
-
-  _renderItem = ({ item, index }) => {
-    if (item.search) {
-      return this._renderSearch();
-    }
-
-    if (item.viewMore) {
-      return this._renderViewMore(item);
-    }
-
-    if (item.header) {
-      return this._renderHeader(item);
-    }
-
-    return this._renderConversationPreview(item);
-  }
-
-  _renderItemSeparator = ({ leadingItem }) => {
-    if (leadingItem.last) {
-      return <View style={styles.spacer} />;
-    }
-
-    if (!leadingItem.header && !leadingItem.viewMore && !leadingItem.search) {
-      return <View style={styles.separator} />;
-    }
-
-    return null;
-  }
-
   _generateData = () => {
-    const { exploreConversations, feedConversations, privateConversations, recentConversations } = this.state;
+    const { search, exploreConversations, feedConversations, privateConversations, recentConversations } = this.state;
+
+    if (search) {
+      return [
+        { id: 'search', search: true },
+      ];
+    }
 
     return [
       { id: 'search', search: true },
@@ -167,6 +109,82 @@ export default class HomeScreen extends Component {
     ];
   }
 
+  _onSearchChangeText = text => {
+
+
+    this.setState({ search: text });
+  }
+
+  _renderHeader = ({ title, type }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => this._openConversationsList({ title, type })}
+        style={styles.headerButton}
+      >
+        <Text style={styles.headerText}>{title}</Text>
+        <ChevronRightIcon width={32} height={32} style={styles.headerIcon} />
+      </TouchableOpacity>
+    );
+  }
+
+  _renderSearch = () => {
+    return (
+      <BabbleSearchField
+        onChangeText={this._onSearchChangeText}
+        placeholder={'Search users and conversations...'}
+        containerStyle={styles.searchField}
+      />
+    );
+  }
+
+  _renderViewMore = ({ title, type }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => this._openConversationsList({ title, type })}
+        style={styles.viewMoreButton}
+      >
+        <Text style={styles.viewMoreText}>View More</Text>
+      </TouchableOpacity>
+    );
+  }
+
+  _renderConversationPreview = conversation => {
+    return (
+      <BabbleConversationPreview
+        conversation={conversation}
+        style={styles.conversationPreview}
+      />
+    );
+  }
+
+  _renderItem = ({ item, index }) => {
+    if (item.search) {
+      return this._renderSearch();
+    }
+
+    if (item.viewMore) {
+      return this._renderViewMore(item);
+    }
+
+    if (item.header) {
+      return this._renderHeader(item);
+    }
+
+    return this._renderConversationPreview(item);
+  }
+
+  _renderItemSeparator = ({ leadingItem }) => {
+    if (leadingItem.last) {
+      return <View style={styles.spacer} />;
+    }
+
+    if (!leadingItem.header && !leadingItem.viewMore && !leadingItem.search) {
+      return <View style={styles.separator} />;
+    }
+
+    return null;
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -174,6 +192,7 @@ export default class HomeScreen extends Component {
           data={this._generateData()}
           contentContainerStyle={styles.contentContainer}
           renderItem={this._renderItem}
+          keyboardShouldPersistTaps={'handled'}
           keyExtractor={(item, index) => `${item.id}.${index}`}
           ItemSeparatorComponent={this._renderItemSeparator}
           style={styles.container}

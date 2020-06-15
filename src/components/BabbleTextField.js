@@ -20,10 +20,15 @@ export default class BabbleTextField extends Component {
   clear = () => {
     this.setState({ value: '' });
     this.textInputComponent.clear();
+    this._onChangeText('');
   }
 
   focus = () => {
     this.textInputComponent.focus();
+  }
+
+  blur = () => {
+    this.textInputComponent.blur();
   }
 
   _onChangeText = text => {
@@ -90,40 +95,26 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
   },
-  textInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F1F7FB',
-    borderWidth: 1,
-    borderColor: '#E1E3E8',
-    borderRadius: 4,
+  errorText: {
+    color: '#F53333',
   },
   fieldLabelContainer: {
     marginBottom: 8,
   },
-  textInput: {
-    color: '#323643',
-    fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 24,
-    paddingTop: 2,
-    paddingHorizontal: 10,
-    height: 50,
-    width: '100%',
-  },
-  textInputSmall: {
-    fontSize: 16,
+  infoText: {
+    color: '#9B9B9B',
   },
   shadow: {
-    position: 'absolute',
+    backgroundColor: '#FFF',
     height: 35,
     left: '5%',
+    position: 'absolute',
     right: '5%',
-    zIndex: -2,
-    backgroundColor: '#FFF',
     shadowColor: '#252A3F',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
     shadowRadius: 5,
+    zIndex: -2,
   },
   shadowLabel: {
     top: 50,
@@ -132,15 +123,29 @@ const styles = StyleSheet.create({
     top: 17,
   },
   subtext: {
-    position: 'absolute',
     bottom: -25,
     fontFamily: 'NunitoSans-Regular',
     fontSize: 16,
+    position: 'absolute',
   },
-  infoText: {
-    color: '#9B9B9B',
+  textInput: {
+    color: '#323643',
+    fontFamily: 'NunitoSans-SemiBold',
+    fontSize: 24,
+    height: 50,
+    paddingHorizontal: 10,
+    paddingTop: 2,
+    width: '100%',
   },
-  errorText: {
-    color: '#F53333',
+  textInputContainer: {
+    alignItems: 'center',
+    backgroundColor: '#F1F7FB',
+    borderColor: '#E1E3E8',
+    borderRadius: 4,
+    borderWidth: 1,
+    flexDirection: 'row',
+  },
+  textInputSmall: {
+    fontSize: 16,
   },
 });
