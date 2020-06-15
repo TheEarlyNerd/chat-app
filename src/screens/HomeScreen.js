@@ -46,7 +46,7 @@ export default class HomeScreen extends Component {
     return (
       <TouchableOpacity
         onPress={() => this._openConversationsList({ title, type })}
-        style={styles.header}
+        style={styles.headerButton}
       >
         <Text style={styles.headerText}>{title}</Text>
         <ChevronRightIcon width={32} height={32} style={styles.headerIcon} />
@@ -60,6 +60,17 @@ export default class HomeScreen extends Component {
         placeholder={'Search users and conversations...'}
         containerStyle={styles.searchField}
       />
+    );
+  }
+
+  _renderViewMore = ({ title, type }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => this._openConversationsList({ title, type })}
+        style={styles.viewMoreButton}
+      >
+        <Text style={styles.viewMoreText}>View More</Text>
+      </TouchableOpacity>
     );
   }
 
@@ -77,6 +88,10 @@ export default class HomeScreen extends Component {
       return this._renderSearch();
     }
 
+    if (item.viewMore) {
+      return this._renderViewMore(item);
+    }
+
     if (item.header) {
       return this._renderHeader(item);
     }
@@ -89,7 +104,7 @@ export default class HomeScreen extends Component {
       return <View style={styles.spacer} />;
     }
 
-    if (!leadingItem.header && !leadingItem.search) {
+    if (!leadingItem.header && !leadingItem.viewMore && !leadingItem.search) {
       return <View style={styles.separator} />;
     }
 
@@ -110,6 +125,7 @@ export default class HomeScreen extends Component {
 
           return conversation;
         })),
+        ...((recentConversations.length >= 5) ? [ { viewMore: true, title: 'Recent Conversations', type: 'recent' } ] : []),
       ] : []),
 
       ...((!!privateConversations && privateConversations.length) ? [
@@ -121,6 +137,7 @@ export default class HomeScreen extends Component {
 
           return conversation;
         })),
+        ...((privateConversations.length >= 5) ? [ { viewMore: true, title: 'Direct Messages', type: 'private' } ] : []),
       ] : []),
 
       ...((!!feedConversations && feedConversations.length) ? [
@@ -132,6 +149,7 @@ export default class HomeScreen extends Component {
 
           return conversation;
         })),
+        ...((feedConversations.length >= 5) ? [ { viewMore: true, title: 'Feed', type: 'feed' } ] : []),
       ] : []),
 
       ...((!!exploreConversations && exploreConversations.length) ? [
@@ -143,6 +161,7 @@ export default class HomeScreen extends Component {
 
           return conversation;
         })),
+        { viewMore: true, title: 'Explore', type: 'explore' },
       ] : []),
     ];
 
@@ -177,13 +196,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingBottom: 100,
+    paddingBottom: 25,
     paddingTop: 40,
   },
   conversationPreview: {
     paddingHorizontal: 15,
   },
-  header: {
+  headerButton: {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
@@ -237,5 +256,22 @@ const styles = StyleSheet.create({
   },
   spacer: {
     height: 40,
+  },
+  viewMoreButton: {
+    alignSelf: 'center',
+    borderColor: '#E8E8E8',
+    borderRadius: 15,
+    borderWidth: 1,
+    marginBottom: 30,
+    marginTop: -10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+
+  },
+  viewMoreText: {
+    alignSelf: 'center',
+    color: '#9B9B9B',
+    fontFamily: 'NunitoSans-Bold',
+    fontSize: 14,
   },
 });
