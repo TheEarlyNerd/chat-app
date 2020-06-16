@@ -12,10 +12,10 @@ export default class BabbleSearchField extends Component {
   }
 
   _cancelPress = () => {
-    this.setState({ search: null });
-
     this.textField.clear();
     this.textField.blur();
+
+    this.setState({ search: null });
   }
 
   _onBlur = () => {
@@ -54,6 +54,7 @@ export default class BabbleSearchField extends Component {
     return (
       <View style={[ styles.container, containerStyle ]}>
         <BabbleTextField
+          autoCorrect={false}
           placeholder={placeholder}
           returnKeyType={'search'}
           onFocus={() => this._toggleCancelButton(true)}

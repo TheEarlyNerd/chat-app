@@ -90,7 +90,7 @@ export default class UserManager extends Manager {
     this._setLoggedInUser(response.body);
   }
 
-  async getSearchUsers(search) {
+  async searchUsers(search) {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.get({
       path: '/users',

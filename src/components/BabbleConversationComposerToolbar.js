@@ -119,7 +119,7 @@ export default class BabbleConversationComposerToolbar extends Component {
     this.searchTextInputTimeout = setTimeout(async () => {
       const { selectedUsers } = this.state;
       const selectedUserIds = selectedUsers.map(selectedUser => selectedUser.id);
-      const searchUsers = (await userManager.getSearchUsers(search)).filter(searchUser => {
+      const searchUsers = (await userManager.searchUsers(search)).filter(searchUser => {
         return !selectedUserIds.includes(searchUser.id);
       });
 

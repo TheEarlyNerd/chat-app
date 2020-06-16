@@ -10,11 +10,13 @@ const { navigationHelper } = maestro.helpers;
 
 export default class HomeScreen extends Component {
   state = {
-    search: null,
     exploreConversations: null,
     feedConversations: null,
     privateConversations: null,
     recentConversations: null,
+    search: null,
+    searchUsers: null,
+    searchConversations: null,
   }
 
   searchTextInputTimeout = null;

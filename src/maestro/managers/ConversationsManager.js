@@ -124,6 +124,20 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
+  async searchConversations(search) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({
+      path: '/conversations',
+      queryParams: { search },
+    });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    return response.body;
+  }
+
   async createConversation({ accessLevel, title, users, message }) {
     const { apiHelper } = this.maestro.helpers;
     const { userManager } = this.maestro.managers;
