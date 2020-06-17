@@ -12,6 +12,7 @@ import BabbleConversationMessageEmbed from './BabbleConversationMessageEmbed';
 import BabbleConversationMessageOptions from './BabbleConversationMessageOptions';
 import BabbleConversationPreview from './BabbleConversationPreview';
 import BabbleConversationPreviewsList from './BabbleConversationPreviewsList';
+import BabbleConversationUserList from './BabbleConversationUserList';
 import BabbleEmojiSelector from './BabbleEmojiSelector';
 import BabbleFieldLabel from './BabbleFieldLabel';
 import BabbleHeader from './BabbleHeader';
@@ -31,7 +32,7 @@ import BabbleTextField from './BabbleTextField';
 import BabbleTiledIconsBackground from './BabbleTiledIconsBackground';
 import BabbleUserAvatar from './BabbleUserAvatar';
 import BabbleUserAvatarGroup from './BabbleUserAvatarGroup';
-import BabbleUserList from './BabbleUserList';
+import BabbleUserPreview from './BabbleUserPreview';
 import BabbleUsernameField from './BabbleUsernameField';
 
 export {
@@ -49,6 +50,7 @@ export {
   BabbleConversationMessageOptions,
   BabbleConversationPreview,
   BabbleConversationPreviewsList,
+  BabbleConversationUserList,
   BabbleEmojiSelector,
   BabbleFieldLabel,
   BabbleHeader,
@@ -68,6 +70,6 @@ export {
   BabbleTiledIconsBackground,
   BabbleUserAvatar,
   BabbleUserAvatarGroup,
-  BabbleUserList,
+  BabbleUserPreview,
   BabbleUsernameField,
 };

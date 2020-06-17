@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, StyleSheet } from 'react-native';
-import { BabbleUserAvatar, BabbleUserList } from './';
+import { BabbleConversationUserList, BabbleUserAvatar } from './';
 import { UsersIcon, MessageCircleIcon, LockIcon, ChevronDownIcon } from './icons';
 import maestro from '../maestro';
 
@@ -268,7 +268,7 @@ export default class BabbleConversationComposerToolbar extends Component {
         )}
 
         {showSearchUsersList && (
-          <BabbleUserList
+          <BabbleConversationUserList
             loading={loadingSearch}
             users={searchUsers}
             disableNoResultsMessage={!search}

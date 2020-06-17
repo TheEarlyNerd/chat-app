@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import { BabbleUserAvatar, BabbleUserAvatarGroup } from './';
-import { MessageCircleIcon, UsersIcon, LockIcon, ChevronRightIcon } from './icons';
+import { MessageCircleIcon, UsersIcon, LockIcon } from './icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;

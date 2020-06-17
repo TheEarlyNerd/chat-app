@@ -12,7 +12,7 @@ export default class BabbleEmojiSelector extends Component {
   }
 
   _getData = () => {
-    const search = this.state.search.toLowerCase();
+    const search = (this.state.search) ? this.state.search.toLowerCase() : null;
     const sections = [
       { category: 'people', name: 'People', emojis: [] },
       { category: 'animals_and_nature', name: 'Nature', emojis: [] },
@@ -99,6 +99,7 @@ export default class BabbleEmojiSelector extends Component {
     return (
       <View style={styles.container}>
         <BabbleSearchField
+          disableCancelButton
           onChangeText={text => this.setState({ search: text })}
           returnKeyType={'done'}
           placeholder={'Search reactions...'}

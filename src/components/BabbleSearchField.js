@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text, LayoutAnimation, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { BabbleTextField } from './';
 import { SearchIcon } from './icons';
 
@@ -12,10 +12,9 @@ export default class BabbleSearchField extends Component {
   }
 
   _cancelPress = () => {
-    this.textField.clear();
+    this._onChangeText(null);
+    this._toggleCancelButton(false);
     this.textField.blur();
-
-    this.setState({ search: null });
   }
 
   _onBlur = () => {
@@ -37,18 +36,11 @@ export default class BabbleSearchField extends Component {
   }
 
   _toggleCancelButton = show => {
-    LayoutAnimation.configureNext({
-      duration: 500,
-      create: { type: 'linear', property: 'opacity' },
-      update: { type: 'spring', springDamping: (show) ? 0.65 : 1 },
-      delete: { type: 'linear', property: 'opacity' },
-    });
-
     this.setState({ showCancelButton: show });
   }
 
   render() {
-    const { placeholder, containerStyle, style, ...additionalProps } = this.props;
+    const { placeholder, containerStyle, onChangeText, disableCancelButton, style, ...additionalProps } = this.props;
     const { search, showCancelButton } = this.state;
 
     return (
@@ -75,7 +67,7 @@ export default class BabbleSearchField extends Component {
           ref={component => this.textField = component}
         />
 
-        {showCancelButton && (
+        {showCancelButton && !disableCancelButton && (
           <TouchableOpacity onPress={this._cancelPress} style={styles.cancelButton}>
             <Text style={styles.cancelButtonText}>cancel</Text>
           </TouchableOpacity>

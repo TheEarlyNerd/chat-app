@@ -43,7 +43,7 @@ export default class BabbleTextField extends Component {
 
   render() {
     const { value } = this.state;
-    const { containerStyle, label, info, error, style, inputPrefix, labelPostfix, small, ...props } = this.props;
+    const { containerStyle, label, info, error, style, inputPrefix, labelPostfix, onChangeText, small, ...props } = this.props;
 
     return (
       <View style={[ styles.container, containerStyle ]}>

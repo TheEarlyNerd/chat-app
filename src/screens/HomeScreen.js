@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import LinearGradient from 'react-native-linear-gradient';
-import { BabbleConversationPreview, BabbleSearchField } from '../components';
+import { BabbleConversationPreview, BabbleUserPreview, BabbleSearchField } from '../components';
 import { ChevronRightIcon, EditIcon } from '../components/icons';
 import maestro from '../maestro';
 
-const { conversationsManager } = maestro.managers;
+const { conversationsManager, userManager } = maestro.managers;
 const { navigationHelper } = maestro.helpers;
 
 export default class HomeScreen extends Component {
@@ -17,6 +18,7 @@ export default class HomeScreen extends Component {
     search: null,
     searchUsers: null,
     searchConversations: null,
+    loadingSearch: false,
   }
 
   searchTextInputTimeout = null;
@@ -50,11 +52,49 @@ export default class HomeScreen extends Component {
   }
 
   _generateData = () => {
-    const { search, exploreConversations, feedConversations, privateConversations, recentConversations } = this.state;
+    const {
+      exploreConversations,
+      feedConversations,
+      privateConversations,
+      recentConversations,
+      search,
+      searchUsers,
+      searchConversations,
+      loadingSearch,
+    } = this.state;
+
+    const mapItems = (items, type) => items.map((item, index) => {
+      if (index === items.length - 1) {
+        item.last = true;
+      }
+
+      if (type) {
+        item[type] = true;
+      }
+
+      return item;
+    });
 
     if (search) {
       return [
         { id: 'search', search: true },
+        { id: 'searchUsers', title: 'Users', header: true },
+        ...((!!searchUsers && !loadingSearch && searchUsers.length) ? [
+          ...mapItems(searchUsers, 'userPreview'),
+        ] : [
+          (!loadingSearch)
+            ? { id: 'searchUsersNoResults', last: true, noResults: true }
+            : { id: 'searchUsersLoading', last: true, loading: true },
+        ]),
+
+        { id: 'searchConversations', title: 'Conversations', header: true },
+        ...((!!searchConversations && !loadingSearch && searchConversations.length) ? [
+          ...mapItems(searchConversations, 'conversationPreview'),
+        ] : [
+          (!loadingSearch)
+            ? { id: 'searchConversationsNoResults', last: true, noResults: true }
+            : { id: 'searchConversationsLoading', last: true, loading: true },
+        ]),
       ];
     }
 
@@ -63,68 +103,65 @@ export default class HomeScreen extends Component {
 
       ...((!!recentConversations && recentConversations.length) ? [
         { id: 'recentConversations', title: 'Recent Conversations', type: 'recent', header: true },
-        ...(recentConversations.map((conversation, index) => {
-          if (index === recentConversations.length - 1) {
-            conversation.last = true;
-          }
-
-          return conversation;
-        })),
+        ...mapItems(recentConversations, 'conversationPreview'),
         ...((recentConversations.length >= 5) ? [ { viewMore: true, title: 'Recent Conversations', type: 'recent' } ] : []),
       ] : []),
 
       ...((!!privateConversations && privateConversations.length) ? [
         { id: 'directMessages', title: 'Direct Messages', type: 'private', header: true },
-        ...(privateConversations.map((conversation, index) => {
-          if (index === privateConversations.length - 1) {
-            conversation.last = true;
-          }
-
-          return conversation;
-        })),
+        ...mapItems(privateConversations, 'conversationPreview'),
         ...((privateConversations.length >= 5) ? [ { viewMore: true, title: 'Direct Messages', type: 'private' } ] : []),
       ] : []),
 
       ...((!!feedConversations && feedConversations.length) ? [
         { id: 'feed', title: 'Feed', type: 'feed', header: true },
-        ...(feedConversations.map((conversation, index) => {
-          if (index === feedConversations.length - 1) {
-            conversation.last = true;
-          }
-
-          return conversation;
-        })),
+        ...mapItems(feedConversations, 'conversationPreview'),
         ...((feedConversations.length >= 5) ? [ { viewMore: true, title: 'Feed', type: 'feed' } ] : []),
       ] : []),
 
       ...((!!exploreConversations && exploreConversations.length) ? [
         { id: 'explore', title: 'Explore', type: 'explore', header: true },
-        ...(exploreConversations.map((conversation, index) => {
-          if (index === exploreConversations.length - 1) {
-            conversation.last = true;
-          }
-
-          return conversation;
-        })),
+        ...mapItems(exploreConversations, 'conversationPreview'),
         { viewMore: true, title: 'Explore', type: 'explore' },
       ] : []),
     ];
   }
 
   _onSearchChangeText = text => {
-
-
     this.setState({ search: text });
+
+    clearTimeout(this.searchTextInputTimeout);
+
+    if (!text) {
+      return;
+    } else {
+      this.setState({ loadingSearch: true });
+    }
+
+    this.searchTextInputTimeout = setTimeout(async () => {
+      const searchUsers = await userManager.searchUsers(text);
+      const searchConversations = await conversationsManager.searchConversations(text);
+
+      this.setState({
+        searchUsers,
+        searchConversations,
+        loadingSearch: false,
+      });
+    }, 500);
   }
 
   _renderHeader = ({ title, type }) => {
     return (
       <TouchableOpacity
         onPress={() => this._openConversationsList({ title, type })}
+        disabled={!type}
         style={styles.headerButton}
       >
         <Text style={styles.headerText}>{title}</Text>
-        <ChevronRightIcon width={32} height={32} style={styles.headerIcon} />
+
+        {!!type && (
+          <ChevronRightIcon width={32} height={32} style={styles.headerIcon} />
+        )}
       </TouchableOpacity>
     );
   }
@@ -136,6 +173,12 @@ export default class HomeScreen extends Component {
         placeholder={'Search users and conversations...'}
         containerStyle={styles.searchField}
       />
+    );
+  }
+
+  _renderLoading = () => {
+    return (
+      <ActivityIndicator size={'large'} />
     );
   }
 
@@ -159,9 +202,26 @@ export default class HomeScreen extends Component {
     );
   }
 
+  _renderUserPreview = user => {
+    return (
+      <BabbleUserPreview
+        user={user}
+        style={styles.userPreview}
+      />
+    );
+  }
+
   _renderItem = ({ item, index }) => {
     if (item.search) {
       return this._renderSearch();
+    }
+
+    if (item.loading) {
+      return this._renderLoading();
+    }
+
+    if (item.noResults) {
+      return this._renderNoResults();
     }
 
     if (item.viewMore) {
@@ -172,7 +232,13 @@ export default class HomeScreen extends Component {
       return this._renderHeader(item);
     }
 
-    return this._renderConversationPreview(item);
+    if (item.conversationPreview) {
+      return this._renderConversationPreview(item);
+    }
+
+    if (item.userPreview) {
+      return this._renderUserPreview(item);
+    }
   }
 
   _renderItemSeparator = ({ leadingItem }) => {
@@ -180,17 +246,23 @@ export default class HomeScreen extends Component {
       return <View style={styles.spacer} />;
     }
 
-    if (!leadingItem.header && !leadingItem.viewMore && !leadingItem.search) {
+    if (!leadingItem.header && !leadingItem.viewMore && !leadingItem.noResults && !leadingItem.search) {
       return <View style={styles.separator} />;
     }
 
     return null;
   }
 
+  _renderNoResults = () => {
+    return (
+      <Text style={styles.noResultsText}>No results found</Text>
+    );
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <FlatList
+        <KeyboardAwareFlatList
           data={this._generateData()}
           contentContainerStyle={styles.contentContainer}
           renderItem={this._renderItem}
@@ -267,6 +339,12 @@ const styles = StyleSheet.create({
   newButtonIcon: {
     color: '#FFFFFF',
   },
+  noResultsText: {
+    color: '#797979',
+    fontFamily: 'NunitoSans-Bold',
+    fontSize: 14,
+    textAlign: 'center',
+  },
   searchField: {
     marginBottom: 30,
     paddingHorizontal: 15,
@@ -280,6 +358,9 @@ const styles = StyleSheet.create({
   },
   spacer: {
     height: 40,
+  },
+  userPreview: {
+    paddingHorizontal: 15,
   },
   viewMoreButton: {
     alignSelf: 'center',
