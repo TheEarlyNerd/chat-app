@@ -93,6 +93,7 @@ export default class BabbleConversationMessage extends Component {
         {heading && (
           <BabbleUserAvatar
             avatarAttachment={user.avatarAttachment}
+            lastActiveAt={user.lastActiveAt}
             size={40}
             onPress={() => this._userPress(user.id)}
             style={styles.avatar}

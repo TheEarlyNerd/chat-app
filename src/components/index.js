@@ -34,6 +34,7 @@ import BabbleUserAvatar from './BabbleUserAvatar';
 import BabbleUserAvatarGroup from './BabbleUserAvatarGroup';
 import BabbleUserPreview from './BabbleUserPreview';
 import BabbleUsernameField from './BabbleUsernameField';
+import BabbleViewMoreButton from './BabbleViewMoreButton';
 
 export {
   BabbleAutoscaleImage,
@@ -72,4 +73,5 @@ export {
   BabbleUserAvatarGroup,
   BabbleUserPreview,
   BabbleUsernameField,
+  BabbleViewMoreButton,
 };

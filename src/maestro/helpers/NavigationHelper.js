@@ -8,6 +8,10 @@ export default class NavigationHelper extends Helper {
 
   _navigation = null;
 
+  pop(numberOfScreens = 1) {
+    this._navigation.dispatch(StackActions.pop(numberOfScreens));
+  }
+
   push(routeName, params) {
     this._navigation.dispatch(StackActions.push(routeName, params));
   }

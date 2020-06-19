@@ -20,6 +20,7 @@ const BabbleHeader = ({ scene }) => {
         {!!user && !backEnabled && !closeEnabled && (
           <BabbleUserAvatar
             avatarAttachment={user.avatarAttachment}
+            lastActiveAt={user.lastActiveAt}
             size={40}
             imageStyle={styles.userButton}
             onPress={() => {

@@ -2,8 +2,10 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BabbleHeader } from '../components';
 
+import ConversationInfoScreen from '../screens/ConversationInfoScreen';
 import ConversationScreen from '../screens/ConversationScreen';
 import ConversationsListScreen from '../screens/ConversationsListScreen';
+import ConversationUsersScreen from '../screens/ConversationUsersScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LandingScreen from '../screens/LandingScreen';
 import PhoneLoginCodeScreen from '../screens/PhoneLoginCodeScreen';
@@ -22,6 +24,15 @@ export default initialRouteName => {
       }}
     >
       <MainStack.Screen
+        name={'ConversationInfo'}
+        component={ConversationInfoScreen}
+        options={{
+          title: 'Conversation Info',
+          backEnabled: true,
+        }}
+      />
+
+      <MainStack.Screen
         name={'Conversation'}
         component={ConversationScreen}
         options={{
@@ -33,6 +44,15 @@ export default initialRouteName => {
         name={'ConversationsList'}
         component={ConversationsListScreen}
         options={{ backEnabled: true }}
+      />
+
+      <MainStack.Screen
+        name={'ConversationUsers'}
+        component={ConversationUsersScreen}
+        options={{
+          backEnabled: true,
+          title: 'Participants',
+        }}
       />
 
       <MainStack.Screen

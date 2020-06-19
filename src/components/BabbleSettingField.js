@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, View, Text, TextInput, StyleSheet } from 'react-native';
-import { ChevronRightIcon } from './icons';
 
 export default class BabbleSettingField extends Component {
   textInput = null;
@@ -10,7 +9,11 @@ export default class BabbleSettingField extends Component {
   }
 
   _settingPress = () => {
-    const { editable } = this.props;
+    const { editable, onPress } = this.props;
+
+    if (onPress) {
+      onPress();
+    }
 
     if (this.textInput) {
       this.textInput.focus();
@@ -22,17 +25,29 @@ export default class BabbleSettingField extends Component {
   }
 
   render() {
-    const { label, editable, placeholder, showMoreIcon, valuePrefix, maxLength, style, value, ...props } = this.props;
+    const { label, labelStyle, editable, placeholder, IconComponent, iconStyle, valuePrefix, maxLength, onPress, style, value, children, ...props } = this.props;
     const { editing } = this.state;
 
     return (
-      <TouchableOpacity onPress={this._settingPress} style={[ styles.container, style ]}>
+      <TouchableOpacity
+        disabled={!onPress && !editable}
+        onPress={this._settingPress}
+        style={[ styles.container, style ]}
+      >
         <View style={styles.settingContainer}>
           <View style={styles.headingContainer}>
-            <Text style={styles.labelText}>{label}</Text>
+            <Text style={[ styles.labelText, labelStyle ]}>{label}</Text>
 
             {editable && !editing && (
               <Text style={styles.editText}>Edit</Text>
+            )}
+
+            {!!IconComponent && (
+              <IconComponent
+                width={24}
+                height={24}
+                style={[ styles.icon, iconStyle ]}
+              />
             )}
           </View>
 
@@ -61,17 +76,11 @@ export default class BabbleSettingField extends Component {
               {editing && !!maxLength && (
                 <Text style={styles.lengthText}>{(value) ? value.length : 0} / {maxLength}</Text>
               )}
+
+              {children}
             </View>
           </View>
         </View>
-
-        {showMoreIcon && (
-          <ChevronRightIcon
-            width={24}
-            height={24}
-            style={styles.moreIcon}
-          />
-        )}
       </TouchableOpacity>
     );
   }
@@ -93,6 +102,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  icon: {
+    color: '#ADADAD',
+  },
   inputContainer: {
     flex: 1,
   },
@@ -107,9 +119,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'right',
     width: '100%',
-  },
-  moreIcon: {
-    color: '#ADADAD',
   },
   settingContainer: {
     flex: 1,

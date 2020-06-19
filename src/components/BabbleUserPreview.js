@@ -31,6 +31,7 @@ export default class BabbleUserPreview extends Component {
       >
         <BabbleUserAvatar
           avatarAttachment={user.avatarAttachment}
+          lastActiveAt={user.lastActiveAt}
           disabled
           size={50}
         />

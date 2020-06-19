@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import LinearGradient from 'react-native-linear-gradient';
-import { BabbleConversationPreview, BabbleUserPreview, BabbleSearchField } from '../components';
+import { BabbleConversationPreview, BabbleUserPreview, BabbleSearchField, BabbleViewMoreButton } from '../components';
 import { ChevronRightIcon, EditIcon } from '../components/icons';
 import maestro from '../maestro';
 
@@ -184,12 +184,9 @@ export default class HomeScreen extends Component {
 
   _renderViewMore = ({ title, type }) => {
     return (
-      <TouchableOpacity
+      <BabbleViewMoreButton
         onPress={() => this._openConversationsList({ title, type })}
-        style={styles.viewMoreButton}
-      >
-        <Text style={styles.viewMoreText}>View More</Text>
-      </TouchableOpacity>
+      />
     );
   }
 
@@ -361,22 +358,5 @@ const styles = StyleSheet.create({
   },
   userPreview: {
     paddingHorizontal: 15,
-  },
-  viewMoreButton: {
-    alignSelf: 'center',
-    borderColor: '#E8E8E8',
-    borderRadius: 15,
-    borderWidth: 1,
-    marginBottom: 35,
-    marginTop: -15,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-
-  },
-  viewMoreText: {
-    alignSelf: 'center',
-    color: '#9B9B9B',
-    fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
   },
 });

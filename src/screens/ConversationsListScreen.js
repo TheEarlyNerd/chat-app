@@ -4,7 +4,6 @@ import { BabbleConversationPreviewsList } from '../components';
 import maestro from '../maestro';
 
 const { conversationsManager } = maestro.managers;
-const { navigationHelper } = maestro.helpers;
 
 export default class CovnersationsListScreen extends Component {
   state = {

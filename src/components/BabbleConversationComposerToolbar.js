@@ -191,6 +191,7 @@ export default class BabbleConversationComposerToolbar extends Component {
               >
                 <BabbleUserAvatar
                   avatarAttachment={selectedUser.avatarAttachment}
+                  lastActiveAt={selectedUser.lastActiveAt}
                   disabled
                   size={20}
                   style={styles.avatar}

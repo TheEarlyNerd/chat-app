@@ -10,6 +10,7 @@ export default class BabbleConversationUserList extends Component {
       <TouchableOpacity onPress={() => onPress(item)} style={styles.user}>
         <BabbleUserAvatar
           avatarAttachment={item.avatarAttachment}
+          lastActiveAt={item.lastActiveAt}
           disabled
           size={40}
         />

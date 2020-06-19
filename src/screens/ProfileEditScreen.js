@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { BabbleUserAvatar, BabbleSettingField } from '../components';
+import { ChevronRightIcon } from '../components/icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
@@ -89,7 +90,6 @@ export default class ProfileEditScreen extends Component {
             returnKeyType={'done'}
             onChangeText={text => this.setState({ name: text })}
             value={name}
-            style={styles.setting}
           />
 
           <View style={styles.border} />
@@ -114,7 +114,6 @@ export default class ProfileEditScreen extends Component {
             placeholder={'(Tell the world a little about yourself)'}
             onChangeText={text => this.setState({ about: text })}
             value={about}
-            style={styles.setting}
           />
 
           <View style={styles.border} />
@@ -122,33 +121,29 @@ export default class ProfileEditScreen extends Component {
           <BabbleSettingField
             label={'Account Phone Number'}
             value={user.phone}
-            style={styles.setting}
           />
 
           <View style={styles.border} />
 
           <BabbleSettingField
             label={'Privacy Policy'}
-            showMoreIcon
-            style={styles.setting}
+            IconComponent={ChevronRightIcon}
           />
 
           <View style={styles.border} />
 
           <BabbleSettingField
             label={'Terms & Conditions'}
-            showMoreIcon
-            style={styles.setting}
+            IconComponent={ChevronRightIcon}
           />
 
           <View style={styles.border} />
 
-          <TouchableOpacity
+          <BabbleSettingField
             onPress={() => userManager.logout()}
-            style={styles.logoutButton}
-          >
-            <Text style={styles.logoutText}>Logout</Text>
-          </TouchableOpacity>
+            label={'Logout'}
+            labelStyle={styles.logoutLabelText}
+          />
         </View>
       </KeyboardAwareScrollView>
     );
@@ -165,15 +160,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 40,
   },
-  logoutButton: {
-    justifyContent: 'center',
-    paddingVertical: 15,
-    width: '100%',
-  },
-  logoutText: {
+  logoutLabelText: {
     color: '#F54444',
-    fontFamily: 'NunitoSans-Bold',
-    fontSize: 16,
   },
   nameText: {
     color: '#494949',

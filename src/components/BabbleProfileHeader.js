@@ -52,8 +52,9 @@ export default class BabbleProfileHeader extends Component {
       <View style={[ styles.container, style ]}>
         <View style={styles.user}>
           <BabbleUserAvatar
-            activityIconStyle={styles.avatarActivityIcon}
             avatarAttachment={user.avatarAttachment}
+            lastActiveAt={user.lastActiveAt}
+            activityIconStyle={styles.avatarActivityIcon}
             size={60}
           />
 

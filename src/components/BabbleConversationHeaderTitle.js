@@ -4,6 +4,7 @@ import { UsersIcon, MessageCircleIcon, LockIcon } from './icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
+const { navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationHeaderTitle extends Component {
   state = {
@@ -52,12 +53,21 @@ export default class BabbleConversationHeaderTitle extends Component {
     });
   }
 
+  _onPress = () => {
+    const { conversation } = this.props;
+
+    navigationHelper.push('ConversationInfo', { conversation });
+  }
+
   render() {
     const { accessLevel } = this.props.conversation;
     const { subtext, subtextOpacityAnimated } = this.state;
 
     return (
-      <TouchableOpacity style={styles.container}>
+      <TouchableOpacity
+        onPress={this._onPress}
+        style={styles.container}
+      >
         <View style={styles.textContainer}>
           <Text numberOfLines={1} style={styles.titleText}>{this._getTitle()}</Text>
 

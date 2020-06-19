@@ -4,43 +4,62 @@ import FastImage from 'react-native-fast-image';
 import { EditIcon } from './icons';
 
 const BabbleUserAvatar = props => {
+  const {
+    avatarAttachment,
+    lastActiveAt,
+    onPress,
+    size,
+    showEditIcon,
+    hideActivityIcon,
+    activityIconStyle,
+    editIconStyle,
+    disabled,
+    imageStyle,
+    style,
+  } = props;
   const defaultAvatar = props.defaultAvatar || require('../assets/images/default-avatar.png');
 
   return (
     <TouchableOpacity
-      onPress={props.onPress}
+      onPress={onPress}
       style={[
         styles.container,
-        props.style,
+        style,
       ]}
-      disabled={props.disabled}
+      disabled={disabled}
     >
       <FastImage
-        source={(props.avatarAttachment) ? { uri: props.avatarAttachment.url } : defaultAvatar}
+        source={(avatarAttachment) ? { uri: avatarAttachment.url } : defaultAvatar}
         resizeMode={'cover'}
         style={[
           styles.image,
           {
-            width: props.size,
-            height: props.size,
-            borderRadius: props.size,
+            width: size,
+            height: size,
+            borderRadius: size,
           },
-          props.imageStyle,
+          imageStyle,
         ]}
       />
 
-      {props.showEditIcon && (
+      {showEditIcon && (
         <View style={styles.editIconContainer}>
           <EditIcon
             width={17}
             height={17}
-            style={[ styles.editIcon, props.editIconStyle ]}
+            style={[ styles.editIcon, editIconStyle ]}
           />
         </View>
       )}
 
-      {!props.hideActivityIcon && (
-        <View style={[ styles.activityIcon, props.activityIconStyle ]} />
+      {!hideActivityIcon && (
+        <View
+          style={[
+            styles.activityIcon,
+            (lastActiveAt) ? styles.activityIconActive : styles.activityIconInactive,
+            activityIconStyle,
+          ]}
+        />
       )}
     </TouchableOpacity>
   );
@@ -50,7 +69,6 @@ export default BabbleUserAvatar;
 
 const styles = StyleSheet.create({
   activityIcon: {
-    backgroundColor: '#1FD7CB',
     borderColor: '#FFFFFF',
     borderRadius: 6,
     borderWidth: 2,
@@ -60,13 +78,19 @@ const styles = StyleSheet.create({
     top: 0,
     width: 12,
   },
+  activityIconActive: {
+    backgroundColor: '#1FD7CB',
+  },
+  activityIconInactive: {
+    backgroundColor: '#B2B2B2',
+  },
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#252A3F',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
+    //shadowColor: '#252A3F',
+    //shadowOffset: { width: 0, height: 3 },
+    //shadowOpacity: 0.15,
+    //shadowRadius: 5,
     zIndex: 1,
   },
   editIcon: {

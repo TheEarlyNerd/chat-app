@@ -53,6 +53,21 @@ export default class BabbleConversationPreview extends Component {
     }
   }
 
+  _getLastActiveAt = () => {
+    const { accessLevel, user, previewConversationUsers } = this.props.conversation;
+    const loggedInUserId = userManager.store.user.id;
+
+    if (accessLevel === 'private') {
+      const otherUser = previewConversationUsers.map(conversationUser => (
+        conversationUser.user
+      )).find(user => user.id !== loggedInUserId);
+
+      return (otherUser) ? otherUser.lastActiveAt : user.lastActiveAt;
+    } else {
+      return user.lastActiveAt;
+    }
+  }
+
   _getTitle = () => {
     const { accessLevel, user, title } = this.props.conversation;
 
@@ -67,31 +82,6 @@ export default class BabbleConversationPreview extends Component {
     if ([ 'protected', 'private' ].includes(accessLevel)) {
       return this._getGroupUsers().map(user => user.name).join(', ') || user.name;
     }
-  }
-
-  _getPreviewImageUrl = () => {
-    const { conversation } = this.props;
-    const previewConversationMessage = conversation.previewConversationMessage || {};
-    const { attachments, embeds } = previewConversationMessage;
-    let previewImageUrl = null;
-
-    if (attachments?.length) {
-      const previewAttachment = attachments.find(attachment => {
-        if (attachment.mimetype.includes('image/')) {
-          return true;
-        }
-      });
-
-      previewImageUrl = (previewAttachment) ? previewAttachment.url : null;
-    }
-
-    if (embeds?.length) {
-      const previewEmbed = embeds.find(embed => !!embed.imageUrl);
-
-      previewImageUrl = (previewEmbed) ? previewEmbed.imageUrl : null;
-    }
-
-    return previewImageUrl;
   }
 
   _getPreviewText = () => {
@@ -125,7 +115,6 @@ export default class BabbleConversationPreview extends Component {
     const { conversation, style } = this.props;
     const { accessLevel, usersCount } = conversation;
     const groupUsers = this._getGroupUsers();
-    const previewImageUrl = this._getPreviewImageUrl();
 
     return (
       <TouchableOpacity
@@ -135,6 +124,7 @@ export default class BabbleConversationPreview extends Component {
         {groupUsers.length < 2 && (
           <BabbleUserAvatar
             avatarAttachment={this._getAvatarAttachment()}
+            lastActiveAt={this._getLastActiveAt()}
             disabled
             size={50}
           />

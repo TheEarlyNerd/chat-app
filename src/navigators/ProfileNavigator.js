@@ -3,7 +3,9 @@ import { ActivityIndicator } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BabbleHeader } from '../components';
 
+import ConversationInfoScreen from '../screens/ConversationInfoScreen';
 import ConversationScreen from '../screens/ConversationScreen';
+import ConversationUsersScreen from '../screens/ConversationUsersScreen';
 import ProfileEditScreen from '../screens/ProfileEditScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
@@ -19,11 +21,29 @@ export default () => {
       }}
     >
       <ProfileStack.Screen
+        name={'ConversationInfo'}
+        component={ConversationInfoScreen}
+        options={{
+          title: 'Conversation Info',
+          backEnabled: true,
+        }}
+      />
+
+      <ProfileStack.Screen
         name={'Conversation'}
         component={ConversationScreen}
         options={{
           backEnabled: true,
           title: <ActivityIndicator color={'#FFFFFF'} />,
+        }}
+      />
+
+      <ProfileStack.Screen
+        name={'ConversationUsers'}
+        component={ConversationUsersScreen}
+        options={{
+          backEnabled: true,
+          title: 'Participants',
         }}
       />
 
