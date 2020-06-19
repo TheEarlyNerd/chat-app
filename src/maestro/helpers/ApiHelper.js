@@ -117,6 +117,7 @@ export default class ApiHelper extends Helper {
       if (value.createdAt) { value.createdAt = new Date(value.createdAt); }
       if (value.updatedAt) { value.updatedAt = new Date(value.updatedAt); }
       if (value.deletedAt) { value.deletedAt = new Date(value.deletedAt); }
+      if (value.lastActiveAt) { value.lastActiveAt = new Date(value.lastActiveAt); }
       if (value.closedAt) { value.closedAt = new Date(value.closedAt); }
       if (value.sentAt) { value.sentAt = new Date(value.sentAt); }
 

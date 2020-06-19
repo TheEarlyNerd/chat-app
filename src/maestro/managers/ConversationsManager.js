@@ -28,6 +28,17 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
+  async getConversationUsers(conversationId) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({ path: `/conversations/${conversationId}/users` });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    return response.body;
+  }
+
   async getPrivateConversationByUserIds(userIds) { // TODO: review implementation
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.get({
@@ -163,7 +174,13 @@ export default class ConversationsManager extends Manager {
     }
 
     this._addActiveConversation(response.body);
-    this._addConversationToRecentConversations(response.body);
+    this._addRecentConversation(response.body);
+
+    if (accessLevel === 'private') {
+      this._addPrivateConversation(response.body);
+    } else {
+      this._addExploreConversation(response.body);
+    }
 
     return response.body;
   }
@@ -244,6 +261,19 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
+  async deleteConversation(conversationId) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.delete({
+      path: `/conversations/${conversationId}`,
+    });
+
+    if (response.code !== 204) {
+      throw new Error(response.body);
+    }
+
+    this._removeFromAllConversationTypes(conversationId);
+  }
+
   async deleteConversationMessage({ conversationId, conversationMessageId }) {
     this._removeMessageFromConversation({ conversationId, conversationMessageId });
 
@@ -276,16 +306,32 @@ export default class ConversationsManager extends Manager {
     }
   }
 
-  removeActiveConversation(conversationId) {
-    const { activeConversations } = this.store;
+  async deleteConversationUser({ conversationId, conversationUserId }) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.delete({
+      path: `/conversations/${conversationId}/users/${conversationUserId}`,
+    });
 
-    if (activeConversations) {
-      this.updateStore({
-        activeConversations: activeConversations.filter(conversation => {
-          return conversation.id !== conversationId;
-        }),
-      });
+    if (response.code !== 204) {
+      throw new Error(response.body);
     }
+  }
+
+  async leaveConversation(conversationId) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.delete({
+      path: `/users/me/conversations/${conversationId}`,
+    });
+
+    if (response.code !== 204) {
+      throw new Error(response.body);
+    }
+
+    this._removeRecentConversation(conversationId);
+  }
+
+  removeActiveConversation(conversationId) {
+    this._removeActiveConversation(conversationId);
   }
 
   /*
@@ -293,10 +339,82 @@ export default class ConversationsManager extends Manager {
    */
 
   _addActiveConversation(conversation) {
-    this.updateStore({
-      activeConversations: (this.store.activeConversations)
-        ? [ ...this.store.activeConversations, conversation ]
-        : [ conversation ],
+    this._addConversation({ conversation, type: 'active' });
+  }
+
+  _addExploreConversation(conversation) {
+    this._addConversation({ conversation, type: 'explore' });
+  }
+
+  _addFeedConversation(conversation) {
+    this._addConversation({ conversation, type: 'feed' });
+  }
+
+  _addPrivateConversation(conversation) {
+    this._addConversation({ conversation, type: 'private' });
+  }
+
+  _addRecentConversation(conversation) {
+    this._addConversation({ conversation, type: 'recent' });
+  }
+
+  _addConversation({ conversation, type }) {
+    let typeConversations = this._getConversationsByType(type);
+
+    typeConversations = typeConversations.filter(typeConversation => (
+      typeConversation.id !== conversation.id
+    ));
+
+    if (type !== 'explore' && typeConversations.length >= 5) {
+      typeConversations.pop();
+    }
+
+    typeConversations.unshift(conversation);
+
+    this._updateConversationsByType({
+      conversations: typeConversations,
+      type,
+    });
+  }
+
+  _removeFromAllConversationTypes(conversationId) {
+    this._removeActiveConversation(conversationId);
+    this._removeExploreConversation(conversationId);
+    this._removeFeedConversation(conversationId);
+    this._removePrivateConversation(conversationId);
+    this._removeRecentConversation(conversationId);
+  }
+
+  _removeActiveConversation(conversationId) {
+    this._removeConversation({ conversationId, type: 'active' });
+  }
+
+  _removeExploreConversation(conversationId) {
+    this._removeConversation({ conversationId, type: 'explore' });
+  }
+
+  _removeFeedConversation(conversationId) {
+    this._removeConversation({ conversationId, type: 'feed' });
+  }
+
+  _removePrivateConversation(conversationId) {
+    this._removeConversation({ conversationId, type: 'private' });
+  }
+
+  _removeRecentConversation(conversationId) {
+    this._removeConversation({ conversationId, type: 'recent' });
+  }
+
+  _removeConversation({ conversationId, type }) {
+    let typeConversations = this._getConversationsByType(type);
+
+    typeConversations = typeConversations.filter(typeConversation => (
+      typeConversation.id !== conversationId
+    ));
+
+    this._updateConversationsByType({
+      conversations: typeConversations,
+      type,
     });
   }
 
@@ -329,7 +447,7 @@ export default class ConversationsManager extends Manager {
     });
 
     if (newRecentConversation) {
-      this._addConversationToRecentConversations(newRecentConversation);
+      this._addRecentConversation(newRecentConversation);
     }
   }
 
@@ -449,21 +567,36 @@ export default class ConversationsManager extends Manager {
     });
   }
 
-  _addConversationToRecentConversations(conversation) {
-    const { store } = this;
-    let recentConversations = (store.recentConversations) ? [ ...store.recentConversations ] : [];
-
-    recentConversations = recentConversations.filter(recentConversation => (
-      recentConversation.id !== conversation.id
-    ));
-
-    if (recentConversations.length === 5) {
-      recentConversations.pop();
+  _getConversationsByType = type => {
+    if (type === 'active') {
+      return this.store.activeConversations || [];
     }
 
-    recentConversations.unshift(conversation);
+    if (type === 'explore') {
+      return this.store.exploreConversations || [];
+    }
 
-    this.updateStore({ recentConversations });
+    if (type === 'feed') {
+      return this.store.feedConversations || [];
+    }
+
+    if (type === 'private') {
+      return this.store.privateConversations || [];
+    }
+
+    if (type === 'recent') {
+      return this.store.recentConversations || [];
+    }
+  }
+
+  _updateConversationsByType = ({ conversations, type }) => {
+    this.updateStore({
+      activeConversations: (type === 'active') ? conversations : this.store.activeConversations,
+      exploreConversations: (type === 'explore') ? conversations : this.store.exploreConversations,
+      feedConversations: (type === 'feed') ? conversations : this.store.feedConversations,
+      privateConversations: (type === 'private') ? conversations : this.store.privateConversations,
+      recentConversations: (type === 'recent') ? conversations : this.store.recentConversations,
+    });
   }
 
   _iterateConversationTypes = modifierFunction => {
