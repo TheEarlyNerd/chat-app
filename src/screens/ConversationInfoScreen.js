@@ -6,12 +6,11 @@ import { ChevronRightIcon } from '../components/icons';
 import maestro from '../maestro';
 
 const { conversationsManager } = maestro.managers;
-const { navigationHelper } = maestro.helpers;
+const { navigationHelper, interfaceHelper } = maestro.helpers;
 
 export default class ConversationDetailsScreen extends Component {
   state = {
     title: this.props.route.params.conversation.title,
-    accessLevel: this.props.route.params.conversation.accessLevel,
     conversationUsers: null,
   }
 
@@ -83,8 +82,25 @@ export default class ConversationDetailsScreen extends Component {
     ]);
   }
 
-  _savePress = () => {
+  _savePress = async () => {
+    const { navigation } = this.props;
+    const { conversation } = this.props.route.params;
+    const { title } = this.state;
 
+    navigation.setOptions({ showRightLoading: true });
+
+    try {
+      await conversationsManager.updateConversation({
+        conversationId: conversation.id,
+        fields: { title },
+      });
+    } catch (error) {
+      interfaceHelper.showError({ message: error.message });
+
+      return navigation.setOptions({ showRightLoading: false });
+    }
+
+    navigation.pop();
   }
 
   _openConversationUsers = () => {
@@ -96,7 +112,7 @@ export default class ConversationDetailsScreen extends Component {
   }
 
   _getAccessLevelText = () => {
-    const { accessLevel } = this.state;
+    const { accessLevel } = this.props.route.params.conversation;
 
     if (accessLevel === 'public') {
       return 'Public - Anyone can join this conversation, send and react to messages, and invite others.';

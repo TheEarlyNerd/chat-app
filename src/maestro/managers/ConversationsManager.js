@@ -330,6 +330,20 @@ export default class ConversationsManager extends Manager {
     this._removeRecentConversation(conversationId);
   }
 
+  async updateConversation({ conversationId, fields }) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.patch({
+      path: `/conversations/${conversationId}`,
+      data: fields,
+    });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    this._updateConversation({ conversationId, fields });
+  }
+
   removeActiveConversation(conversationId) {
     this._removeActiveConversation(conversationId);
   }
@@ -415,6 +429,18 @@ export default class ConversationsManager extends Manager {
     this._updateConversationsByType({
       conversations: typeConversations,
       type,
+    });
+  }
+
+  _updateConversation({ conversationId, fields }) {
+    this._iterateConversationTypes(({ conversations }) => {
+      conversations.forEach(conversation => {
+        if (conversation.id !== conversationId) {
+          return;
+        }
+
+        Object.assign(conversation, fields);
+      });
     });
   }
 
