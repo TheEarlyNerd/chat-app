@@ -17,26 +17,23 @@ export default class ProfileScreen extends Component {
 
     const params = this.props.route.params || {};
     const { userId } = params;
+    const user = await userManager.getUser(userId);
 
-    try {
-      const user = await userManager.getUser(userId);
-      this.setState({ user });
-      this.props.navigation.setOptions({ title: `@${user.username}` });
+    this.setState({ user });
 
-      const conversations = await conversationsManager.getConversationsByUserId(userId);
-      this.setState({ conversations });
-    } catch (error) {
-      interfaceHelper.showError({ message: error.message });
-      this.props.navigation.pop();
-    }
+    this.props.navigation.setOptions({ title: `@${user.username}` });
+
+    await conversationsManager.loadUsersConersations(userId);
   }
 
   componentWillUnmount() {
     maestro.unlink(this);
   }
 
-  receiveStoreUpdate({ user }) {
-    this.setState({ user: user.user });
+  receiveStoreUpdate({ conversations }) {
+    const { user } = this.state;
+
+    this.setState({ conversations: conversations.usersConversations[user.id] });
   }
 
   _renderHeader = () => {

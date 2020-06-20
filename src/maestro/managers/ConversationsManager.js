@@ -11,21 +11,11 @@ export default class ConversationsManager extends Manager {
     feedConversations: null,
     privateConversations: null,
     recentConversations: null,
+    usersConversations: {},
   }
 
   get storeName() {
     return 'conversations';
-  }
-
-  async getConversationsByUserId(userId) {
-    const { apiHelper } = this.maestro.helpers;
-    const response = await apiHelper.get({ path: `/users/${userId}/conversations` });
-
-    if (response.code !== 200) {
-      throw new Error(response.body);
-    }
-
-    return response.body;
   }
 
   async getConversationUsers(conversationId) {
@@ -74,34 +64,15 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
-  async loadRecentConversations() {
+  async loadExploreConversations() {
     const { apiHelper } = this.maestro.helpers;
-    const response = await apiHelper.get({
-      path: '/conversations',
-      queryParams: { accessLevels: [ 'public', 'protected', 'private' ] },
-    });
+    const response = await apiHelper.get({ path: '/conversations' });
 
     if (response.code !== 200) {
       throw new Error(response.body);
     }
 
-    this.updateStore({ recentConversations: response.body });
-
-    return response.body;
-  }
-
-  async loadPrivateConversations() {
-    const { apiHelper } = this.maestro.helpers;
-    const response = await apiHelper.get({
-      path: '/conversations',
-      queryParams: { accessLevels: [ 'private' ] },
-    });
-
-    if (response.code !== 200) {
-      throw new Error(response.body);
-    }
-
-    this.updateStore({ privateConversations: response.body });
+    this.updateStore({ exploreConversations: response.body });
 
     return response.body;
   }
@@ -122,15 +93,50 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
-  async loadExploreConversations() {
+  async loadPrivateConversations() {
     const { apiHelper } = this.maestro.helpers;
-    const response = await apiHelper.get({ path: '/conversations' });
+    const response = await apiHelper.get({
+      path: '/conversations',
+      queryParams: { accessLevels: [ 'private' ] },
+    });
 
     if (response.code !== 200) {
       throw new Error(response.body);
     }
 
-    this.updateStore({ exploreConversations: response.body });
+    this.updateStore({ privateConversations: response.body });
+
+    return response.body;
+  }
+
+  async loadRecentConversations() {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({
+      path: '/conversations',
+      queryParams: { accessLevels: [ 'public', 'protected', 'private' ] },
+    });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    this.updateStore({ recentConversations: response.body });
+
+    return response.body;
+  }
+
+  async loadUsersConersations(userId) {
+    const usersConversations = { ...this.store.usersConversations };
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({ path: `/users/${userId}/conversations` });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    usersConversations[userId] = response.body;
+
+    this.updateStore({ usersConversations });
 
     return response.body;
   }
@@ -348,6 +354,10 @@ export default class ConversationsManager extends Manager {
     this._removeActiveConversation(conversationId);
   }
 
+  removeUsersConversations(userId) {
+    this._removeUsersConversations(userId);
+  }
+
   /*
    * Helpers
    */
@@ -397,6 +407,7 @@ export default class ConversationsManager extends Manager {
     this._removeFeedConversation(conversationId);
     this._removePrivateConversation(conversationId);
     this._removeRecentConversation(conversationId);
+    this._removeUsersConversation(conversationId);
   }
 
   _removeActiveConversation(conversationId) {
@@ -419,12 +430,24 @@ export default class ConversationsManager extends Manager {
     this._removeConversation({ conversationId, type: 'recent' });
   }
 
+  _removeUsersConversation(conversationId) {
+    this._removeConversation({ conversationId, type: 'users' });
+  }
+
   _removeConversation({ conversationId, type }) {
     let typeConversations = this._getConversationsByType(type);
 
-    typeConversations = typeConversations.filter(typeConversation => (
-      typeConversation.id !== conversationId
-    ));
+    if (type !== 'users') {
+      typeConversations = typeConversations.filter(typeConversation => (
+        typeConversation.id !== conversationId
+      ));
+    } else {
+      Object.keys(typeConversations).forEach(userId => {
+        typeConversations[userId] = typeConversations[userId].filter(userConversation => (
+          userConversation.id !== conversationId
+        ));
+      });
+    }
 
     this._updateConversationsByType({
       conversations: typeConversations,
@@ -594,24 +617,30 @@ export default class ConversationsManager extends Manager {
   }
 
   _getConversationsByType = type => {
+    const { store } = this;
+
     if (type === 'active') {
-      return this.store.activeConversations || [];
+      return (store.activeConversations) ? [ ...store.activeConversations ] : [];
     }
 
     if (type === 'explore') {
-      return this.store.exploreConversations || [];
+      return (store.exploreConversations) ? [ ...store.exploreConversations ] : [];
     }
 
     if (type === 'feed') {
-      return this.store.feedConversations || [];
+      return (store.feedConversations) ? [ ...store.feedConversations ] : [];
     }
 
     if (type === 'private') {
-      return this.store.privateConversations || [];
+      return (store.privateConversations) ? [ ...store.privateConversations ] : [];
     }
 
     if (type === 'recent') {
-      return this.store.recentConversations || [];
+      return (store.recentConversations) ? [ ...store.recentConversations ] : [];
+    }
+
+    if (type === 'users') {
+      return (store.usersConversations) ? { ...this.store.usersConversations } : {};
     }
   }
 
@@ -622,6 +651,7 @@ export default class ConversationsManager extends Manager {
       feedConversations: (type === 'feed') ? conversations : this.store.feedConversations,
       privateConversations: (type === 'private') ? conversations : this.store.privateConversations,
       recentConversations: (type === 'recent') ? conversations : this.store.recentConversations,
+      usersConversations: (type === 'users') ? conversations : this.store.usersConversations,
     });
   }
 
@@ -632,6 +662,7 @@ export default class ConversationsManager extends Manager {
     const feedConversations = (store.feedConversations) ? [ ...store.feedConversations ] : null;
     const privateConversations = (store.privateConversations) ? [ ...store.privateConversations ] : null;
     const recentConversations = (store.recentConversations) ? [ ...store.recentConversations ] : null;
+    const usersConversations = (store.usersConversations) ? { ...store.usersConversations } : null;
 
     if (Array.isArray(activeConversations)) {
       modifierFunction({
@@ -668,12 +699,22 @@ export default class ConversationsManager extends Manager {
       });
     }
 
+    if (typeof usersConversations === 'object') {
+      Object.values(usersConversations).forEach(userConversations => {
+        modifierFunction({
+          conversations: userConversations,
+          type: 'users',
+        });
+      });
+    }
+
     this.updateStore({
       activeConversations,
       exploreConversations,
       feedConversations,
       privateConversations,
       recentConversations,
+      usersConversations,
     });
   }
 
