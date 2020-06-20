@@ -58,7 +58,7 @@ export default initialRouteName => {
       <MainStack.Screen
         name={'Home'}
         component={HomeScreen}
-        options={{ showActivityButton: true }}
+        options={{ showHelpButton: true }}
       />
 
       <MainStack.Screen

@@ -22,10 +22,13 @@ export default class ConversationScreen extends Component {
 
     const conversationId = this.props.route?.params?.conversationId;
     const toUsers = this.props.route?.params?.toUsers;
+    const title = this.props.route?.params?.title;
 
-    this.props.navigation.setOptions({
-      title: (conversationId) ? <ActivityIndicator color={'#FFFFFF'} /> : 'New Conversation',
-    });
+    if (!title) {
+      this.props.navigation.setOptions({
+        title: (conversationId) ? <ActivityIndicator color={'#FFFFFF'} /> : 'New Conversation',
+      });
+    }
 
     if (conversationId) {
       conversationsManager.loadActiveConversation(conversationId); // handle non existent convos?

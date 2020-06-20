@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { BabbleTiledIconsBackground, BabbleUserAvatar } from './';
-import { ArrowLeftIcon, MessageSquareIcon, HeartIcon, BellIcon, XIcon } from './icons';
+import { ArrowLeftIcon, MessageSquareIcon, HeartIcon, UserPlusIcon, XIcon } from './icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
@@ -12,7 +12,7 @@ const BabbleHeader = ({ scene }) => {
   const { navigation, options } = descriptor;
   const params = scene.route.params || {};
   const title = options.title || params.title;
-  const { rightButtonTitle, showRightLoading, onRightButtonPress, showActivityButton, backEnabled, closeEnabled } = options || params || {};
+  const { rightButtonTitle, showRightLoading, onRightButtonPress, showHelpButton, backEnabled, closeEnabled } = options || params || {};
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,16 +66,21 @@ const BabbleHeader = ({ scene }) => {
       </View>
 
       <View style={styles.headerRight}>
-        {showActivityButton && (
+        {showHelpButton && (
           <TouchableOpacity
-            onPress={() => navigation.push('ActivityNavigator')}
-            style={styles.activityButton}
+            onPress={() => navigation.push('Conversation', {
+              title: 'Report Bugs',
+              toUsers: [
+                {
+                  id: 1,
+                  name: 'Babble Team',
+                  username: 'babble',
+                }
+              ]
+            })}
+            style={styles.helpButton}
           >
-            <BellIcon
-              width={23}
-              height={23}
-              style={styles.activityButtonIcon}
-            />
+            <Text>🐞</Text>
           </TouchableOpacity>
         )}
 
@@ -112,21 +117,6 @@ const BabbleHeader = ({ scene }) => {
 export default BabbleHeader;
 
 const styles = StyleSheet.create({
-  activityButton: {
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    height: 40,
-    justifyContent: 'center',
-    shadowColor: '#252A3F',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
-    width: 40,
-  },
-  activityButtonIcon: {
-    color: '#2A99CC',
-  },
   babbleLogoText: {
     fontFamily: 'Lobster-Regular',
     fontSize: 32,
@@ -164,6 +154,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     minWidth: 40,
     paddingRight: 15,
+  },
+  helpButton: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    height: 40,
+    justifyContent: 'center',
+    shadowColor: '#252A3F',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+    width: 40,
+  },
+  helpIcon: {
+    color: '#2A99CC',
   },
   rightButtonText: {
     color: '#FFFFFF',
