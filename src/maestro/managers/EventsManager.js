@@ -7,7 +7,9 @@ export default class EventsManager extends Manager {
     return 'eventsManager';
   }
 
-  static initialStore = {}
+  static initialStore = {
+    subscriptions: [],
+  }
 
   get storeName() {
     return 'events';
@@ -27,5 +29,56 @@ export default class EventsManager extends Manager {
       aws_pubsub_region: 'us-east-2',
       aws_pubsub_endpoint: 'wss://aia9sasq9hvwi-ats.iot.us-east-2.amazonaws.com/mqtt',
     }));
+  }
+
+  subscribe({ topic, onMessage, onError, onClose }) {
+    const existingSubscription = this._getSubscription(topic);
+
+    if (existingSubscription) {
+      return existingSubscription;
+    }
+
+    this._addSubscription({
+      topic,
+      instance: PubSub.subscribe(topic).subscribe({
+        next: onMessage,
+        error: onError,
+        close: onClose,
+      }),
+    });
+  }
+
+  unsubscribe(topic) {
+    this._removeSubscription(topic);
+  }
+
+  /*
+   * Helpers
+   */
+
+  _addSubscription = ({ topic, instance }) => {
+    const subscriptions = [ ...this.store.subscriptions ];
+
+    subscriptions.push({ topic, instance });
+
+    this.updateStore({ subscriptions });
+  }
+
+  _removeSubscription = topic => {
+    const subscription = this._getSubscription(topic);
+
+    subscription.instance.unsubscribe();
+
+    this.updateStore({
+      subscriptions: this.store.subscriptions.filter(subscription => (
+        subscription.topic !== topic
+      )),
+    });
+  }
+
+  _getSubscription = topic => {
+    return this.store.subscriptions.find(subscription => (
+      subscription.topic === topic
+    ));
   }
 }
