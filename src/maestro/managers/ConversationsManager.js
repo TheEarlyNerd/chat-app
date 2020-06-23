@@ -12,10 +12,25 @@ export default class ConversationsManager extends Manager {
     privateConversations: null,
     recentConversations: null,
     usersConversations: {},
+    lastConversationsHash: '',
   }
 
   get storeName() {
     return 'conversations';
+  }
+
+  receiveStoreUpdate({ conversations }) {
+    const { lastConversationsHash } = conversations;
+    let hash = ''; // not a true hash, shrug, doesn't matter here.
+
+    this._iterateConversationTypes(({ conversations }) => {
+      conversations.forEach(conversation => hash += `${conversation.id}`);
+    }, false);
+
+    if (hash !== lastConversationsHash) {
+      this._syncConversationEvents();
+      this.updateStore({ lastConversationsHash: hash });
+    }
   }
 
   async getConversationUsers(conversationId) {
@@ -655,7 +670,7 @@ export default class ConversationsManager extends Manager {
     });
   }
 
-  _iterateConversationTypes = modifierFunction => {
+  _iterateConversationTypes = (modifierFunction, updateStore = true) => {
     const { store } = this;
     const activeConversations = (store.activeConversations) ? [ ...store.activeConversations ] : null;
     const exploreConversations = (store.exploreConversations) ? [ ...store.exploreConversations ] : null;
@@ -708,14 +723,16 @@ export default class ConversationsManager extends Manager {
       });
     }
 
-    this.updateStore({
-      activeConversations,
-      exploreConversations,
-      feedConversations,
-      privateConversations,
-      recentConversations,
-      usersConversations,
-    });
+    if (updateStore) {
+      this.updateStore({
+        activeConversations,
+        exploreConversations,
+        feedConversations,
+        privateConversations,
+        recentConversations,
+        usersConversations,
+      });
+    }
   }
 
   _conversationMessagesSorter = (conversationMessageA, conversationMessageB) => {
@@ -775,5 +792,17 @@ export default class ConversationsManager extends Manager {
     });
 
     return Promise.all(attachmentPromises);
+  }
+
+  _syncConversationEvents = () => {
+    const { eventsManager } = this.maestro.managers;
+
+    // maybe we should diff and unsubscribe from no longer loaded convos to reduce network overhead?
+
+    this._iterateConversationTypes(({ conversations }) => {
+      conversations.forEach(conversation => {
+        eventsManager.subscribe(`conversation-${conversation.eventsToken}`);
+      });
+    }, false);
   }
 }
