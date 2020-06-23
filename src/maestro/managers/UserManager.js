@@ -22,7 +22,7 @@ export default class UserManager extends Manager {
     this.updateStore({
       ready: asyncStorageHelper.getItem(LOGGED_IN_USER_KEY).then(user => {
         user.lastActiveAt = new Date(); // temp? async json storage converts date to string when we get it..
-        this.updateStore({ user });
+        this._setLoggedInUser(user);
         resolveInitialReadyPromise();
       }),
     });
@@ -172,11 +172,16 @@ export default class UserManager extends Manager {
 
   _setLoggedInUser(user) {
     const { asyncStorageHelper } = this.maestro.helpers;
+    const { eventsManager } = this.maestro.managers;
 
     user = (this.store.user && user) ? { ...this.store.user, ...user } : user;
 
     this.updateStore({ user });
 
     asyncStorageHelper.setItem(LOGGED_IN_USER_KEY, user);
+
+    if (user) {
+      eventsManager.subscribe(`user-${user.accessToken}`);
+    }
   }
 }

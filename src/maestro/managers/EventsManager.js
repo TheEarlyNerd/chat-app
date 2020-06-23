@@ -31,7 +31,7 @@ export default class EventsManager extends Manager {
     }));
   }
 
-  subscribe({ topic, onMessage, onError, onClose }) {
+  subscribe(topic) {
     const existingSubscription = this._getSubscription(topic);
 
     if (existingSubscription) {
@@ -41,15 +41,21 @@ export default class EventsManager extends Manager {
     this._addSubscription({
       topic,
       instance: PubSub.subscribe(topic).subscribe({
-        next: onMessage,
-        error: onError,
-        close: onClose,
+        next: this._onSubscriptionMessage,
+        error: this._onSubscriptionError,
+        close: this._onSubscriptionClose,
       }),
     });
   }
 
   unsubscribe(topic) {
     this._removeSubscription(topic);
+  }
+
+  unsubscribeAll() {
+    this.store.subscriptions.forEach(subscription => {
+      this._removeSubscription(subscription.topic);
+    });
   }
 
   /*
@@ -80,5 +86,17 @@ export default class EventsManager extends Manager {
     return this.store.subscriptions.find(subscription => (
       subscription.topic === topic
     ));
+  }
+
+  _onSubscriptionMessage = message => {
+    console.log('mqtt message', message);
+  }
+
+  _onSubscriptionError = error => {
+    console.log('mqtt error', error);
+  }
+
+  _onSubscriptionClose = () => {
+    console.log('mqtt closed');
   }
 }
