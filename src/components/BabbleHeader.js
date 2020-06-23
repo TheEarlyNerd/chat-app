@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { BabbleTiledIconsBackground, BabbleUserAvatar } from './';
-import { ArrowLeftIcon, MessageSquareIcon, HeartIcon, UserPlusIcon, XIcon } from './icons';
+import { ArrowLeftIcon, MessageSquareIcon, HeartIcon, XIcon } from './icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
@@ -75,8 +75,8 @@ const BabbleHeader = ({ scene }) => {
                   id: 1,
                   name: 'Babble Team',
                   username: 'babble',
-                }
-              ]
+                },
+              ],
             })}
             style={styles.helpButton}
           >
