@@ -59,6 +59,7 @@ export default class ApiHelper extends Helper {
 
   async _request(options) {
     const { userManager } = this.maestro.managers;
+    const { dataHelper } = this.maestro.helpers;
     let requestUrl = this._host + options.path;
 
     options.headers = options.headers || {};
@@ -94,40 +95,7 @@ export default class ApiHelper extends Helper {
 
     return {
       code: response.status,
-      body: (response.status !== 204) ? this._normalizeResponseBody(await response.json()) : '',
+      body: (response.status !== 204) ? dataHelper.normalizeDataObject(await response.json()) : '',
     };
-  }
-
-  _normalizeResponseBody(responseBody) {
-    const normalize = value => {
-      if (typeof value !== 'object' || [ null, undefined ].includes(value)) {
-        return value;
-      }
-
-      Object.keys(value).forEach(key => {
-        if (typeof value[key] === 'object') {
-          value[key] = normalize(value[key]);
-        }
-
-        if (Array.isArray(value[key])) {
-          value[key] = value[key].map(item => normalize(item));
-        }
-      });
-
-      if (value.createdAt) { value.createdAt = new Date(value.createdAt); }
-      if (value.updatedAt) { value.updatedAt = new Date(value.updatedAt); }
-      if (value.deletedAt) { value.deletedAt = new Date(value.deletedAt); }
-      if (value.lastActiveAt) { value.lastActiveAt = new Date(value.lastActiveAt); }
-      if (value.closedAt) { value.closedAt = new Date(value.closedAt); }
-      if (value.sentAt) { value.sentAt = new Date(value.sentAt); }
-
-      return value;
-    };
-
-    responseBody = (Array.isArray(responseBody))
-      ? responseBody.map(value => normalize(value))
-      : normalize(responseBody);
-
-    return responseBody;
   }
 }

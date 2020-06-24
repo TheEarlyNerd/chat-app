@@ -89,7 +89,51 @@ export default class EventsManager extends Manager {
   }
 
   _onSubscriptionMessage = message => {
-    console.log('mqtt message', message);
+    const { conversationsManager } = this.maestro.managers;
+    const { dataHelper } = this.maestro.helpers;
+    const event = message.value.event;
+    const data = dataHelper.normalizeDataObject(message.value.data);
+
+    if (event === 'CONVERSATION_CREATE') {
+      conversationsManager._addRecentConversation(data);
+
+      if (data.accessLevel === 'private') {
+        conversationsManager._addPrivateConversation(data);
+      }
+    }
+
+    if (event === 'CONVERSATION_UPDATE') {
+      conversationsManager._updateConversation({
+        conversationId: data.id,
+        fields: data,
+      });
+    }
+
+    if (event === 'CONVERSATION_DELETE') {
+      conversationsManager._removeFromAllConversationTypes(data.id);
+    }
+
+    if (event === 'CONVERSATION_MESSAGE_CREATE') {
+      conversationsManager._addMessageToConversation({
+        conversationId: data.conversationId,
+        message: data,
+      });
+    }
+
+    if (event === 'CONVERSATION_MESSAGE_UPDATE') {
+
+    }
+
+    if (event === 'CONVERSATION_MESSAGE_DELETE') {
+      conversationsManager._removeMessageFromConversation({
+        conversationId: data.conversationId,
+        conversationMessageId: data.id,
+      });
+    }
+
+    if (event === 'CONVERSATION_MESSAGE_TYPING_START') {
+
+    }
   }
 
   _onSubscriptionError = error => {
