@@ -102,7 +102,7 @@ export default class ConversationScreen extends Component {
       createdConversation = await conversationsManager.createConversation({
         accessLevel,
         title,
-        users: selectedUsers.map(selectedUser => selectedUser.id),
+        userIds: selectedUsers.map(selectedUser => selectedUser.id),
         message: { text, attachments, embeds },
       });
     } catch (error) {

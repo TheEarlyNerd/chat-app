@@ -170,7 +170,7 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
-  async createConversation({ accessLevel, title, users, message }) {
+  async createConversation({ accessLevel, title, userIds, message }) {
     const { apiHelper } = this.maestro.helpers;
     const { userManager } = this.maestro.managers;
     const attachments = await this._createAttachments(message.attachments);
@@ -180,11 +180,11 @@ export default class ConversationsManager extends Manager {
       data: {
         accessLevel,
         title,
-        users,
+        userIds,
         message: {
           ...message,
-          attachments: attachments.map(attachment => attachment.id),
-          embeds: embeds.map(embed => embed.id),
+          attachmentIds: attachments.map(attachment => attachment.id),
+          embedIds: embeds.map(embed => embed.id),
           nonce: `n-${userManager.store.user.id}-${Date.now()}`,
         },
       },
@@ -234,8 +234,8 @@ export default class ConversationsManager extends Manager {
       path: `/conversations/${conversationId}/messages`,
       data: {
         ...message,
-        attachments: attachments.map(attachment => attachment.id),
-        embeds: embeds.map(embed => embed.id),
+        attachmentIds: attachments.map(attachment => attachment.id),
+        embedIds: embeds.map(embed => embed.id),
       },
     });
 
