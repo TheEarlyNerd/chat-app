@@ -99,6 +99,16 @@ export default class BabbleMessageComposerToolbar extends Component {
     } catch { /* noop */ }
   }
 
+  _onChangeText = text => {
+    const { onTyping } = this.props;
+
+    if (onTyping) {
+      onTyping();
+    }
+
+    this.setState({ text });
+  }
+
   render() {
     const { onSubmit, loading, style } = this.props;
     const { text, attachments } = this.state;
@@ -150,7 +160,7 @@ export default class BabbleMessageComposerToolbar extends Component {
                 multiline
                 placeholderColor={'#909090'}
                 placeholder={'Message...'}
-                onChangeText={text => this.setState({ text })}
+                onChangeText={this._onChangeText}
                 editable={!loading}
                 value={text}
                 style={styles.textInput}

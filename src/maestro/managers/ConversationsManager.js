@@ -365,6 +365,17 @@ export default class ConversationsManager extends Manager {
     this._updateConversation({ conversationId, fields });
   }
 
+  async createTypingEvent({ conversationId }) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.post({
+      path: `/conversations/${conversationId}/typing`,
+    });
+
+    if (response.code !== 204) {
+      throw new Error(response.body);
+    }
+  }
+
   removeActiveConversation(conversationId) {
     this._removeActiveConversation(conversationId);
   }
@@ -503,7 +514,6 @@ export default class ConversationsManager extends Manager {
           conversation.previewConversationMessage = message;
         }
 
-        // this may need revisiting when we add in MQTT?
         if (type !== 'active' && (message.user.id === userManager.store.user.id || [ 'recent', 'private' ].includes(type))) {
           newRecentConversation = conversation;
         }
@@ -513,6 +523,8 @@ export default class ConversationsManager extends Manager {
     if (newRecentConversation) {
       this._addRecentConversation(newRecentConversation);
     }
+
+    this._removeTypingUserFromConversation({ conversationId, userId: message.user.id });
   }
 
   _removeMessageFromConversation({ conversationId, conversationMessageId }) {
@@ -631,6 +643,44 @@ export default class ConversationsManager extends Manager {
     });
   }
 
+  _addTypingUserToConversation({ conversationId, user }) {
+    const loggedInUserId = this.maestro.managers.userManager.store.user.id;
+
+    if (user.id === loggedInUserId) {
+      return;
+    }
+
+    this._iterateConversationTypes(({ conversations, type }) => {
+      conversations.forEach(conversation => {
+        if (conversation.id !== conversationId) {
+          return;
+        }
+
+        conversation.conversationTypingUsers = conversation.conversationTypingUsers || [];
+        conversation.conversationTypingUsers = conversation.conversationTypingUsers.filter(conversationTypingUser => (
+          conversationTypingUser.id !== user.id
+        )).sort(this._conversationTypingUsersSorter);
+
+        conversation.conversationTypingUsers.push(user);
+      });
+    });
+  }
+
+  _removeTypingUserFromConversation({ conversationId, userId }) {
+    this._iterateConversationTypes(({ conversations }) => {
+      conversations.forEach(conversation => {
+        if (conversation.id !== conversationId) {
+          return;
+        }
+
+        conversation.conversationTypingUsers = conversation.conversationTypingUsers || [];
+        conversation.conversationTypingUsers = conversation.conversationTypingUsers.filter(conversationTypingUser => (
+          conversationTypingUser.id !== userId
+        )).sort(this._conversationTypingUsersSorter);
+      });
+    });
+  }
+
   _getConversationsByType = type => {
     const { store } = this;
 
@@ -745,6 +795,10 @@ export default class ConversationsManager extends Manager {
     }
 
     return 0;
+  }
+
+  _conversationTypingUsersSorter = (conversationTypingUserA, conversationTypingUserB) => {
+    return conversationTypingUserA.typingAt > conversationTypingUserB.typingAt ? -1 : 1;
   }
 
   _createEmbedsFromText = async text => {

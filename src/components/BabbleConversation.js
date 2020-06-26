@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Animated, StyleSheet } from 'react-native';
+import { View, Text, Animated, StyleSheet } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { BabbleConversationMessage, BabbleConversationMessageOptions } from './';
 
@@ -9,6 +9,18 @@ export default class BabbleConversation extends Component {
 
   state = {
     autoscroll: true,
+  }
+
+  _getTypingText = () => {
+    const typingUsers = this.props.typingUsers || [];
+
+    if (!typingUsers.length) {
+      return;
+    }
+
+    return (typingUsers.length > 1)
+      ? `${typingUsers[0].name} & ${typingUsers.length - 1} others are typing...`
+      : `${typingUsers[0].name} is typing...`;
   }
 
   _scrollBeginDrag = () => {
@@ -87,6 +99,8 @@ export default class BabbleConversation extends Component {
 
   render() {
     const { messages, style } = this.props;
+    const typingText = this._getTypingText();
+
  // maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: 0 }} /* TODO: This will not work on Android, new messages will cause chat to jump. */
     return (
       <View style={styles.container}>
@@ -111,6 +125,12 @@ export default class BabbleConversation extends Component {
           style={[ styles.container, style ]}
           listViewRef={component => this.swipeListView = component}
         />
+
+        {!!typingText && (
+          <View style={styles.typingContainer}>
+            <Text style={styles.typingText}>{typingText}</Text>
+          </View>
+        )}
       </View>
     );
   }
@@ -124,5 +144,20 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'flex-end',
     paddingBottom: 15,
+    paddingTop: 20,
+  },
+  typingContainer: {
+    bottom: 0,
+    left: 0,
+    paddingLeft: 20,
+    paddingRight: 15,
+    paddingVertical: 5,
+    position: 'absolute',
+    right: 0,
+  },
+  typingText: {
+    color: '#797979',
+    fontFamily: 'NunitoSans-SemiBoldItalic',
+    fontSize: 12,
   },
 });

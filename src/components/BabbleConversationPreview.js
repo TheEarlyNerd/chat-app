@@ -85,14 +85,21 @@ export default class BabbleConversationPreview extends Component {
   }
 
   _getPreviewText = () => {
+    const loggedInUserId = userManager.store.user.id;
     const { previewConversationMessage } = this.props.conversation;
+    const conversationTypingUsers = this.props.conversation.conversationTypingUsers || [];
+
+    if (conversationTypingUsers.length > 0 && (!previewConversationMessage || previewConversationMessage.createdAt < conversationTypingUsers[0].typingAt)) {
+      return (conversationTypingUsers.length > 1)
+        ? `${conversationTypingUsers[0].name} & ${conversationTypingUsers.length - 1} others are typing...`
+        : `${conversationTypingUsers[0].name} is typing...`;
+    }
 
     if (!previewConversationMessage) {
       return '(Deleted Message)';
     }
 
     const { user, text } = previewConversationMessage;
-    const loggedInUserId = userManager.store.user.id;
     const authorIsLoggedInUser = user.id === loggedInUserId;
     const name = (authorIsLoggedInUser) ? 'You' : user.name;
 

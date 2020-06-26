@@ -132,7 +132,10 @@ export default class EventsManager extends Manager {
     }
 
     if (event === 'CONVERSATION_MESSAGE_TYPING_START') {
-
+      conversationsManager._addTypingUserToConversation({
+        conversationId: data.user.conversationId,
+        user: data.user,
+      });
     }
   }
 

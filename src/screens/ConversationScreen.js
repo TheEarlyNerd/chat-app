@@ -10,6 +10,7 @@ const { interfaceHelper } = maestro.helpers;
 export default class ConversationScreen extends Component {
   conversationComposer = null;
   messageComposer = null;
+  typingTimeout = null;
 
   state = {
     conversation: null,
@@ -72,6 +73,15 @@ export default class ConversationScreen extends Component {
     this.setState({ conversation });
   }
 
+  _onTyping = () => {
+    const { conversation } = this.state;
+
+    if (conversation && this.typingTimeout === null) {
+      this.typingTimeout = setTimeout(() => this.typingTimeout = null, 2500);
+      conversationsManager.createTypingEvent({ conversationId: conversation.id });
+    }
+  }
+
   _onMessageSubmit = async ({ text, attachments, embeds }) => {
     const { conversation } = this.state;
     const { accessLevel, title, selectedUsers } = this.conversationComposer || {};
@@ -132,7 +142,7 @@ export default class ConversationScreen extends Component {
 
   render() {
     const { conversation, showConversationComposer, loading } = this.state;
-    const { conversationMessages } = conversation || {};
+    const { conversationMessages, conversationTypingUsers } = conversation || {};
 
     return (
       <SafeAreaView style={styles.container}>
@@ -146,9 +156,11 @@ export default class ConversationScreen extends Component {
 
         <BabbleConversation
           messages={conversationMessages}
+          typingUsers={conversationTypingUsers}
         />
 
         <BabbleConversationMessageComposerToolbar
+          onTyping={this._onTyping}
           onSubmit={this._onMessageSubmit}
           loading={loading}
           ref={component => this.messageComposer = component}
