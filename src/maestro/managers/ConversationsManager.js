@@ -546,6 +546,9 @@ export default class ConversationsManager extends Manager {
   }
 
   _addReactionToConversationMessage({ conversationId, conversationMessageId, reaction }) {
+    const { userManager } = this.maestro.managers;
+    const loggedInUserId = userManager.store.user.id;
+
     this._iterateConversationTypes(({ conversations, type }) => {
       if (type !== 'active') {
         return;
@@ -573,21 +576,25 @@ export default class ConversationsManager extends Manager {
           conversationMessageReaction.reaction === reaction.reaction
         ));
 
-        if (authUserConversationMessageReactionIndex !== -1) {
-          authUserConversationMessageReactions[authUserConversationMessageReactionIndex] = reaction;
-        } else {
-          authUserConversationMessageReactions.push(reaction);
+        if (!reaction.userId || reaction.userId === loggedInUserId) {
+          if (authUserConversationMessageReactionIndex !== -1) {
+            authUserConversationMessageReactions[authUserConversationMessageReactionIndex] = reaction;
+          } else {
+            authUserConversationMessageReactions.push(reaction);
+          }
         }
 
         const conversationMessageReaction = conversationMessageReactions.find(conversationMessageReaction => (
           conversationMessageReaction.reaction === reaction.reaction
         ));
 
-        if (authUserConversationMessageReactionIndex === -1 && conversationMessageReaction) {
+        if (conversationMessageReaction && !conversationMessageReaction.userIds.includes(reaction.userId)) {
+          conversationMessageReaction.userIds.push(reaction.userId || loggedInUserId);
           conversationMessageReaction.count++;
         } else if (!conversationMessageReaction) {
           conversationMessageReactions.push({
-            ...reaction,
+            reaction: reaction.reaction,
+            userIds: (reaction.userId) ? [ reaction.userId ] : [ loggedInUserId ],
             count: 1,
           });
         }

@@ -137,6 +137,22 @@ export default class EventsManager extends Manager {
         user: data.user,
       });
     }
+
+    if (event === 'CONVERSATION_MESSAGE_REACTION_CREATE') {
+      conversationsManager._addReactionToConversationMessage({
+        conversationId: data.conversationId,
+        conversationMessageId: data.conversationMessageId,
+        reaction: data,
+      });
+    }
+
+    if (event === 'CONVERSATION_MESSAGE_REACTION_DELETE') {
+      conversationsManager._removeReactionFromConversationMessage({
+        conversationId: data.conversationId,
+        conversationMessageId: data.conversationMessageId,
+        conversationMessageReactionId: data.id,
+      });
+    }
   }
 
   _onSubscriptionError = error => {
