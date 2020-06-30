@@ -148,9 +148,11 @@ export default class EventsManager extends Manager {
 
     if (event === 'CONVERSATION_MESSAGE_REACTION_DELETE') {
       conversationsManager._removeReactionFromConversationMessage({
+        userId: data.userId,
         conversationId: data.conversationId,
         conversationMessageId: data.conversationMessageId,
         conversationMessageReactionId: data.id,
+        reaction: data.reaction,
       });
     }
   }

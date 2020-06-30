@@ -588,13 +588,21 @@ export default class ConversationsManager extends Manager {
           conversationMessageReaction.reaction === reaction.reaction
         ));
 
-        if (conversationMessageReaction && !conversationMessageReaction.userIds.includes(reaction.userId)) {
-          conversationMessageReaction.userIds.push(reaction.userId || loggedInUserId);
+        if (conversationMessageReaction && !conversationMessageReaction?.createUserIds?.includes(reaction.userId)) {
+          conversationMessageReaction.createUserIds = conversationMessageReaction.createUserIds || [];
+          conversationMessageReaction.createUserIds.push(reaction.userId || loggedInUserId);
+
+          if (conversationMessageReaction.deleteUserIds) {
+            conversationMessageReaction.deleteUserIds = conversationMessageReaction.deleteUserIds.filter(deleteUserId => (
+              deleteUserId !== reaction.userId
+            ));
+          }
+
           conversationMessageReaction.count++;
         } else if (!conversationMessageReaction) {
           conversationMessageReactions.push({
             reaction: reaction.reaction,
-            userIds: (reaction.userId) ? [ reaction.userId ] : [ loggedInUserId ],
+            createUserIds: (reaction.userId) ? [ reaction.userId ] : [ loggedInUserId ],
             count: 1,
           });
         }
@@ -602,7 +610,10 @@ export default class ConversationsManager extends Manager {
     });
   }
 
-  _removeReactionFromConversationMessage({ conversationId, conversationMessageId, conversationMessageReactionId }) {
+  _removeReactionFromConversationMessage({ conversationId, conversationMessageId, conversationMessageReactionId, userId, reaction }) {
+    const { userManager } = this.maestro.managers;
+    const loggedInUserId = userManager.store.user.id;
+
     this._iterateConversationTypes(({ conversations, type }) => {
       if (type !== 'active') {
         return;
@@ -623,27 +634,38 @@ export default class ConversationsManager extends Manager {
 
         const authUserConversationMessageReactions = conversationMessage.authUserConversationMessageReactions || [];
         const conversationMessageReactions = conversationMessage.conversationMessageReactions || [];
-        const removedConversationMessageReaction = authUserConversationMessageReactions.find(conversationMessageReaction => (
-          (conversationMessageReactionId && conversationMessageReaction.id === conversationMessageReactionId)
+        const relevantAuthUserConversationMessageReaction = authUserConversationMessageReactions.find(conversationMessageReaction => (
+          (conversationMessageReactionId && conversationMessageReaction.id === conversationMessageReactionId) ||
+          (userId === loggedInUserId && conversationMessageReaction.reaction === reaction)
         ));
 
-        if (!removedConversationMessageReaction) {
+        conversationMessage.authUserConversationMessageReactions = authUserConversationMessageReactions.filter(conversationMessageReaction => (
+          conversationMessageReaction.id !== relevantAuthUserConversationMessageReaction?.id
+        ));
+
+        const relevantConversationMessageReaction = conversationMessageReactions.find(conversationMessageReaction => (
+          conversationMessageReaction.reaction === relevantAuthUserConversationMessageReaction?.reaction ||
+          conversationMessageReaction.reaction === reaction
+        ));
+
+        if (!relevantConversationMessageReaction || (userId && relevantConversationMessageReaction?.deleteUserIds?.includes(userId))) {
           return;
         }
 
-        conversationMessage.authUserConversationMessageReactions = authUserConversationMessageReactions.filter(conversationMessageReaction => (
-          conversationMessageReaction.id !== removedConversationMessageReaction.id
-        ));
+        if (relevantConversationMessageReaction.count > 1) {
+          relevantConversationMessageReaction.deleteUserIds = relevantConversationMessageReaction.deleteUserIds || [];
+          relevantConversationMessageReaction.deleteUserIds.push(userId || loggedInUserId);
 
-        const conversationMessageReaction = conversationMessageReactions.find(conversationMessageReaction => (
-          conversationMessageReaction.reaction === removedConversationMessageReaction.reaction
-        ));
+          if (relevantConversationMessageReaction.createUserIds) {
+            relevantConversationMessageReaction.createUserIds = relevantConversationMessageReaction.createUserIds.filter(createUserId => (
+              createUserId !== userId
+            ));
+          }
 
-        if (conversationMessageReaction.count > 1) {
-          conversationMessageReaction.count--;
+          relevantConversationMessageReaction.count--;
         } else {
           conversationMessage.conversationMessageReactions = conversationMessageReactions.filter(conversationMessageReaction => (
-            conversationMessageReaction.reaction !== removedConversationMessageReaction.reaction
+            conversationMessageReaction.reaction !== relevantConversationMessageReaction.reaction
           ));
         }
       });
