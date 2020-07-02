@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { Manager } from 'react-native-maestro';
 
 const LOGGED_IN_USER_KEY = 'LOGGED_IN_USER';
@@ -21,7 +22,10 @@ export default class UserManager extends Manager {
 
     this.updateStore({
       ready: asyncStorageHelper.getItem(LOGGED_IN_USER_KEY).then(user => {
-        user.lastActiveAt = new Date(); // temp? async json storage converts date to string when we get it..
+        if (user) {
+          user.lastActiveAt = new Date(); // temp? async json storage converts date to string when we get it..
+        }
+
         this._setLoggedInUser(user);
         resolveInitialReadyPromise();
       }),
@@ -129,6 +133,7 @@ export default class UserManager extends Manager {
   }
 
   nextRouteNameForUserState() {
+    const { notificationsManager } = this.maestro.managers;
     const { user } = this.store;
 
     if (!user) {
@@ -139,7 +144,9 @@ export default class UserManager extends Manager {
       return 'SetupProfile';
     }
 
-    // notifications
+    if (Platform.OS === 'ios' && !notificationsManager.iosPermissionsEnabled()) {
+      return 'SetupIOSNotifications';
+    }
 
     return 'Home';
   }
@@ -147,7 +154,6 @@ export default class UserManager extends Manager {
   logout() {
     const { navigationHelper } = this.maestro.helpers;
 
-    // TODO: maestro should support unlinking all screens..
     this.maestro._linkedInstances.forEach(linkedInstance => {
       const instanceName = linkedInstance.constructor.name;
 
