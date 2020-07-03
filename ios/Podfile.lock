@@ -318,6 +318,8 @@ PODS:
     - React
   - RNCPushNotificationIOS (1.2.2):
     - React
+  - RNDeviceInfo (5.6.1):
+    - React
   - RNFastImage (8.1.5):
     - React
     - SDWebImage (~> 5.0)
@@ -406,6 +408,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
@@ -497,6 +500,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNCPushNotificationIOS:
     :path: "../node_modules/@react-native-community/push-notification-ios"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFastImage:
     :path: "../node_modules/react-native-fast-image"
   RNGestureHandler:
@@ -558,6 +563,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: b16697280b08bab4b5f2f67f752d93d13a52e9ed
   RNCMaskedView: 5dba3cb07493765fb66156c83c3dd281ca709a48
   RNCPushNotificationIOS: 375feee5b89ad4aeee8a971f63fe4848902380b7
+  RNDeviceInfo: ab2ab4ca9e7f2bc4f35d62ab6ce2b66f2cbf1e7a
   RNFastImage: 35ae972d6727c84ee3f5c6897e07f84d0a3445e9
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNImageCropPicker: 38865ab4af1b0b2146ad66061196bc0184946855

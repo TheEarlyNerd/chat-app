@@ -1,17 +1,40 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Linking } from 'react-native';
 import { BabbleButton, BabbleTiledIconsBackground } from '../components';
 import { BellIcon, SmileIcon } from '../components/icons';
 import maestro from '../maestro';
 
-const { userManager } = maestro.managers;
+const { userManager, notificationsManager } = maestro.managers;
 
 export default class SetupIOSNotificationsScreen extends Component {
+  state = {
+    failed: false,
+  }
+
+  componentDidMount() {
+    maestro.link(this);
+  }
+
+  componentWillUnmount() {
+    maestro.unlink(this);
+  }
+
+  receiveEvent(name, value) {
+    if (name === 'NOTIFICATIONS:REGISTERED') {
+      this.props.navigation.navigate(userManager.nextRouteNameForUserState());
+    }
+  }
+
   _enableNotifications = () => {
-    this.props.navigation.navigate(userManager.nextRouteNameForUserState());
+    if (!this.state.failed) {
+      notificationsManager.requestIOSPermissions();
+    } else {
+      Linking.openURL('app-settings:');
+    }
   }
 
   _notNow = () => {
+    notificationsManager.deferIOSPermissions();
     this.props.navigation.navigate(userManager.nextRouteNameForUserState());
   }
 
@@ -35,7 +58,9 @@ export default class SetupIOSNotificationsScreen extends Component {
         </View>
 
         <View style={styles.formContainer}>
-          <BabbleButton onPress={this._enableNotifications}>Enable Notifications</BabbleButton>
+          <BabbleButton onPress={this._enableNotifications}>
+            {(!this.state.failed) ? 'Enable Notifications' : 'Open Settings'}
+          </BabbleButton>
 
           <TouchableOpacity onPress={this._notNow} style={styles.notNowButton}>
             <Text style={styles.notNowButtonText}>Not Now</Text>

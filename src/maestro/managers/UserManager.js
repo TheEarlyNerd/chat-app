@@ -36,6 +36,12 @@ export default class UserManager extends Manager {
     return 'user';
   }
 
+  receiveEvent(name, value) {
+    if (name === 'NOTIFICATIONS:REGISTERED') {
+      this._updateUserDevice();
+    }
+  }
+
   async getUser(userId) {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.get({ path: `/users/${userId}` });
@@ -144,7 +150,7 @@ export default class UserManager extends Manager {
       return 'SetupProfile';
     }
 
-    if (Platform.OS === 'ios' && !notificationsManager.iosPermissionsEnabled()) {
+    if (Platform.OS === 'ios' && !notificationsManager.iosPermissionsEnabled() && !notificationsManager.store.iosPermissionsDeferred) {
       return 'SetupIOSNotifications';
     }
 
@@ -188,6 +194,26 @@ export default class UserManager extends Manager {
 
     if (user) {
       eventsManager.subscribe(`user-${user.accessToken}`);
+      this._updateUserDevice();
     }
+  }
+
+  async _updateUserDevice() {
+    const { apiHelper, deviceHelper } = this.maestro.helpers;
+    const { apnsToken, fcmRegistrationId } = this.maestro.managers.notificationsManager.store;
+
+    if (!this.store.user) {
+      return;
+    }
+
+    await apiHelper.put({
+      path: '/devices',
+      data: {
+        apnsToken,
+        fcmRegistrationId,
+        idfv: deviceHelper.getIDFV(),
+        details: await deviceHelper.getDeviceDetails(),
+      },
+    });
   }
 }
