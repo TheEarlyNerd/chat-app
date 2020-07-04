@@ -150,7 +150,7 @@ export default class UserManager extends Manager {
       return 'SetupProfile';
     }
 
-    if (Platform.OS === 'ios' && !notificationsManager.iosPermissionsEnabled() && !notificationsManager.store.iosPermissionsDeferred) {
+    if (Platform.OS === 'ios' && !notificationsManager.permissionsEnabled() && !notificationsManager.permissionsDeferred()) {
       return 'SetupIOSNotifications';
     }
 

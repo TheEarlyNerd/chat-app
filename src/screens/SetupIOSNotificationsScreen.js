@@ -8,7 +8,8 @@ const { userManager, notificationsManager } = maestro.managers;
 
 export default class SetupIOSNotificationsScreen extends Component {
   state = {
-    failed: false,
+    failed: !notificationsManager.permissionsEnabled() && notificationsManager.permissionsRequested(),
+    loading: false,
   }
 
   componentDidMount() {
@@ -19,22 +20,33 @@ export default class SetupIOSNotificationsScreen extends Component {
     maestro.unlink(this);
   }
 
-  receiveEvent(name, value) {
-    if (name === 'NOTIFICATIONS:REGISTERED') {
-      this.props.navigation.navigate(userManager.nextRouteNameForUserState());
+  async receiveEvent(name, value) {
+    if (name === 'NOTIFICATIONS:PROMPT_COMPLETE') {
+      this._next();
+    }
+
+    if (name === 'APP_STATE_CHANGED' && value === 'active') {
+      await notificationsManager.checkAndSyncPermissions();
+
+      if (notificationsManager.permissionsEnabled()) {
+        this._next();
+      } else {
+        this.setState({ loading: false });
+      }
     }
   }
 
   _enableNotifications = () => {
     if (!this.state.failed) {
-      notificationsManager.requestIOSPermissions();
+      notificationsManager.requestPermissions();
     } else {
+      this.setState({ loading: true });
       Linking.openURL('app-settings:');
     }
   }
 
-  _notNow = () => {
-    notificationsManager.deferIOSPermissions();
+  _next = () => {
+    notificationsManager.deferPermissions();
     this.props.navigation.navigate(userManager.nextRouteNameForUserState());
   }
 
@@ -58,11 +70,11 @@ export default class SetupIOSNotificationsScreen extends Component {
         </View>
 
         <View style={styles.formContainer}>
-          <BabbleButton onPress={this._enableNotifications}>
+          <BabbleButton loading={this.state.loading} onPress={this._enableNotifications}>
             {(!this.state.failed) ? 'Enable Notifications' : 'Open Settings'}
           </BabbleButton>
 
-          <TouchableOpacity onPress={this._notNow} style={styles.notNowButton}>
+          <TouchableOpacity onPress={this._next} style={styles.notNowButton}>
             <Text style={styles.notNowButtonText}>Not Now</Text>
           </TouchableOpacity>
         </View>

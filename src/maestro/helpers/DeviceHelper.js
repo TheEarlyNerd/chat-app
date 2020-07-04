@@ -11,6 +11,10 @@ export default class DevicerHelper extends Helper {
     return DeviceInfo.getUniqueId();
   }
 
+  async isEmulator() {
+    return DeviceInfo.isEmulator();
+  }
+
   async getDeviceDetails() {
     return {
       os: Platform.OS,

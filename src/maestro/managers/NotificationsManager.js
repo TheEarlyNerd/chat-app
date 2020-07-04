@@ -5,6 +5,8 @@ import PushNotification from 'react-native-push-notification';
 
 const APNS_TOKEN_KEY = 'APNS_TOKEN';
 const FCM_REGISTRATION_ID_KEY = 'FCM_REGISTRATION_ID';
+const NOTIFICATION_PERMISSIONS_REQUESTED_KEY = 'NOTIFICATION_PERMISSIONS_REQUESTED';
+const NOTIFICATION_PERMISSIONS_STATE_KEY = 'NOTIFICATIONS_PERMISSIONS_STATE';
 
 export default class NotificationsManager extends Manager {
   static get instanceKey() {
@@ -14,7 +16,13 @@ export default class NotificationsManager extends Manager {
   static initialStore = {
     apnsToken: null,
     fcmRegistrationId: null,
-    iosPermissionsDeferred: false,
+    permissionsRequested: false,
+    permissionsDeferred: false,
+    permissionsState: {
+      alert: false,
+      badge: false,
+      sound: false,
+    },
   }
 
   constructor(maestro) {
@@ -30,30 +38,69 @@ export default class NotificationsManager extends Manager {
       this.updateStore({ fcmRegistrationId });
     });
 
+    asyncStorageHelper.getItem(NOTIFICATION_PERMISSIONS_REQUESTED_KEY).then(permissionsRequested => {
+      this.updateStore({ permissionsRequested });
+    });
+
+    asyncStorageHelper.getItem(NOTIFICATION_PERMISSIONS_STATE_KEY).then(permissionsState => {
+      this.updateStore({ permissionsState }); // TODO: check permissions can delay, so we need to cache to prevent weird races
+    });
+
     PushNotification.configure({
       onRegister: this._registeredForNotifications,
       onNotification: this._receivedNotification,
-      onError: error => console.log(error),
       requestPermissions: Platform.OS === 'android',
     });
+
+    this.checkAndSyncPermissions();
   }
 
   get storeName() {
     return 'notifications';
   }
 
-  requestIOSPermissions() {
-    if (Platform.OS === 'ios' && !this.store.apnsToken) {
-      PushNotification.requestPermissions();
+  async requestPermissions() {
+    const { deviceHelper, asyncStorageHelper } = this.maestro.helpers;
+
+    if (Platform.OS === 'ios' && await deviceHelper.isEmulator()) {
+      Alert.alert('Device Notifications Not Supported On IOS Emulator');
     }
+
+    const permissionsState = await PushNotification.requestPermissions();
+
+    asyncStorageHelper.setItem(NOTIFICATION_PERMISSIONS_REQUESTED_KEY, true);
+
+    this._syncPermissionsState(permissionsState);
+    this.updateStore({ permissionsRequested: true });
+
+    this.maestro.dispatchEvent('NOTIFICATIONS:PROMPT_COMPLETE');
   }
 
-  deferIOSPermissions() {
-    this.updateStore({ iosPermissionsDeferred: true });
+  async checkAndSyncPermissions() {
+    return new Promise(resolve => {
+      PushNotification.checkPermissions(permissionsState => {
+        this._syncPermissionsState(permissionsState);
+        resolve(permissionsState);
+      });
+    });
   }
 
-  iosPermissionsEnabled() {
-    return !!this.store.apnsToken;
+  deferPermissions() {
+    this.updateStore({ permissionsDeferred: true });
+  }
+
+  permissionsDeferred() {
+    return !!this.store.permissionsDeferred;
+  }
+
+  permissionsEnabled() {
+    const { store } = this;
+
+    return store.permissionsState.alert && (store.apnsToken || store.fcmRegistrationId);
+  }
+
+  permissionsRequested() {
+    return !!this.store.permissionsRequested;
   }
 
   setBadgeNumber(number) {
@@ -65,12 +112,9 @@ export default class NotificationsManager extends Manager {
    */
 
   _registeredForNotifications = token => {
-    Alert.alert('notification token', JSON.stringify(token));
-    console.log(token);
-
     const { asyncStorageHelper } = this.maestro.helpers;
-    const apnsToken = (token.os === 'ios') ? token.token : null;
-    const fcmRegistrationId = (token.os === 'android') ? token.token : null;
+    const apnsToken = (Platform.OS === 'ios') ? token.token : null;
+    const fcmRegistrationId = (Platform.OS === 'android') ? token.token : null;
 
     this.updateStore({ apnsToken, fcmRegistrationId });
 
@@ -82,5 +126,13 @@ export default class NotificationsManager extends Manager {
 
   _receivedNotification = notification => {
     notification.finish(PushNotificationIOS.FetchResult.NoData);
+  }
+
+  _syncPermissionsState = permissionsState => {
+    const { asyncStorageHelper } = this.maestro.helpers;
+
+    asyncStorageHelper.setItem(NOTIFICATION_PERMISSIONS_STATE_KEY, permissionsState);
+
+    this.updateStore({ permissionsState });
   }
 }

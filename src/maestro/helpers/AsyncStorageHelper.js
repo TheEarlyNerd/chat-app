@@ -19,8 +19,6 @@ export default class AsyncStorageHelper extends Helper {
   }
 
   setItem(key, value) {
-    value = (typeof value !== 'string') ? JSON.stringify(value) : value;
-
-    return AsyncStorage.setItem(key, value);
+    return AsyncStorage.setItem(key, JSON.stringify(value));
   }
 }
