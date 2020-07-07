@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     width: 40,
   },
-  activityIcon: {
+  activityButtonIcon: {
     color: '#2A99CC',
   },
   babbleLogoText: {

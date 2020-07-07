@@ -76,6 +76,8 @@ export default class ConversationsManager extends Manager {
 
     this._addActiveConversation(response.body);
 
+    this.markConversationRead(response.body.id);
+
     return response.body;
   }
 
@@ -203,6 +205,8 @@ export default class ConversationsManager extends Manager {
       this._addExploreConversation(response.body);
     }
 
+    this.markConversationRead(response.body.id);
+
     return response.body;
   }
 
@@ -247,6 +251,8 @@ export default class ConversationsManager extends Manager {
       conversationId,
       message: response.body,
     });
+
+    this.markConversationRead(conversationId);
 
     return response.body;
   }
@@ -374,6 +380,28 @@ export default class ConversationsManager extends Manager {
     if (response.code !== 204) {
       throw new Error(response.body);
     }
+  }
+
+  async markConversationRead(conversationId) {
+    const { apiHelper } = this.maestro.helpers;
+
+    apiHelper.put({ path: `/users/me/conversations/${conversationId}/data` });
+
+    this._iterateConversationTypes(({ conversations, type }) => {
+      if (type === 'active') {
+        return;
+      }
+
+      conversations.forEach(conversation => {
+        if (conversation.id !== conversationId) {
+          return;
+        }
+
+        conversation.authUserConversationData = {
+          lastReadAt: new Date(),
+        };
+      });
+    });
   }
 
   removeActiveConversation(conversationId) {

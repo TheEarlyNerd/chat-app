@@ -118,6 +118,12 @@ export default class BabbleConversationPreview extends Component {
       : null;
   }
 
+  _isUnread = () => {
+    const { authUserConversationData, previewConversationMessage } = this.props.conversation;
+
+    return !authUserConversationData || authUserConversationData.lastReadAt < previewConversationMessage.createdAt;
+  }
+
   render() {
     const { conversation, style } = this.props;
     const { accessLevel, usersCount } = conversation;
@@ -169,7 +175,15 @@ export default class BabbleConversationPreview extends Component {
           </View>
 
           <View style={styles.preview}>
-            <Text numberOfLines={2} style={styles.previewText}>{this._getPreviewText()}</Text>
+            <Text
+              numberOfLines={2}
+              style={[
+                styles.previewText,
+                (this._isUnread()) ? styles.previewTextUnread : null,
+              ]}
+            >
+              {this._getPreviewText()}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>

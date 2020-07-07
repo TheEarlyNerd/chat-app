@@ -88,10 +88,10 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    //shadowColor: '#252A3F',
-    //shadowOffset: { width: 0, height: 3 },
-    //shadowOpacity: 0.15,
-    //shadowRadius: 5,
+    shadowColor: '#252A3F',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
     zIndex: 1,
   },
   editIcon: {
