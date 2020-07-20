@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { BabbleUserAvatar, BabbleUserAvatarGroup } from './';
-import { MessageCircleIcon, UsersIcon, LockIcon } from './icons';
+import { MessageCircleIcon, UsersIcon, LockIcon, RepeatIcon } from './icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
@@ -35,10 +35,6 @@ export default class BabbleConversationPreview extends Component {
     const { accessLevel, previewConversationUsers } = this.props.conversation;
     const loggedInUserId = userManager.store.user.id;
 
-    if (accessLevel === 'public') {
-//      return [];
-    }
-
     if ([ 'public', 'protected' ].includes(accessLevel)) {
       return previewConversationUsers.filter(conversationUser => (
         conversationUser.permissions.includes('CONVERSATION_ADMIN') ||
@@ -69,19 +65,13 @@ export default class BabbleConversationPreview extends Component {
   }
 
   _getTitle = () => {
-    const { accessLevel, user, title } = this.props.conversation;
+    const { user, title } = this.props.conversation;
 
     if (title) {
       return title;
     }
 
-    if (accessLevel === 'public') {
-      return user.name;
-    }
-
-    if ([ 'protected', 'private' ].includes(accessLevel)) {
-      return this._getGroupUsers().map(user => user.name).join(', ') || user.name;
-    }
+    return this._getGroupUsers().map(user => user.name).join(', ') || user.name;
   }
 
   _getPreviewText = () => {
@@ -126,7 +116,7 @@ export default class BabbleConversationPreview extends Component {
 
   render() {
     const { conversation, style } = this.props;
-    const { accessLevel, usersCount } = conversation;
+    const { accessLevel, conversationRepostUser, usersCount } = conversation;
     const groupUsers = this._getGroupUsers();
 
     return (
@@ -157,6 +147,13 @@ export default class BabbleConversationPreview extends Component {
             <Text style={styles.titleText} numberOfLines={1}>{this._getTitle()}</Text>
 
             <View style={styles.headingRight}>
+              {!!conversationRepostUser && (
+                <>
+                  <RepeatIcon width={15} height={15} style={styles.repostIcon} />
+                  <Text style={[ styles.headingRightText, styles.bulletText ]}>•</Text>
+                </>
+              )}
+
               {accessLevel === 'public' && (
                 <MessageCircleIcon width={15} height={15} style={styles.accessLevelIcon} />
               )}
@@ -236,6 +233,10 @@ const styles = StyleSheet.create({
   previewTextUnread: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
+  },
+  repostIcon: {
+    color: '#1ACCB4',
+    marginTop: 1,
   },
   titleText: {
     color: '#404040',

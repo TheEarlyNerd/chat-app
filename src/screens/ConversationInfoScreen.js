@@ -158,6 +158,15 @@ export default class ConversationDetailsScreen extends Component {
 
         <View style={styles.border} />
 
+        <BabbleSettingField label={'Owner'}>
+          <BabbleUserPreview
+            user={conversation.user}
+            style={styles.participant}
+          />
+        </BabbleSettingField>
+
+        <View style={styles.border} />
+
         <BabbleSettingField
           label={`Participants (${conversation.usersCount})`}
           onPress={(conversation.usersCount > 5) ? this._openConversationUsers : null}

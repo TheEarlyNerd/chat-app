@@ -12,7 +12,7 @@ const BabbleHeader = ({ scene }) => {
   const { navigation, options } = descriptor;
   const params = scene.route.params || {};
   const title = options.title || params.title;
-  const { rightButtonTitle, showRightLoading, onRightButtonPress, showHelpButton, backEnabled, closeEnabled } = options || params || {};
+  const { rightButtonTitle, rightButtonComponent, showRightLoading, onRightButtonPress, showHelpButton, backEnabled, closeEnabled } = options || params || {};
 
   return (
     <SafeAreaView style={styles.container}>
@@ -79,10 +79,14 @@ const BabbleHeader = ({ scene }) => {
           </TouchableOpacity>
         )}
 
-        {!!rightButtonTitle && (
+        {(!!rightButtonTitle || !!rightButtonComponent) && (
           <TouchableOpacity disabled={showRightLoading} onPress={onRightButtonPress}>
-            {!showRightLoading && (
+            {!showRightLoading && !rightButtonComponent && (
               <Text style={styles.rightButtonText}>{rightButtonTitle}</Text>
+            )}
+
+            {!showRightLoading && !!rightButtonComponent && (
+              rightButtonComponent
             )}
 
             {showRightLoading && (

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Animated, LayoutAnimation, StyleSheet, Alert } from 'react-native';
 import { BabbleTiledIconsBackground } from './';
-import { CornerUpLeftIcon, EditIcon, Trash2Icon, ShareIcon, SmileIcon, MoreHorizontalIcon, MessageSquareIcon, AlertTriangle } from './icons';
+import { CornerUpLeftIcon, EditIcon, Trash2Icon, ShareIcon, SmileIcon, MoreHorizontalIcon, MessageSquareIcon, AlertTriangleIcon } from './icons';
 import maestro from '../maestro';
 
 const { conversationsManager, userManager } = maestro.managers;
@@ -86,7 +86,7 @@ export default class BabbleConversationMessageOptions extends Component {
       });
     } else {
       actions.push({
-        iconComponent: AlertTriangle,
+        iconComponent: AlertTriangleIcon,
         text: 'Report User',
         onPress: this._reportPress,
       });

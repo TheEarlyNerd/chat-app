@@ -142,7 +142,7 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
-  async loadUsersConersations(userId) {
+  async loadUsersConversations(userId) {
     const usersConversations = { ...this.store.usersConversations };
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.get({ path: `/users/${userId}/conversations` });

@@ -23,7 +23,7 @@ export default class ProfileScreen extends Component {
 
     this.props.navigation.setOptions({ title: `@${user.username}` });
 
-    await conversationsManager.loadUsersConersations(userId);
+    await conversationsManager.loadUsersConversations(userId);
   }
 
   componentWillUnmount() {
