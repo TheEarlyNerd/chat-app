@@ -288,6 +288,24 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
+  async createConversationRepost(conversationId) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.put({
+      path: `/conversations/${conversationId}/reposts`,
+    });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    this._addAuthUserRepostToConversation({
+      conversationId,
+      repost: response.body,
+    });
+
+    return response.body;
+  }
+
   async deleteConversation(conversationId) {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.delete({
@@ -342,6 +360,19 @@ export default class ConversationsManager extends Manager {
     if (response.code !== 204) {
       throw new Error(response.body);
     }
+  }
+
+  async deleteConversationRepost(conversationId) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.delete({
+      path: `/conversations/${conversationId}/reposts`,
+    });
+
+    if (response.code !== 204) {
+      throw new Error(response.body);
+    }
+
+    this._removeAuthUserRepostFromConversation(conversationId);
   }
 
   async leaveConversation(conversationId) {
@@ -746,6 +777,30 @@ export default class ConversationsManager extends Manager {
         conversation.conversationTypingUsers = conversation.conversationTypingUsers.filter(conversationTypingUser => (
           conversationTypingUser.id !== userId
         )).sort(this._conversationTypingUsersSorter);
+      });
+    });
+  }
+
+  _addAuthUserRepostToConversation({ conversationId, repost }) {
+    this._iterateConversationTypes(({ conversations }) => {
+      conversations.forEach(conversation => {
+        if (conversation.id !== conversationId) {
+          return;
+        }
+
+        conversation.authUserConversationRepost = repost;
+      });
+    });
+  }
+
+  _removeAuthUserRepostFromConversation(conversationId) {
+    this._iterateConversationTypes(({ conversations }) => {
+      conversations.forEach(conversation => {
+        if (conversation.id !== conversationId) {
+          return;
+        }
+
+        conversation.authUserConversationRepost = null;
       });
     });
   }

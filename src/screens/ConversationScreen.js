@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { SafeAreaView, ActivityIndicator, StyleSheet } from 'react-native';
+import { SafeAreaView, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import { BabbleConversationComposerToolbar, BabbleConversationHeaderTitle, BabbleConversation, BabbleConversationMessageComposerToolbar } from '../components';
-import { AlertTriangleIcon } from '../components/icons';
+import { AlertTriangleIcon, RepeatIcon, MoreVerticalIcon } from '../components/icons';
 import maestro from '../maestro';
 
 const { conversationsManager } = maestro.managers;
@@ -33,6 +33,11 @@ export default class ConversationScreen extends Component {
 
     if (conversationId) {
       conversationsManager.loadActiveConversation(conversationId); // handle non existent convos?
+
+      this.props.navigation.setOptions({
+        rightButtonComponent: <MoreVerticalIcon width={31} height={31} style={styles.moreIcon} />,
+        onRightButtonPress: this._showMoreActionSheet,
+      });
     }
 
     if (Array.isArray(toUsers)) {
@@ -63,10 +68,38 @@ export default class ConversationScreen extends Component {
     this._setConversation(conversation);
   }
 
+  _showMoreActionSheet = () => {
+    const { id, authUserConversationRepost } = this.state.conversation;
+
+    interfaceHelper.showOverlay({
+      name: 'ActionSheet',
+      data: {
+        actions: [
+          {
+            iconComponent: RepeatIcon,
+            text: (!authUserConversationRepost) ? 'Repost' : 'Delete Repost',
+            subtext: 'Your repost of this conversation will be deleted and removed from the feeds of your followers.',
+            onPress: () => {
+              if (!authUserConversationRepost) {
+                conversationsManager.createConversationRepost(id);
+                Alert.alert('Reposted', 'This conversation has been reposted to your profile and feeds of your followers.');
+              } else {
+                conversationsManager.deleteConversationRepost(id);
+                Alert.alert('Repost Deleted', 'This conversation repost has been deleted and removed from your profile and the feed of your followers.');
+              }
+            },
+          },
+        ],
+      },
+    });
+  }
+
   _setConversation = conversation => {
     if (conversation) {
       this.props.navigation.setOptions({
         title: <BabbleConversationHeaderTitle conversation={conversation} />,
+        rightButtonComponent: <MoreVerticalIcon width={31} height={31} style={styles.moreIcon} />,
+        onRightButtonPress: this._showMoreActionSheet,
       });
     }
 
@@ -173,5 +206,8 @@ export default class ConversationScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  moreIcon: {
+    color: '#FFFFFF',
   },
 });

@@ -38,8 +38,8 @@ export default class BabbleConversationHeaderTitle extends Component {
     const count = (usersCount > 2) ? `${usersCount - 1} others` : '1 other';
 
     return (usersCount === 1)
-      ? `${permission} | ${username}`
-      : `${permission} | ${username} & ${count}`;
+      ? `${permission} • ${username}`
+      : `${permission} • ${username} & ${count}`;
   }
 
   _toggleSubtext = show => {
