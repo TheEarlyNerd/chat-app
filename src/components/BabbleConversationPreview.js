@@ -111,6 +111,10 @@ export default class BabbleConversationPreview extends Component {
   _isUnread = () => {
     const { authUserConversationData, previewConversationMessage } = this.props.conversation;
 
+    if (!previewConversationMessage) {
+      return false;
+    }
+
     return !authUserConversationData || authUserConversationData.lastReadAt < previewConversationMessage.createdAt;
   }
 

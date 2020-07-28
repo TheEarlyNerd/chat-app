@@ -714,11 +714,23 @@ export default class ConversationsManager extends Manager {
         }
 
         conversation.conversationTypingUsers = conversation.conversationTypingUsers || [];
-        conversation.conversationTypingUsers = conversation.conversationTypingUsers.filter(conversationTypingUser => (
-          conversationTypingUser.id !== user.id
-        )).sort(this._conversationTypingUsersSorter);
+        conversation.conversationTypingUsers = conversation.conversationTypingUsers.filter(conversationTypingUser => {
+          if (conversationTypingUser.id === user.id) {
+            clearTimeout(conversationTypingUser.stoppedTypingTimeout);
 
-        conversation.conversationTypingUsers.push(user);
+            return false;
+          }
+
+          return true;
+        }).sort(this._conversationTypingUsersSorter);
+
+        conversation.conversationTypingUsers.push({
+          ...user,
+          stoppedTypingTimeout: setTimeout(() => this._removeTypingUserFromConversation({
+            conversationId,
+            userId: user.id,
+          }), 2500),
+        });
       });
     });
   }
