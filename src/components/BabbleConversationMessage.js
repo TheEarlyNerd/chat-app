@@ -62,7 +62,7 @@ export default class BabbleConversationMessage extends Component {
   }
 
   render() {
-    const { message: { user, attachments, embeds, authUserConversationMessageReactions, conversationMessageReactions, createdAt }, heading, style } = this.props;
+    const { message: { conversationUser, attachments, embeds, authUserConversationMessageReactions, conversationMessageReactions, createdAt }, heading, style } = this.props;
     const text = this._getText();
     const parsedTextOptions = [
       {
@@ -92,10 +92,10 @@ export default class BabbleConversationMessage extends Component {
       >
         {heading && (
           <BabbleUserAvatar
-            avatarAttachment={user.avatarAttachment}
-            lastActiveAt={user.lastActiveAt}
+            avatarAttachment={conversationUser.user.avatarAttachment}
+            lastActiveAt={conversationUser.user.lastActiveAt}
             size={40}
-            onPress={() => this._userPress(user.id)}
+            onPress={() => this._userPress(conversationUser.userId)}
             style={styles.avatar}
           />
         )}
@@ -103,12 +103,12 @@ export default class BabbleConversationMessage extends Component {
         <View style={styles.content}>
           {heading && (
             <View style={styles.heading}>
-              <TouchableOpacity onPress={() => this._userPress(user.id)}>
+              <TouchableOpacity onPress={() => this._userPress(conversationUser.userId)}>
                 <Text
                   dataDetectorType={'all'}
                   style={styles.nameText}
                 >
-                  {user.name}
+                  {conversationUser.user.name}
                 </Text>
               </TouchableOpacity>
 

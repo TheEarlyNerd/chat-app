@@ -48,9 +48,9 @@ export default class BabbleConversationMessageOptions extends Component {
   }
 
   _reportPress = () => {
-    const { user } = this.props;
+    const { conversationUser } = this.props;
 
-    Alert.alert('Report User', `Are you sure you want to report ${user.name} for sending inappropriate, violent or concerning content?`, [
+    Alert.alert('Report User', `Are you sure you want to report ${conversationUser.user.name} for sending inappropriate, violent or concerning content?`, [
       {
         text: 'Report',
         onPress: () => {},
@@ -63,7 +63,7 @@ export default class BabbleConversationMessageOptions extends Component {
   }
 
   _morePress = () => {
-    const { user } = this.props;
+    const { conversationUser } = this.props;
     const actions = [];
 
     actions.push({
@@ -72,7 +72,7 @@ export default class BabbleConversationMessageOptions extends Component {
       onPress: this._reactPress,
     });
 
-    if (userManager.store.user.id === user.id) {
+    if (userManager.store.user.id === conversationUser.userId) {
       actions.push({
         iconComponent: EditIcon,
         text: 'Edit',
@@ -99,7 +99,7 @@ export default class BabbleConversationMessageOptions extends Component {
   }
 
   render() {
-    const { user, style } = this.props;
+    const { conversationUser, style } = this.props;
 
     return (
       <Animated.View style={[ styles.container, style ]}>
@@ -113,13 +113,13 @@ export default class BabbleConversationMessageOptions extends Component {
             <Text style={styles.reactionPlusText}>+</Text>
           </TouchableOpacity>
 
-          {(userManager.store.user.id === user.id) && (
+          {(userManager.store.user.id === conversationUser.userId) && (
             <TouchableOpacity onPress={this._editPress} style={styles.option}>
               <EditIcon width={22} height={22} style={styles.optionIcon} />
             </TouchableOpacity>
           )}
 
-          {(userManager.store.user.id !== user.id) && (
+          {(userManager.store.user.id !== conversationUser.userId) && (
             <TouchableOpacity onPress={this._sharePress} style={styles.option}>
               <ShareIcon width={22} height={22} style={styles.optionIcon} />
             </TouchableOpacity>

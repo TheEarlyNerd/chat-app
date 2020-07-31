@@ -22,10 +22,6 @@ export default class UserManager extends Manager {
 
     this.updateStore({
       ready: asyncStorageHelper.getItem(LOGGED_IN_USER_KEY).then(user => {
-        if (user) {
-          user.lastActiveAt = new Date(); // temp? async json storage converts date to string when we get it..
-        }
-
         this._setLoggedInUser(user);
         resolveInitialReadyPromise();
       }),

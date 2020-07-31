@@ -13,6 +13,7 @@ import BabbleConversationMessageOptions from './BabbleConversationMessageOptions
 import BabbleConversationPreview from './BabbleConversationPreview';
 import BabbleConversationPreviewsList from './BabbleConversationPreviewsList';
 import BabbleConversationUserList from './BabbleConversationUserList';
+import BabbleConversationViewerToolbar from './BabbleConversationViewerToolbar';
 import BabbleEmojiSelector from './BabbleEmojiSelector';
 import BabbleFieldLabel from './BabbleFieldLabel';
 import BabbleHeader from './BabbleHeader';
@@ -52,6 +53,7 @@ export {
   BabbleConversationPreview,
   BabbleConversationPreviewsList,
   BabbleConversationUserList,
+  BabbleConversationViewerToolbar,
   BabbleEmojiSelector,
   BabbleFieldLabel,
   BabbleHeader,

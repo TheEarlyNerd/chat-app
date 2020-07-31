@@ -95,10 +95,10 @@ export default class EventsManager extends Manager {
     const data = dataHelper.normalizeDataObject(message.value.data);
 
     if (event === 'CONVERSATION_CREATE') {
-      conversationsManager._addRecentConversation(data);
+      conversationsManager._addUpdateRecentConversation(data);
 
       if (data.accessLevel === 'private') {
-        conversationsManager._addPrivateConversation(data);
+        conversationsManager._addUpdatePrivateConversation(data);
       }
     }
 

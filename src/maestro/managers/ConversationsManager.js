@@ -74,7 +74,7 @@ export default class ConversationsManager extends Manager {
 
     response.body.conversationMessages.sort(this._conversationMessagesSorter);
 
-    this._addActiveConversation(response.body);
+    this._addUpdateActiveConversation(response.body);
 
     this.markConversationRead(response.body.id);
 
@@ -196,13 +196,13 @@ export default class ConversationsManager extends Manager {
       throw new Error(response.body);
     }
 
-    this._addActiveConversation(response.body);
-    this._addRecentConversation(response.body);
+    this._addUpdateActiveConversation(response.body);
+    this._addUpdateRecentConversation(response.body);
 
     if (accessLevel === 'private') {
-      this._addPrivateConversation(response.body);
+      this._addUpdatePrivateConversation(response.body);
     } else {
-      this._addExploreConversation(response.body);
+      this._addUpdateExploreConversation(response.body);
     }
 
     this.markConversationRead(response.body.id);
@@ -224,7 +224,10 @@ export default class ConversationsManager extends Manager {
         ...message,
         attachments,
         embeds,
-        user: userManager.store.user,
+        conversationUser: this._getAuthConversationUserFromActiveConversation(conversationId) || {
+          userId: userManager.store.user.id,
+          user: userManager.store.user,
+        },
         updatedAt: new Date(),
         createdAt: new Date(),
         optimistic: true,
@@ -250,6 +253,11 @@ export default class ConversationsManager extends Manager {
     this._addMessageToConversation({
       conversationId,
       message: response.body,
+    });
+
+    this._addUpdateConversationAuthConversationUser({
+      conversationId,
+      conversationUser: response.body.conversationUser,
     });
 
     this.markConversationRead(conversationId);
@@ -285,6 +293,8 @@ export default class ConversationsManager extends Manager {
       reaction: response.body,
     });
 
+    this.markConversationRead(conversationId);
+
     return response.body;
   }
 
@@ -298,12 +308,34 @@ export default class ConversationsManager extends Manager {
       throw new Error(response.body);
     }
 
-    this._addAuthUserRepostToConversation({
+    this._addAuthUserConversationRepostToConversation({
       conversationId,
       repost: response.body,
     });
 
     return response.body;
+  }
+
+  async joinConversation(conversationId) {
+    const { apiHelper } = this.maestro.helpers;
+    const { userManager } = this.maestro.managers;
+    const response = await apiHelper.put({
+      path: `/conversations/${conversationId}/users`,
+      data: { userId: userManager.store.user.id },
+    });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    this._addUpdateConversationAuthConversationUser({
+      conversationId,
+      conversationUser: response.body,
+    });
+
+    await this.markConversationRead(conversationId);
+
+    await this._addUpdatePreviewConversation(conversationId);
   }
 
   async deleteConversation(conversationId) {
@@ -372,7 +404,7 @@ export default class ConversationsManager extends Manager {
       throw new Error(response.body);
     }
 
-    this._removeAuthUserRepostFromConversation(conversationId);
+    this._removeAuthUserConversationRepostFromConversation(conversationId);
   }
 
   async leaveConversation(conversationId) {
@@ -385,6 +417,7 @@ export default class ConversationsManager extends Manager {
       throw new Error(response.body);
     }
 
+    this._removeConversationAuthConversationUser(conversationId);
     this._removeRecentConversation(conversationId);
   }
 
@@ -424,13 +457,11 @@ export default class ConversationsManager extends Manager {
       }
 
       conversations.forEach(conversation => {
-        if (conversation.id !== conversationId) {
-          return;
+        if (conversation.id === conversationId) {
+          conversation.authUserConversationData = {
+            lastReadAt: new Date(),
+          };
         }
-
-        conversation.authUserConversationData = {
-          lastReadAt: new Date(),
-        };
       });
     });
   }
@@ -447,23 +478,23 @@ export default class ConversationsManager extends Manager {
    * Helpers
    */
 
-  _addActiveConversation(conversation) {
+  _addUpdateActiveConversation(conversation) {
     this._addConversation({ conversation, type: 'active' });
   }
 
-  _addExploreConversation(conversation) {
+  _addUpdateExploreConversation(conversation) {
     this._addConversation({ conversation, type: 'explore' });
   }
 
-  _addFeedConversation(conversation) {
+  _addUpdateFeedConversation(conversation) {
     this._addConversation({ conversation, type: 'feed' });
   }
 
-  _addPrivateConversation(conversation) {
+  _addUpdatePrivateConversation(conversation) {
     this._addConversation({ conversation, type: 'private' });
   }
 
-  _addRecentConversation(conversation) {
+  _addUpdateRecentConversation(conversation) {
     this._addConversation({ conversation, type: 'recent' });
   }
 
@@ -553,9 +584,6 @@ export default class ConversationsManager extends Manager {
   }
 
   _addMessageToConversation({ conversationId, message }) {
-    const { userManager } = this.maestro.managers;
-    let newRecentConversation = null;
-
     this._iterateConversationTypes(({ conversations, type }) => {
       conversations.forEach(conversation => {
         if (conversation.id !== conversationId) {
@@ -572,18 +600,12 @@ export default class ConversationsManager extends Manager {
         } else {
           conversation.previewConversationMessage = message;
         }
-
-        if (type !== 'active' && (message.user.id === userManager.store.user.id || [ 'recent', 'private' ].includes(type))) {
-          newRecentConversation = conversation;
-        }
       });
     });
 
-    if (newRecentConversation) {
-      this._addRecentConversation(newRecentConversation);
-    }
+    this._addUpdatePreviewConversation(conversationId);
 
-    this._removeTypingUserFromConversation({ conversationId, userId: message.user.id });
+    this._removeTypingUserFromConversation({ conversationId, userId: message.conversationUser.userId });
   }
 
   _removeMessageFromConversation({ conversationId, conversationMessageId }) {
@@ -781,7 +803,7 @@ export default class ConversationsManager extends Manager {
     });
   }
 
-  _addAuthUserRepostToConversation({ conversationId, repost }) {
+  _addAuthUserConversationRepostToConversation({ conversationId, repost }) {
     this._iterateConversationTypes(({ conversations }) => {
       conversations.forEach(conversation => {
         if (conversation.id !== conversationId) {
@@ -793,7 +815,7 @@ export default class ConversationsManager extends Manager {
     });
   }
 
-  _removeAuthUserRepostFromConversation(conversationId) {
+  _removeAuthUserConversationRepostFromConversation(conversationId) {
     this._iterateConversationTypes(({ conversations }) => {
       conversations.forEach(conversation => {
         if (conversation.id !== conversationId) {
@@ -801,6 +823,30 @@ export default class ConversationsManager extends Manager {
         }
 
         conversation.authUserConversationRepost = null;
+      });
+    });
+  }
+
+  _addUpdateConversationAuthConversationUser({ conversationId, conversationUser }) {
+    this._iterateConversationTypes(({ conversations, type }) => {
+      conversations.forEach(conversation => {
+        if (conversation.id !== conversationId) {
+          return;
+        }
+
+        conversation.authConversationUser = conversationUser;
+      });
+    });
+  }
+
+  _removeConversationAuthConversationUser(conversationId) {
+    this._iterateConversationTypes(({ conversations, type }) => {
+      conversations.forEach(conversation => {
+        if (conversation.id !== conversationId) {
+          return;
+        }
+
+        conversation.authConversationUser = null;
       });
     });
   }
@@ -852,7 +898,7 @@ export default class ConversationsManager extends Manager {
     const privateConversations = (store.privateConversations) ? [ ...store.privateConversations ] : null;
     const recentConversations = (store.recentConversations) ? [ ...store.recentConversations ] : null;
     const usersConversations = (store.usersConversations) ? { ...store.usersConversations } : null;
-
+// could make this more DRY.
     if (Array.isArray(activeConversations)) {
       modifierFunction({
         conversations: activeConversations,
@@ -972,10 +1018,61 @@ export default class ConversationsManager extends Manager {
     return Promise.all(attachmentPromises);
   }
 
+  _addUpdatePreviewConversation = async conversationId => {
+    const { apiHelper } = this.maestro.helpers;
+    let previewConversation = null;
+
+    this._iterateConversationTypes(({ conversations, type }) => {
+      if (type !== 'active' && !previewConversation) {
+        previewConversation = conversations.find(conversation => (
+          conversation.id === conversationId
+        ));
+      }
+    }, false);
+
+    if (!previewConversation) {
+      const response = await apiHelper.get({
+        path: `/conversations/${conversationId}`,
+        queryParams: { preview: true },
+      });
+
+      if (response.code !== 200 || !response.body.id) {
+        return; // throw here?
+      }
+
+      previewConversation = response.body;
+    }
+
+    if (previewConversation.authConversationUser) {
+      this._addUpdateRecentConversation(previewConversation);
+    }
+
+    if (previewConversation.accessLevel === 'private') {
+      this._addUpdatePrivateConversation(previewConversation);
+    }
+  }
+
+  _getAuthConversationUserFromActiveConversation = conversationId => {
+    let authConversationUser = null;
+
+    this._iterateConversationTypes(({ conversations, type }) => {
+      if (type === 'active') { // refactor vv
+        conversations.forEach(conversation => {
+          if (conversation.id === conversationId) {
+            authConversationUser = conversation.authConversationUser;
+          }
+        });
+      }
+    }, false);
+
+    return authConversationUser;
+  }
+
   _syncConversationEvents = () => {
     const { eventsManager } = this.maestro.managers;
 
     // maybe we should diff and unsubscribe from no longer loaded convos to reduce network overhead?
+    // we probabably need to subscribe to all convos user is apart of?..
 
     this._iterateConversationTypes(({ conversations }) => {
       conversations.forEach(conversation => {

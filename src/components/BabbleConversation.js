@@ -73,7 +73,7 @@ export default class BabbleConversation extends Component {
         message={item}
         heading={(
           index === messages.length - 1 ||
-          messages[index + 1].user.id !== item.user.id ||
+          messages[index + 1].conversationUser.userId !== item.conversationUser.userId ||
           (item.createdAt - messages[index + 1].createdAt) / 1000 > 60 * 15
         )}
         style={{

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { SafeAreaView, ActivityIndicator, Alert, StyleSheet } from 'react-native';
-import { BabbleConversationComposerToolbar, BabbleConversationHeaderTitle, BabbleConversation, BabbleConversationMessageComposerToolbar } from '../components';
-import { AlertTriangleIcon, RepeatIcon, MoreVerticalIcon } from '../components/icons';
+import { BabbleConversationComposerToolbar, BabbleConversationHeaderTitle, BabbleConversation, BabbleConversationMessageComposerToolbar, BabbleConversationViewerToolbar } from '../components';
+import { AlertTriangleIcon, RepeatIcon, InfoIcon, MoreVerticalIcon } from '../components/icons';
 import maestro from '../maestro';
 
 const { conversationsManager } = maestro.managers;
-const { interfaceHelper } = maestro.helpers;
+const { navigationHelper, interfaceHelper } = maestro.helpers;
 
 export default class ConversationScreen extends Component {
   conversationComposer = null;
@@ -69,7 +69,8 @@ export default class ConversationScreen extends Component {
   }
 
   _showMoreActionSheet = () => {
-    const { id, authUserConversationRepost } = this.state.conversation;
+    const { conversation } = this.state;
+    const { id, authUserConversationRepost } = conversation;
 
     interfaceHelper.showOverlay({
       name: 'ActionSheet',
@@ -78,15 +79,23 @@ export default class ConversationScreen extends Component {
           {
             iconComponent: RepeatIcon,
             text: (!authUserConversationRepost) ? 'Repost' : 'Delete Repost',
-            subtext: 'Your repost of this conversation will be deleted and removed from the feeds of your followers.',
+            subtext: (!authUserConversationRepost) ? 'This conversation will be reposted to your profile and the feeds of your followers.' : 'Your repost of this conversation will be deleted and removed from the feeds of your followers.',
             onPress: () => {
               if (!authUserConversationRepost) {
                 conversationsManager.createConversationRepost(id);
                 Alert.alert('Reposted', 'This conversation has been reposted to your profile and feeds of your followers.');
               } else {
                 conversationsManager.deleteConversationRepost(id);
-                Alert.alert('Repost Deleted', 'This conversation repost has been deleted and removed from your profile and the feed of your followers.');
+                Alert.alert('Repost Deleted', 'This conversation repost has been deleted and removed from your profile and the feeds of your followers.');
               }
+            },
+          },
+          {
+            iconComponent: InfoIcon,
+            text: 'View Info',
+            subtext: 'See additional details about this conversation and its participants.',
+            onPress: () => {
+              navigationHelper.push('ConversationInfo', { conversation });
             },
           },
         ],
@@ -175,7 +184,13 @@ export default class ConversationScreen extends Component {
 
   render() {
     const { conversation, showConversationComposer, loading } = this.state;
-    const { conversationMessages, conversationTypingUsers } = conversation || {};
+    const { accessLevel, conversationMessages, conversationTypingUsers, authConversationUser } = conversation || {};
+    const showViewerToolbar = accessLevel === 'protected' && (
+      !authConversationUser || (
+        !authConversationUser.permissions.includes('CONVERSATION_ADMIN') &&
+        !authConversationUser.permissions.includes('CONVERSATION_MESSAGES_CREATE')
+      )
+    );
 
     return (
       <SafeAreaView style={styles.container}>
@@ -192,12 +207,18 @@ export default class ConversationScreen extends Component {
           typingUsers={conversationTypingUsers}
         />
 
-        <BabbleConversationMessageComposerToolbar
-          onTyping={this._onTyping}
-          onSubmit={this._onMessageSubmit}
-          loading={loading}
-          ref={component => this.messageComposer = component}
-        />
+        {!!conversation && showViewerToolbar && (
+          <BabbleConversationViewerToolbar conversation={conversation} />
+        )}
+
+        {(!conversation || !showViewerToolbar) && (
+          <BabbleConversationMessageComposerToolbar
+            onTyping={this._onTyping}
+            onSubmit={this._onMessageSubmit}
+            loading={loading}
+            ref={component => this.messageComposer = component}
+          />
+        )}
       </SafeAreaView>
     );
   }

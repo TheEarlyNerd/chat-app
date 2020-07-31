@@ -20,7 +20,7 @@ const BabbleHeader = ({ scene }) => {
         {!!user && !backEnabled && !closeEnabled && (
           <BabbleUserAvatar
             avatarAttachment={user.avatarAttachment}
-            lastActiveAt={user.lastActiveAt}
+            lastActiveAt={new Date() /* TODO: This should be settable by the user, if they're in the app they'll show active to other users right now due to any backend requests setting server side lastActiveAt */}
             size={40}
             imageStyle={styles.userButton}
             onPress={() => {

@@ -43,9 +43,9 @@ export default class BabbleConversationPreview extends Component {
     }
 
     if (accessLevel === 'private') {
-      return previewConversationUsers.map(conversationUser => (
-        conversationUser.user
-      )).filter(user => user.id !== loggedInUserId);
+      return previewConversationUsers.filter(conversationUser => (
+        conversationUser.userId !== loggedInUserId
+      ));
     }
   }
 
@@ -89,9 +89,9 @@ export default class BabbleConversationPreview extends Component {
       return '(Deleted Message)';
     }
 
-    const { user, text } = previewConversationMessage;
-    const authorIsLoggedInUser = user.id === loggedInUserId;
-    const name = (authorIsLoggedInUser) ? 'You' : user.name;
+    const { conversationUser, text } = previewConversationMessage;
+    const authorIsLoggedInUser = conversationUser.userId === loggedInUserId;
+    const name = (authorIsLoggedInUser) ? 'You' : conversationUser.user.name;
 
     if (authorIsLoggedInUser) {
       return (text) ? `You: ${text}` : 'You sent an attachment(s).';
