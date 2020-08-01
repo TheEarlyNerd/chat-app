@@ -124,6 +124,10 @@ export default class HomeScreen extends Component {
         ...mapItems(exploreConversations, 'conversationPreview'),
         { viewMore: true, title: 'Explore', type: 'explore' },
       ] : []),
+
+      ...((!recentConversations && !privateConversations && !feedConversations && !exploreConversations) ? [
+        { id: 'loading', loading: true, last: true },
+      ] : []),
     ];
   }
 
