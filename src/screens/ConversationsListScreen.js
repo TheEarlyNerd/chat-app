@@ -8,29 +8,13 @@ const { conversationsManager } = maestro.managers;
 export default class CovnersationsListScreen extends Component {
   state = {
     conversations: null,
+    refreshing: false,
   }
 
   componentDidMount() {
     maestro.link(this);
 
-    const params = this.props.route.params || {};
-    const { type } = params;
-
-    if (type === 'recent') {
-      conversationsManager.loadRecentConversations();
-    }
-
-    if (type === 'private') {
-      conversationsManager.loadPrivateConversations();
-    }
-
-    if (type === 'feed') {
-      conversationsManager.loadFeedConversations();
-    }
-
-    if (type === 'explore') {
-      conversationsManager.loadExploreConversations();
-    }
+    this._loadConversations();
   }
 
   receiveStoreUpdate({ conversations }) {
@@ -54,6 +38,35 @@ export default class CovnersationsListScreen extends Component {
     }
   }
 
+  _loadConversations = async () => {
+    const params = this.props.route.params || {};
+    const { type } = params;
+
+    if (type === 'recent') {
+      conversationsManager.loadRecentConversations();
+    }
+
+    if (type === 'private') {
+      conversationsManager.loadPrivateConversations();
+    }
+
+    if (type === 'feed') {
+      conversationsManager.loadFeedConversations();
+    }
+
+    if (type === 'explore') {
+      conversationsManager.loadExploreConversations();
+    }
+  }
+
+  _refresh = async () => {
+    this.setState({ refreshing: true });
+
+    await this._loadConversations();
+
+    this.setState({ refreshing: false });
+  }
+
   _renderFooter = () => {
     const { conversations } = this.state;
 
@@ -67,13 +80,15 @@ export default class CovnersationsListScreen extends Component {
   }
 
   render() {
-    const { conversations } = this.state;
+    const { conversations, refreshing } = this.state;
 
     return (
       <BabbleConversationPreviewsList
         conversations={conversations}
         ListFooterComponent={this._renderFooter}
         contentContainerStyle={styles.contentContainer}
+        refreshing={refreshing}
+        onRefresh={this._refresh}
         style={styles.container}
       />
     );

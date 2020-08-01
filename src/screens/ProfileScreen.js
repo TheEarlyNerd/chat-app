@@ -10,6 +10,7 @@ export default class ProfileScreen extends Component {
   state = {
     user: null,
     conversations: null,
+    refreshing: false,
   }
 
   async componentDidMount() {
@@ -23,7 +24,7 @@ export default class ProfileScreen extends Component {
 
     this.props.navigation.setOptions({ title: `@${user.username}` });
 
-    await conversationsManager.loadUsersConversations(userId);
+    this._loadConversations();
   }
 
   componentWillUnmount() {
@@ -34,6 +35,21 @@ export default class ProfileScreen extends Component {
     const { user } = this.state;
 
     this.setState({ conversations: conversations.usersConversations[user.id] });
+  }
+
+  _loadConversations = async () => {
+    const params = this.props.route.params || {};
+    const { userId } = params;
+
+    await conversationsManager.loadUsersConversations(userId);
+  }
+
+  _refresh = async () => {
+    this.setState({ refreshing: true });
+
+    await this._loadConversations();
+
+    this.setState({ refreshing: false });
   }
 
   _renderHeader = () => {
@@ -70,7 +86,7 @@ export default class ProfileScreen extends Component {
   }
 
   render() {
-    const { user, conversations } = this.state;
+    const { user, conversations, refreshing } = this.state;
 
     if (!user) {
       return this._renderLoading();
@@ -84,6 +100,8 @@ export default class ProfileScreen extends Component {
         ListFooterComponent={(conversations === null) ? this._renderFooter : null}
         ListFooterComponentStyle={styles.footer}
         ListEmptyComponent={this._renderNoConversations}
+        refreshing={refreshing}
+        onRefresh={this._refresh}
         style={styles.container}
       />
     );

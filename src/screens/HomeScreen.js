@@ -19,6 +19,7 @@ export default class HomeScreen extends Component {
     searchUsers: null,
     searchConversations: null,
     loadingSearch: false,
+    refreshing: false,
   }
 
   searchTextInputTimeout = null;
@@ -26,10 +27,7 @@ export default class HomeScreen extends Component {
   componentDidMount() {
     maestro.link(this);
 
-    conversationsManager.loadExploreConversations();
-    conversationsManager.loadFeedConversations();
-    conversationsManager.loadPrivateConversations();
-    conversationsManager.loadRecentConversations();
+    this._loadConversations();
   }
 
   componentWillUnmount() {
@@ -49,6 +47,15 @@ export default class HomeScreen extends Component {
 
   _openConversationsList = ({ title, type }) => {
     navigationHelper.push('ConversationsList', { title, type });
+  }
+
+  _loadConversations = async () => {
+    await Promise.all([
+      conversationsManager.loadExploreConversations(),
+      conversationsManager.loadFeedConversations(),
+      conversationsManager.loadPrivateConversations(),
+      conversationsManager.loadRecentConversations(),
+    ]);
   }
 
   _generateData = () => {
@@ -152,6 +159,14 @@ export default class HomeScreen extends Component {
         loadingSearch: false,
       });
     }, 500);
+  }
+
+  _refresh = async () => {
+    this.setState({ refreshing: true });
+
+    await this._loadConversations();
+
+    this.setState({ refreshing: false });
   }
 
   _renderHeader = ({ title, type }) => {
@@ -261,6 +276,8 @@ export default class HomeScreen extends Component {
   }
 
   render() {
+    const { refreshing } = this.state;
+
     return (
       <View style={styles.container}>
         <KeyboardAwareFlatList
@@ -270,6 +287,8 @@ export default class HomeScreen extends Component {
           keyboardShouldPersistTaps={'handled'}
           keyExtractor={(item, index) => `${item.id}.${index}`}
           ItemSeparatorComponent={this._renderItemSeparator}
+          refreshing={refreshing}
+          onRefresh={this._refresh}
           style={styles.container}
         />
 
