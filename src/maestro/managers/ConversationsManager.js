@@ -293,8 +293,6 @@ export default class ConversationsManager extends Manager {
       reaction: response.body,
     });
 
-    this.markConversationRead(conversationId);
-
     return response.body;
   }
 

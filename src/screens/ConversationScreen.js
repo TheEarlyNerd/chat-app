@@ -34,6 +34,10 @@ export default class ConversationScreen extends Component {
     if (conversationId) {
       conversationsManager.loadActiveConversation(conversationId); // handle non existent convos?
 
+      this.props.navigation.addListener('blur', () => {
+        conversationsManager.markConversationRead(conversationId);
+      });
+
       this.props.navigation.setOptions({
         rightButtonComponent: <MoreVerticalIcon width={31} height={31} style={styles.moreIcon} />,
         onRightButtonPress: this._showMoreActionSheet,
