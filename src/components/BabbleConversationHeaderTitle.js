@@ -7,17 +7,24 @@ const { userManager } = maestro.managers;
 const { navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationHeaderTitle extends Component {
+  swapSubtextTimeout = null; // prevents setState no-op if unmounted before 1st animation.
+
   state = {
     subtext: 'Tap here for conversation info...',
     subtextOpacityAnimated: new Animated.Value(1),
   }
 
-  async componentDidMount() {
-    await this._toggleSubtext(false);
+  componentDidMount() {
+    this._toggleSubtext(false);
 
-    this.setState({ subtext: this._getSubtext() });
+    this.swapSubtextTimeout = setTimeout(() => {
+      this.setState({ subtext: this._getSubtext() });
+      this._toggleSubtext(true);
+    }, 3500);
+  }
 
-    await this._toggleSubtext(true);
+  componentWillUnmount() {
+    clearTimeout(this.swapSubtextTimeout);
   }
 
   _getTitle = () => {
