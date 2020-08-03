@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { BabbleHeader } from '../components';
+import { BabbleHeader, BabbleHomeHeader } from '../components';
 
 import ConversationInfoScreen from '../screens/ConversationInfoScreen';
 import ConversationScreen from '../screens/ConversationScreen';
@@ -58,7 +58,9 @@ export default initialRouteName => {
       <MainStack.Screen
         name={'Home'}
         component={HomeScreen}
-        options={{ showHelpButton: true }}
+        options={{
+          header: ({ scene }) => <BabbleHomeHeader scene={scene} />,
+        }}
       />
 
       <MainStack.Screen

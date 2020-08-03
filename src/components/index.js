@@ -1,3 +1,4 @@
+import BabbleActivity from './BabbleActivity';
 import BabbleAutoscaleImage from './BabbleAutoscaleImage';
 import BabbleButton from './BabbleButton';
 import BabbleCodeField from './BabbleCodeField';
@@ -17,6 +18,7 @@ import BabbleConversationViewerToolbar from './BabbleConversationViewerToolbar';
 import BabbleEmojiSelector from './BabbleEmojiSelector';
 import BabbleFieldLabel from './BabbleFieldLabel';
 import BabbleHeader from './BabbleHeader';
+import BabbleHomeHeader from './BabbleHomeHeader';
 import BabbleOverlayActionSheet from './BabbleOverlayActionSheet';
 import BabbleOverlayCountrySelector from './BabbleOverlayCountrySelector';
 import BabbleOverlayDismissibleView from './BabbleOverlayDismissibleView';
@@ -38,6 +40,7 @@ import BabbleUsernameField from './BabbleUsernameField';
 import BabbleViewMoreButton from './BabbleViewMoreButton';
 
 export {
+  BabbleActivity,
   BabbleAutoscaleImage,
   BabbleButton,
   BabbleCodeField,
@@ -57,6 +60,7 @@ export {
   BabbleEmojiSelector,
   BabbleFieldLabel,
   BabbleHeader,
+  BabbleHomeHeader,
   BabbleOverlayActionSheet,
   BabbleOverlayCountrySelector,
   BabbleOverlayDismissibleView,

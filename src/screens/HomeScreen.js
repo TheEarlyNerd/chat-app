@@ -36,7 +36,7 @@ export default class HomeScreen extends Component {
     clearTimeout(this.searchTextInputTimeout);
   }
 
-  receiveStoreUpdate({ conversations, user }) {
+  receiveStoreUpdate({ conversations }) {
     this.setState({
       exploreConversations: conversations.exploreConversations,
       feedConversations: conversations.feedConversations,

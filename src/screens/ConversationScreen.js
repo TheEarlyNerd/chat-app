@@ -59,7 +59,7 @@ export default class ConversationScreen extends Component {
     }
   }
 
-  receiveStoreUpdate({ conversations, user }) {
+  receiveStoreUpdate({ conversations }) {
     const { activeConversations } = conversations;
     const conversationId = this.state.conversation?.id || this.props.route?.params?.conversationId;
 

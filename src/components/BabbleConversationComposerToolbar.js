@@ -195,7 +195,7 @@ export default class BabbleConversationComposerToolbar extends Component {
                   disabled
                   size={20}
                   style={styles.avatar}
-                  activityIconStyle={styles.avatarActivityIcon}
+                  statusIconStyle={styles.avatarActivityIcon}
                 />
 
                 <Text

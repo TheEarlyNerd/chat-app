@@ -19,7 +19,7 @@ export default class BabbleUserAvatarGroup extends Component {
         <BabbleUserAvatar
           avatarAttachment={users[0]?.avatarAttachment}
           disabled
-          hideActivityIcon
+          hideStatusIcon
           size={avatarSize}
         />
 
@@ -27,7 +27,7 @@ export default class BabbleUserAvatarGroup extends Component {
           <BabbleUserAvatar
             avatarAttachment={users[1]?.avatarAttachment}
             disabled
-            hideActivityIcon
+            hideStatusIcon
             size={avatarSize}
             style={[
               (users.length === 2) ? {
@@ -43,7 +43,7 @@ export default class BabbleUserAvatarGroup extends Component {
           <BabbleUserAvatar
             avatarAttachment={users[2]?.avatarAttachment}
             disabled
-            hideActivityIcon
+            hideStatusIcon
             size={avatarSize}
             style={[
               (users.length === 3) ? {

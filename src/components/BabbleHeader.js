@@ -1,37 +1,18 @@
 import React from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
-import { BabbleTiledIconsBackground, BabbleUserAvatar } from './';
-import { BellIcon, ArrowLeftIcon, MessageSquareIcon, HeartIcon, XIcon } from './icons';
-import maestro from '../maestro';
-
-const { userManager } = maestro.managers;
+import { BabbleTiledIconsBackground } from './';
+import { ArrowLeftIcon, MessageSquareIcon, HeartIcon, XIcon } from './icons';
 
 const BabbleHeader = ({ scene }) => {
-  const { user } = userManager.store;
-  const { route, descriptor } = scene;
+  const { descriptor } = scene;
   const { navigation, options } = descriptor;
   const params = scene.route.params || {};
   const title = options.title || params.title;
-  const { rightButtonTitle, rightButtonComponent, showRightLoading, onRightButtonPress, showHelpButton, backEnabled, closeEnabled } = options || params || {};
+  const { rightButtonTitle, rightButtonComponent, showRightLoading, onRightButtonPress, backEnabled, closeEnabled } = options || params || {};
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerLeft}>
-        {!!user && !backEnabled && !closeEnabled && (
-          <BabbleUserAvatar
-            avatarAttachment={user.avatarAttachment}
-            lastActiveAt={new Date() /* TODO: This should be settable by the user, if they're in the app they'll show active to other users right now due to any backend requests setting server side lastActiveAt */}
-            size={40}
-            imageStyle={styles.userButton}
-            onPress={() => {
-              navigation.push('ProfileNavigator', {
-                screen: 'Profile',
-                params: { userId: user.id },
-              });
-            }}
-          />
-        )}
-
         {(backEnabled || closeEnabled) && (
           <TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
             {closeEnabled && (
@@ -54,10 +35,6 @@ const BabbleHeader = ({ scene }) => {
       </View>
 
       <View style={styles.headerCenter}>
-        {route.name === 'Home' && (
-          <Text style={[ styles.text, styles.babbleLogoText ]}>Babble</Text>
-        )}
-
         {!!title && typeof title === 'string' && (
           <Text style={[ styles.text, styles.titleText ]}>{title}</Text>
         )}
@@ -66,19 +43,6 @@ const BabbleHeader = ({ scene }) => {
       </View>
 
       <View style={styles.headerRight}>
-        {showHelpButton && (
-          <TouchableOpacity
-            onPress={() => navigation.push('ActivityNavigator')}
-            style={styles.activityButton}
-          >
-            <BellIcon
-              width={23}
-              height={23}
-              style={styles.activityButtonIcon}
-            />
-          </TouchableOpacity>
-        )}
-
         {(!!rightButtonTitle || !!rightButtonComponent) && (
           <TouchableOpacity disabled={showRightLoading} onPress={onRightButtonPress}>
             {!showRightLoading && !rightButtonComponent && (
@@ -116,25 +80,6 @@ const BabbleHeader = ({ scene }) => {
 export default BabbleHeader;
 
 const styles = StyleSheet.create({
-  activityButton: {
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    height: 40,
-    justifyContent: 'center',
-    shadowColor: '#252A3F',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
-    width: 40,
-  },
-  activityButtonIcon: {
-    color: '#2A99CC',
-  },
-  babbleLogoText: {
-    fontFamily: 'Lobster-Regular',
-    fontSize: 32,
-  },
   backButton: {
     marginTop: -1,
   },
@@ -184,9 +129,5 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: 'NunitoSans-Black',
     fontSize: 22,
-  },
-  userButton: {
-    borderColor: '#FFFFFF',
-    borderWidth: 2,
   },
 });

@@ -68,7 +68,7 @@ export default class SetupProfileScreen extends Component {
             avatarAttachment={(avatarImageUri) ? { url: avatarImageUri } : null}
             defaultAvatar={require('../assets/images/upload-photo-placeholder.png')}
             onPress={this._selectAvatarImage}
-            hideActivityIcon
+            hideStatusIcon
             showEditIcon={!!avatarImageUri}
             size={150}
             style={styles.avatar}

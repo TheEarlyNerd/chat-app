@@ -10,8 +10,8 @@ const BabbleUserAvatar = props => {
     onPress,
     size,
     showEditIcon,
-    hideActivityIcon,
-    activityIconStyle,
+    hideStatusIcon,
+    statusIconStyle,
     editIconStyle,
     disabled,
     imageStyle,
@@ -53,12 +53,12 @@ const BabbleUserAvatar = props => {
         </View>
       )}
 
-      {!hideActivityIcon && (
+      {!hideStatusIcon && (
         <View
           style={[
-            styles.activityIcon,
-            (new Date() - lastActiveAt < lastActiveThreshold) ? styles.activityIconActive : styles.activityIconInactive,
-            activityIconStyle,
+            styles.statusIcon,
+            (new Date() - lastActiveAt < lastActiveThreshold) ? styles.statusIconActive : styles.statusIconInactive,
+            statusIconStyle,
           ]}
         />
       )}
@@ -69,22 +69,6 @@ const BabbleUserAvatar = props => {
 export default BabbleUserAvatar;
 
 const styles = StyleSheet.create({
-  activityIcon: {
-    borderColor: '#FFFFFF',
-    borderRadius: 6,
-    borderWidth: 2,
-    height: 12,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    width: 12,
-  },
-  activityIconActive: {
-    backgroundColor: '#1FD7CB',
-  },
-  activityIconInactive: {
-    backgroundColor: '#B2B2B2',
-  },
   container: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -111,5 +95,21 @@ const styles = StyleSheet.create({
   image: {
     height: '100%',
     width: '100%',
+  },
+  statusIcon: {
+    borderColor: '#FFFFFF',
+    borderRadius: 6,
+    borderWidth: 2,
+    height: 12,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: 12,
+  },
+  statusIconActive: {
+    backgroundColor: '#1FD7CB',
+  },
+  statusIconInactive: {
+    backgroundColor: '#B2B2B2',
   },
 });

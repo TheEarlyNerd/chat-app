@@ -4,7 +4,6 @@ import { BabbleConversationPreviewsList, BabbleProfileHeader } from '../componen
 import maestro from '../maestro';
 
 const { userManager, conversationsManager } = maestro.managers;
-const { interfaceHelper } = maestro.helpers;
 
 export default class ProfileScreen extends Component {
   state = {
@@ -31,10 +30,14 @@ export default class ProfileScreen extends Component {
     maestro.unlink(this);
   }
 
-  receiveStoreUpdate({ conversations }) {
-    const { user } = this.state;
+  receiveStoreUpdate({ conversations, user }) {
+    const state = { conversations: conversations.usersConversations[this.state.user.id] };
 
-    this.setState({ conversations: conversations.usersConversations[user.id] });
+    if (this.state.user.id === user.user.id) {
+      state.user = user.user;
+    }
+
+    this.setState(state);
   }
 
   _loadConversations = async () => {

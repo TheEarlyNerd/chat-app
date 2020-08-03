@@ -131,7 +131,17 @@ export default class UserManager extends Manager {
       throw new Error(response.body);
     }
 
-    this._setLoggedInUser(response.body);
+    this.updateLocalUser(response.body);
+  }
+
+  updateLocalUser(user) {
+    const { asyncStorageHelper } = this.maestro.helpers;
+
+    user = (this.store.user && user) ? { ...this.store.user, ...user } : user;
+
+    this.updateStore({ user });
+
+    asyncStorageHelper.setItem(LOGGED_IN_USER_KEY, user);
   }
 
   nextRouteNameForUserState() {
@@ -179,16 +189,12 @@ export default class UserManager extends Manager {
    */
 
   _setLoggedInUser(user) {
-    const { asyncStorageHelper } = this.maestro.helpers;
-    const { eventsManager } = this.maestro.managers;
+    const { activityManager, eventsManager } = this.maestro.managers;
 
-    user = (this.store.user && user) ? { ...this.store.user, ...user } : user;
-
-    this.updateStore({ user });
-
-    asyncStorageHelper.setItem(LOGGED_IN_USER_KEY, user);
+    this.updateLocalUser(user);
 
     if (user) {
+      activityManager.loadActivity();
       eventsManager.subscribe(`user-${user.accessToken}`);
       this._updateUserDevice();
     }
