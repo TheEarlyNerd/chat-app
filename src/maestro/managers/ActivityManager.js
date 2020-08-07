@@ -34,4 +34,17 @@ export default class ActivityManager extends Manager {
 
     return response.body;
   }
+
+  /*
+   * Helpers
+   */
+
+  _addActivity(activity) {
+    this.updateStore({
+      activity: [
+        activity,
+        ...this.store.activity,
+      ],
+    });
+  }
 }

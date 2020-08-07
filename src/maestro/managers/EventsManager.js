@@ -89,7 +89,7 @@ export default class EventsManager extends Manager {
   }
 
   _onSubscriptionMessage = message => {
-    const { conversationsManager } = this.maestro.managers;
+    const { activityManager, conversationsManager } = this.maestro.managers;
     const { dataHelper } = this.maestro.helpers;
     const event = message.value.event;
     const data = dataHelper.normalizeDataObject(message.value.data);
@@ -154,6 +154,10 @@ export default class EventsManager extends Manager {
         conversationMessageReactionId: data.id,
         reaction: data.reaction,
       });
+    }
+
+    if (event === 'USER_ACTIVITY_CREATE') {
+      activityManager._addActivity(data);
     }
   }
 

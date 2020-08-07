@@ -195,7 +195,7 @@ export default class UserManager extends Manager {
 
     if (user) {
       activityManager.loadActivity();
-      eventsManager.subscribe(`user-${user.accessToken}`);
+      eventsManager.subscribe(user.eventsTopic);
       this._updateUserDevice();
     }
   }

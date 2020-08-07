@@ -1074,7 +1074,7 @@ export default class ConversationsManager extends Manager {
 
     this._iterateConversationTypes(({ conversations }) => {
       conversations.forEach(conversation => {
-        eventsManager.subscribe(`conversation-${conversation.eventsToken}`);
+        eventsManager.subscribe(conversation.eventsTopic);
       });
     }, false);
   }

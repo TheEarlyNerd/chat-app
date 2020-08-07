@@ -20,8 +20,11 @@ export default class BabbleHeader extends Component {
     maestro.unlink(this);
   }
 
-  receiveStoreUpdate({ user }) {
-    this.setState({ user: user.user });
+  receiveStoreUpdate({ activity, user }) {
+    this.setState({
+      activity: activity.activity,
+      user: user.user,
+    });
   }
 
   render() {
@@ -29,8 +32,7 @@ export default class BabbleHeader extends Component {
     const { scene } = this.props;
     const { descriptor } = scene;
     const { navigation } = descriptor;
-console.log(activity);
-console.log(user.lastViewedActivityAt);
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.headerLeft}>
