@@ -18,6 +18,7 @@ export default class HomeScreen extends Component {
     search: null,
     searchUsers: null,
     searchConversations: null,
+    lazyLoading: false,
     loadingSearch: false,
     refreshing: false,
   }
@@ -110,26 +111,25 @@ export default class HomeScreen extends Component {
 
       ...((!!recentConversations && recentConversations.length) ? [
         { id: 'recentConversations', title: 'Recent Conversations', type: 'recent', header: true },
-        ...mapItems(recentConversations, 'conversationPreview'),
+        ...mapItems(recentConversations.slice(0, 5), 'conversationPreview'),
         ...((recentConversations.length >= 5) ? [ { viewMore: true, title: 'Recent Conversations', type: 'recent' } ] : []),
       ] : []),
 
       ...((!!privateConversations && privateConversations.length) ? [
         { id: 'directMessages', title: 'Direct Messages', type: 'private', header: true },
-        ...mapItems(privateConversations, 'conversationPreview'),
+        ...mapItems(privateConversations.slice(0, 5), 'conversationPreview'),
         ...((privateConversations.length >= 5) ? [ { viewMore: true, title: 'Direct Messages', type: 'private' } ] : []),
       ] : []),
 
       ...((!!feedConversations && feedConversations.length) ? [
         { id: 'feed', title: 'Feed', type: 'feed', header: true },
-        ...mapItems(feedConversations, 'conversationPreview'),
+        ...mapItems(feedConversations.slice(0, 5), 'conversationPreview'),
         ...((feedConversations.length >= 5) ? [ { viewMore: true, title: 'Feed', type: 'feed' } ] : []),
       ] : []),
 
       ...((!!exploreConversations && exploreConversations.length) ? [
         { id: 'explore', title: 'Explore', type: 'explore', header: true },
         ...mapItems(exploreConversations, 'conversationPreview'),
-        { viewMore: true, title: 'Explore', type: 'explore' },
       ] : []),
 
       ...((!recentConversations && !privateConversations && !feedConversations && !exploreConversations) ? [
@@ -166,7 +166,26 @@ export default class HomeScreen extends Component {
 
     await this._loadConversations();
 
-    this.setState({ refreshing: false });
+    this.setState({
+      lazyLoading: false,
+      refreshing: false,
+    });
+  }
+
+  _endReached = async () => {
+    const { exploreConversations, lazyLoading } = this.state;
+
+    if (lazyLoading || lazyLoading === null || !exploreConversations) {
+      return;
+    }
+
+    this.setState({ lazyLoading: true });
+
+    const loadedConversations = await conversationsManager.loadExploreConversations({
+      staler: exploreConversations[exploreConversations.length - 1].updatedAt,
+    });
+
+    this.setState({ lazyLoading: (loadedConversations.length) ? false : null });
   }
 
   _renderHeader = ({ title, type }) => {
@@ -276,7 +295,7 @@ export default class HomeScreen extends Component {
   }
 
   render() {
-    const { refreshing } = this.state;
+    const { refreshing, lazyLoading } = this.state;
 
     return (
       <View style={styles.container}>
@@ -287,8 +306,11 @@ export default class HomeScreen extends Component {
           keyboardShouldPersistTaps={'handled'}
           keyExtractor={(item, index) => `${item.id}.${index}`}
           ItemSeparatorComponent={this._renderItemSeparator}
+          ListFooterComponent={(lazyLoading) ? this._renderLoading : null}
           refreshing={refreshing}
           onRefresh={this._refresh}
+          onEndReached={this._endReached}
+          onEndReachedThreshold={0.25}
           style={styles.container}
         />
 

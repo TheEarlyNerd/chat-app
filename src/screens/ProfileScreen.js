@@ -40,19 +40,17 @@ export default class ProfileScreen extends Component {
     this.setState(state);
   }
 
-  _loadConversations = async () => {
+  _loadConversations = async refresh => {
     const params = this.props.route.params || {};
     const { userId } = params;
+    const { conversations } = this.state;
 
-    await conversationsManager.loadUsersConversations(userId);
-  }
-
-  _refresh = async () => {
-    this.setState({ refreshing: true });
-
-    await this._loadConversations();
-
-    this.setState({ refreshing: false });
+    return conversationsManager.loadUsersConversations({
+      userId,
+      queryParams: (conversations && !refresh) ? {
+        before: conversations[conversations.length - 1].createdAt,
+      } : null,
+    });
   }
 
   _renderHeader = () => {
@@ -89,7 +87,7 @@ export default class ProfileScreen extends Component {
   }
 
   render() {
-    const { user, conversations, refreshing } = this.state;
+    const { user, conversations } = this.state;
 
     if (!user) {
       return this._renderLoading();
@@ -98,13 +96,12 @@ export default class ProfileScreen extends Component {
     return (
       <BabbleConversationPreviewsList
         conversations={conversations}
+        loadConversations={this._loadConversations}
         ListHeaderComponent={this._renderHeader}
         ListHeaderComponentStyle={styles.header}
         ListFooterComponent={(conversations === null) ? this._renderFooter : null}
         ListFooterComponentStyle={styles.footer}
         ListEmptyComponent={this._renderNoConversations}
-        refreshing={refreshing}
-        onRefresh={this._refresh}
         style={styles.container}
       />
     );

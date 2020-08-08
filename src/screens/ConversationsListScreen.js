@@ -8,7 +8,6 @@ const { conversationsManager } = maestro.managers;
 export default class CovnersationsListScreen extends Component {
   state = {
     conversations: null,
-    refreshing: false,
   }
 
   componentDidMount() {
@@ -38,36 +37,38 @@ export default class CovnersationsListScreen extends Component {
     }
   }
 
-  _loadConversations = async () => {
+  _loadConversations = async refresh => {
     const params = this.props.route.params || {};
     const { type } = params;
+    const { conversations } = this.state;
+    const queryParams = { limit: 15 };
+
+    if (conversations && !refresh && type === 'feed') {
+      queryParams.before = conversations[conversations.length - 1].createdAt;
+    }
+
+    if (conversations && !refresh && [ 'recent', 'private', 'explore' ].includes(type)) {
+      queryParams.staler = conversations[conversations.length - 1].updatedAt;
+    }
 
     if (type === 'recent') {
-      conversationsManager.loadRecentConversations();
+      return conversationsManager.loadRecentConversations(queryParams);
     }
 
     if (type === 'private') {
-      conversationsManager.loadPrivateConversations();
+      return conversationsManager.loadPrivateConversations(queryParams);
     }
 
     if (type === 'feed') {
-      conversationsManager.loadFeedConversations();
+      return conversationsManager.loadFeedConversations(queryParams);
     }
 
     if (type === 'explore') {
-      conversationsManager.loadExploreConversations();
+      return conversationsManager.loadExploreConversations(queryParams);
     }
   }
 
-  _refresh = async () => {
-    this.setState({ refreshing: true });
-
-    await this._loadConversations();
-
-    this.setState({ refreshing: false });
-  }
-
-  _renderFooter = () => {
+  _renderEmpty = () => {
     const { conversations } = this.state;
 
     if (conversations) {
@@ -80,15 +81,14 @@ export default class CovnersationsListScreen extends Component {
   }
 
   render() {
-    const { conversations, refreshing } = this.state;
+    const { conversations } = this.state;
 
     return (
       <BabbleConversationPreviewsList
         conversations={conversations}
-        ListFooterComponent={this._renderFooter}
+        loadConversations={this._loadConversations}
+        ListEmptyComponent={this._renderEmpty}
         contentContainerStyle={styles.contentContainer}
-        refreshing={refreshing}
-        onRefresh={this._refresh}
         style={styles.container}
       />
     );

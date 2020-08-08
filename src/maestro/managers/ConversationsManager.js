@@ -81,77 +81,61 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
-  async loadExploreConversations() {
-    const { apiHelper } = this.maestro.helpers;
-    const response = await apiHelper.get({ path: '/conversations' });
-
-    if (response.code !== 200) {
-      throw new Error(response.body);
-    }
-
-    this.updateStore({ exploreConversations: response.body });
-
-    return response.body;
+  async loadExploreConversations(queryParams) {
+    return this._loadConversations({
+      conversationsKey: 'exploreConversations',
+      queryParams,
+    });
   }
 
-  async loadFeedConversations() {
+  async loadFeedConversations(queryParams) {
+    return this._loadConversations({
+      conversationsKey: 'feedConversations',
+      queryParams: {
+        feed: true,
+        ...queryParams,
+      },
+    });
+  }
+
+  async loadPrivateConversations(queryParams) {
+    return this._loadConversations({
+      conversationsKey: 'privateConversations',
+      queryParams: {
+        accessLevels: [ 'private' ],
+        ...queryParams,
+      },
+    });
+  }
+
+  async loadRecentConversations(queryParams) {
+    return await this._loadConversations({
+      conversationsKey: 'recentConversations',
+      queryParams: {
+        accessLevels: [ 'public', 'protected', 'private' ],
+        ...queryParams,
+      },
+    });
+  }
+
+  async loadUsersConversations({ userId, queryParams }) {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.get({
-      path: '/conversations',
-      queryParams: { feed: true },
+      path: `/users/${userId}/conversations`,
+      queryParams,
     });
 
-    if (response.code !== 200) {
-      throw new Error(response.body);
-    }
-
-    this.updateStore({ feedConversations: response.body });
-
-    return response.body;
-  }
-
-  async loadPrivateConversations() {
-    const { apiHelper } = this.maestro.helpers;
-    const response = await apiHelper.get({
-      path: '/conversations',
-      queryParams: { accessLevels: [ 'private' ] },
-    });
-
-    if (response.code !== 200) {
-      throw new Error(response.body);
-    }
-
-    this.updateStore({ privateConversations: response.body });
-
-    return response.body;
-  }
-
-  async loadRecentConversations() {
-    const { apiHelper } = this.maestro.helpers;
-    const response = await apiHelper.get({
-      path: '/conversations',
-      queryParams: { accessLevels: [ 'public', 'protected', 'private' ] },
-    });
-
-    if (response.code !== 200) {
-      throw new Error(response.body);
-    }
-
-    this.updateStore({ recentConversations: response.body });
-
-    return response.body;
-  }
-
-  async loadUsersConversations(userId) {
     const usersConversations = { ...this.store.usersConversations };
-    const { apiHelper } = this.maestro.helpers;
-    const response = await apiHelper.get({ path: `/users/${userId}/conversations` });
 
     if (response.code !== 200) {
       throw new Error(response.body);
     }
 
-    usersConversations[userId] = response.body;
+    usersConversations[userId] = this._buildUpdatedConversationsArray({
+      existingConversations: usersConversations[userId],
+      newConversations: response.body,
+      queryParams,
+    });
 
     this.updateStore({ usersConversations });
 
@@ -475,6 +459,26 @@ export default class ConversationsManager extends Manager {
   /*
    * Helpers
    */
+
+  async _loadConversations({ conversationsKey, queryParams }) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({ path: '/conversations', queryParams });
+    const conversations = this.store[conversationsKey];
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    this.updateStore({
+      [conversationsKey]: this._buildUpdatedConversationsArray({
+        existingConversations: conversations,
+        newConversations: response.body,
+        queryParams,
+      }),
+    });
+
+    return response.body;
+  }
 
   _addUpdateActiveConversation(conversation) {
     this._addConversation({ conversation, type: 'active' });
@@ -849,6 +853,18 @@ export default class ConversationsManager extends Manager {
     });
   }
 
+  _buildUpdatedConversationsArray = ({ existingConversations, newConversations, queryParams }) => {
+    if (!queryParams || (!queryParams.before && !queryParams.after && !queryParams.staler && !queryParams.newer)) {
+      return newConversations;
+    } else {
+      if (queryParams.before || queryParams.staler) {
+        return [ ...existingConversations, ...newConversations ];
+      } else if (queryParams.after || queryParams.newer) {
+        return [ ...newConversations, ...existingConversations ];
+      }
+    }
+  }
+
   _getConversationsByType = type => {
     const { store } = this;
 
@@ -896,7 +912,7 @@ export default class ConversationsManager extends Manager {
     const privateConversations = (store.privateConversations) ? [ ...store.privateConversations ] : null;
     const recentConversations = (store.recentConversations) ? [ ...store.recentConversations ] : null;
     const usersConversations = (store.usersConversations) ? { ...store.usersConversations } : null;
-// could make this more DRY.
+    // could make this more DRY.
     if (Array.isArray(activeConversations)) {
       modifierFunction({
         conversations: activeConversations,
