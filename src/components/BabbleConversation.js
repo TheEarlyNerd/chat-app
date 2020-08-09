@@ -75,9 +75,10 @@ export default class BabbleConversation extends Component {
 
   _renderMessage = ({ item, index }) => {
     const { messages } = this.props;
+    const itemKey = this._getItemKey(item);
 
-    if (!this.swipeOpenAnimatedValues[item.nonce]) {
-      this.swipeOpenAnimatedValues[item.nonce] = new Animated.Value(0);
+    if (!this.swipeOpenAnimatedValues[itemKey]) {
+      this.swipeOpenAnimatedValues[itemKey] = new Animated.Value(0);
     }
 
     return (
@@ -89,7 +90,7 @@ export default class BabbleConversation extends Component {
           (item.createdAt - messages[index + 1].createdAt) / 1000 > 60 * 15
         )}
         style={{
-          minHeight: this.swipeOpenAnimatedValues[item.nonce].interpolate({
+          minHeight: this.swipeOpenAnimatedValues[itemKey].interpolate({
             inputRange: [ 0, 1 ],
             outputRange: [ 0, 55 ],
             extrapolate: 'clamp',
@@ -100,10 +101,12 @@ export default class BabbleConversation extends Component {
   }
 
   _renderMessageOptions = ({ item, index }, rowMap) => {
+    const itemKey = this._getItemKey(item);
+
     return (
       <BabbleConversationMessageOptions
-        onCloseRow={() => this._closeRow(rowMap[item.nonce])}
-        style={{ opacity: this.swipeOpenAnimatedValues[item.nonce] }}
+        onCloseRow={() => this._closeRow(rowMap[itemKey])}
+        style={{ opacity: this.swipeOpenAnimatedValues[itemKey] }}
         {...item}
       />
     );
@@ -113,6 +116,10 @@ export default class BabbleConversation extends Component {
     return (
       <ActivityIndicator size={'large'} />
     );
+  }
+
+  _getItemKey = item => {
+    return `${item.id}` || `${item.nonce}`;
   }
 
   render() {
@@ -128,7 +135,7 @@ export default class BabbleConversation extends Component {
           inverted
           renderItem={this._renderMessage}
           renderHiddenItem={this._renderMessageOptions}
-          keyExtractor={item => `${item.id}` || `${item.nonce}`}
+          keyExtractor={this._getItemKey}
           onScrollBeginDrag={this._scrollBeginDrag}
           onContentSizeChange={this._contentSizeChange}
           onSwipeValueChange={this._swipeValueChange}
