@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Animated, StyleSheet } from 'react-native';
+import { View, Text, Animated, ActivityIndicator, StyleSheet } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { BabbleConversationMessage, BabbleConversationMessageOptions } from './';
 
@@ -9,6 +9,7 @@ export default class BabbleConversation extends Component {
 
   state = {
     autoscroll: true,
+    lazyLoading: false,
   }
 
   _getTypingText = () => {
@@ -52,13 +53,24 @@ export default class BabbleConversation extends Component {
   }
 
   _onScroll = ({ nativeEvent: { contentOffset } }) => {
-    if (contentOffset.y <= 0 && !this.state.autoscroll) {
+    if (!this.state.autoscroll && contentOffset.y <= 0) {
       this.setState({ autoscroll: true });
     }
   }
 
-  _endReached = () => {
-    // load more.
+  _endReached = async () => {
+    const { messages, loadMessages } = this.props;
+    const { lazyLoading } = this.state;
+
+    if (lazyLoading || lazyLoading === null || !messages) {
+      return;
+    }
+
+    this.setState({ lazyLoading: true });
+
+    const loadedMessages = await loadMessages();
+
+    this.setState({ lazyLoading: (loadedMessages.length) ? false : null });
   }
 
   _renderMessage = ({ item, index }) => {
@@ -97,8 +109,15 @@ export default class BabbleConversation extends Component {
     );
   }
 
+  _renderLoading = () => {
+    return (
+      <ActivityIndicator size={'large'} />
+    );
+  }
+
   render() {
     const { messages, style } = this.props;
+    const { lazyLoading } = this.state;
     const typingText = this._getTypingText();
 
  // maintainVisibleContentPosition={{ minIndexForVisible: 0, autoscrollToTopThreshold: 0 }} /* TODO: This will not work on Android, new messages will cause chat to jump. */
@@ -109,20 +128,21 @@ export default class BabbleConversation extends Component {
           inverted
           renderItem={this._renderMessage}
           renderHiddenItem={this._renderMessageOptions}
-          keyExtractor={item => `${item.nonce}`}
+          keyExtractor={item => `${item.id}` || `${item.nonce}`}
           onScrollBeginDrag={this._scrollBeginDrag}
           onContentSizeChange={this._contentSizeChange}
           onSwipeValueChange={this._swipeValueChange}
           onScroll={this._onScroll}
           onEndReached={this._endReached}
-          onEndReachedThreshold={0.2}
-          scrollEventThrottle={0}
+          onEndReachedThreshold={0.5}
+          scrollEventThrottle={150}
           closeOnRowBeginSwipe
           closeOnScroll={false}
           rightOpenValue={-145}
           recalculateHiddenLayout
           contentContainerStyle={styles.contentContainer}
           style={[ styles.container, style ]}
+          ListFooterComponent={(lazyLoading) ? this._renderLoading : null}
           listViewRef={component => this.swipeListView = component}
         />
 

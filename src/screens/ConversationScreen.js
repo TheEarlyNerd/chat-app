@@ -21,9 +21,8 @@ export default class ConversationScreen extends Component {
   componentDidMount() {
     maestro.link(this);
 
-    const conversationId = this.props.route?.params?.conversationId;
-    const toUsers = this.props.route?.params?.toUsers;
-    const title = this.props.route?.params?.title;
+    const params = this.props.route.params || {};
+    const { conversationId, toUsers, title } = params;
 
     if (!title) {
       this.props.navigation.setOptions({
@@ -70,6 +69,18 @@ export default class ConversationScreen extends Component {
     const conversation = activeConversations.find(conversation => conversation.id === conversationId);
 
     this._setConversation(conversation);
+  }
+
+  _loadMessages = () => {
+    const params = this.props.route.params || {};
+    const { conversationId } = params;
+    const { conversation } = this.state;
+    const { conversationMessages } = conversation;
+
+    return conversationsManager.loadActiveConversationMessages({
+      conversationId,
+      queryParams: { before: conversationMessages[conversationMessages.length - 1].createdAt },
+    });
   }
 
   _showMoreActionSheet = () => {
@@ -207,6 +218,7 @@ export default class ConversationScreen extends Component {
         )}
 
         <BabbleConversation
+          loadMessages={this._loadMessages}
           messages={conversationMessages}
           typingUsers={conversationTypingUsers}
         />

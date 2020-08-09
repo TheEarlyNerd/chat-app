@@ -81,6 +81,31 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
+  async loadActiveConversationMessages({ conversationId, queryParams }) {
+    const { apiHelper } = this.maestro.helpers;
+    const response = await apiHelper.get({
+      path: `/conversations/${conversationId}/messages`,
+      queryParams,
+    });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    const activeConversations = this._getConversationsByType('active');
+    const activeConversation = activeConversations.find(conversation => conversation.id === conversationId);
+
+    activeConversation.conversationMessages = this._buildUpdatedConversationMessagesArray({
+      existingMessages: activeConversation.conversationMessages,
+      newMessages: response.body,
+      queryParams,
+    });
+
+    this.updateStore({ activeConversations });
+
+    return response.body;
+  }
+
   async loadExploreConversations(queryParams) {
     return this._loadConversations({
       conversationsKey: 'exploreConversations',
@@ -861,6 +886,18 @@ export default class ConversationsManager extends Manager {
         return [ ...existingConversations, ...newConversations ];
       } else if (queryParams.after || queryParams.newer) {
         return [ ...newConversations, ...existingConversations ];
+      }
+    }
+  }
+
+  _buildUpdatedConversationMessagesArray = ({ existingMessages, newMessages, queryParams }) => {
+    if (!queryParams || (!queryParams.before && !queryParams.after)) {
+      return newMessages;
+    } else {
+      if (queryParams.before) {
+        return [ ...existingMessages, ...newMessages ];
+      } else if (queryParams.after) {
+        return [ ...newMessages, ...existingMessages ];
       }
     }
   }
