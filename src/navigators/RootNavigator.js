@@ -3,6 +3,7 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import ActivityNavigator from './ActivityNavigator';
 import MainNavigator from './MainNavigator';
 import ProfileNavigator from './ProfileNavigator';
+import WebBrowserNavigator from './WebBrowserNavigator';
 
 export default props => {
   const RootStack = createStackNavigator();
@@ -29,6 +30,11 @@ export default props => {
       <RootStack.Screen
         name={'ProfileNavigator'}
         component={ProfileNavigator}
+      />
+
+      <RootStack.Screen
+        name={'WebBrowserNavigator'}
+        component={WebBrowserNavigator}
       />
     </RootStack.Navigator>
   );

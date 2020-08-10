@@ -3,6 +3,9 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Video from 'react-native-video';
 import { BabbleAutoscaleImage } from './';
+import maestro from '../maestro';
+
+const { navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationMessageEmbed extends Component {
   state = {
@@ -14,6 +17,15 @@ export default class BabbleConversationMessageEmbed extends Component {
     this.setState({ videoError: true });
   }
 
+  _openLink = () => {
+    const { embed: { url } } = this.props;
+
+    navigationHelper.push('WebBrowserNavigator', {
+      screen: 'WebBrowser',
+      params: { url },
+    });
+  }
+
   render() {
     const { embed: { title, description, contentType, url, audioUrl, imageUrl, videoUrl }, maxWidth, maxHeight, style } = this.props;
     const { videoError } = this.state;
@@ -21,6 +33,7 @@ export default class BabbleConversationMessageEmbed extends Component {
 
     return (
       <TouchableOpacity
+        onPress={(isLink) ? this._openLink : null}
         style={[
           (isLink) ? styles.containerLink : null,
           style,

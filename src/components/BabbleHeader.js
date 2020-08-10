@@ -36,7 +36,7 @@ const BabbleHeader = ({ scene }) => {
 
       <View style={styles.headerCenter}>
         {!!title && typeof title === 'string' && (
-          <Text style={[ styles.text, styles.titleText ]}>{title}</Text>
+          <Text numberOfLines={1} style={[ styles.text, styles.titleText ]}>{title}</Text>
         )}
 
         {React.isValidElement(title) && title}
@@ -129,5 +129,6 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: 'NunitoSans-Black',
     fontSize: 22,
+    paddingHorizontal: 15,
   },
 });
