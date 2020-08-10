@@ -56,15 +56,6 @@ export default class BabbleOverlayDismissibleView extends Component {
     });
   }
 
-  _onScroll = ({ nativeEvent }) => {
-    const { onDragDismiss } = this.props;
-    const { y } = nativeEvent.contentOffset;
-
-    if (y < -30) {
-      this.setState({ scrollEnabled: false }, onDragDismiss);
-    }
-  }
-
   render() {
     const { onTapDismiss, style } = this.props;
     const { opacityAnimated, overlayTranslateYAnimated, panResponder } = this.state;

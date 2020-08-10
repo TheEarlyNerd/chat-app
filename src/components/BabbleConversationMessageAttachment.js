@@ -5,16 +5,19 @@ import { BabbleAutoscaleImage } from './';
 
 export default class BabbleConversationMessageAttachment extends Component {
   render() {
-    const { attachment: { url, mimetype }, maxHeight, maxWidth, style } = this.props;
+    const { attachment: { url, mimetype }, onPress, maxHeight, maxWidth, style } = this.props;
     const isImage = mimetype.includes('image/');
     const isVideo = mimetype.includes('video/');
 
     return (
-      <TouchableOpacity style={style}>
+      <TouchableOpacity onPress={onPress} style={style}>
         {isImage && (
           <BabbleAutoscaleImage
             maxHeight={maxHeight}
             maxWidth={maxWidth}
+            loadingWidth={40}
+            loadingHeight={40}
+            loadingSize={'small'}
             source={{ uri: url }}
             style={styles.image}
           />

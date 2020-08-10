@@ -6,7 +6,7 @@ import { BabbleConversationMessageAttachment, BabbleConversationMessageEmbed, Ba
 import maestro from '../maestro';
 
 const { conversationsManager } = maestro.managers;
-const { navigationHelper } = maestro.helpers;
+const { interfaceHelper, navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationMessage extends Component {
   _getText = () => {
@@ -26,7 +26,10 @@ export default class BabbleConversationMessage extends Component {
   }
 
   _linkPress = url => {
-    console.log(url);
+    navigationHelper.push('WebBrowserNavigator', {
+      screen: 'WebBrowser',
+      params: { url },
+    });
   }
 
   _phonePress = phone => {
@@ -59,6 +62,19 @@ export default class BabbleConversationMessage extends Component {
         conversationMessageReactionId: authReaction.id,
       });
     }
+  }
+
+  _openAttachment = selectedIndex => {
+    const { message: { attachments } } = this.props;
+
+    interfaceHelper.showOverlay({
+      name: 'MediaViewer',
+      data: { attachments, selectedIndex },
+    });
+  }
+
+  _openEmbed = embed => {
+    this._linkPress(embed.url);
   }
 
   render() {
@@ -127,6 +143,7 @@ export default class BabbleConversationMessage extends Component {
               {attachments.map((attachment, index) => (
                 <BabbleConversationMessageAttachment
                   attachment={attachment}
+                  onPress={() => this._openAttachment(index)}
                   maxWidth={335}
                   maxHeight={(attachments.length === 1) ? 200 : 75}
                   style={[
@@ -144,6 +161,7 @@ export default class BabbleConversationMessage extends Component {
               {embeds.map((embed, index) => (
                 <BabbleConversationMessageEmbed
                   embed={embed}
+                  onPress={() => this._openEmbed(embed)}
                   maxWidth={335}
                   maxHeight={(embeds.length === 1) ? 200 : 75}
                   style={[

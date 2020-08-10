@@ -6,7 +6,6 @@ export default class BabbleAutoscaleImage extends Component {
   state = {
     adjustedWidth: 0,
     adjustedHeight: 0,
-    loading: true,
   }
 
   componentDidMount() {
@@ -49,30 +48,30 @@ export default class BabbleAutoscaleImage extends Component {
   }
 
   render() {
-    const { style, containerStyle, ...props } = this.props;
-    const { adjustedWidth, adjustedHeight, loading } = this.state;
+    const { highPriority, style, loadingSize, loadingColor, loadingWidth, loadingHeight, containerStyle, ...props } = this.props;
+    const { adjustedWidth, adjustedHeight } = this.state;
 
     return (
       <View
         style={[
           {
-            width: adjustedWidth,
-            height: adjustedHeight,
+            width: adjustedWidth || loadingWidth,
+            height: adjustedHeight || loadingHeight,
           },
           containerStyle,
         ]}
       >
-        {((!!adjustedWidth && !!adjustedHeight) || loading) && (
+        {(!adjustedWidth || !adjustedHeight) && (
           <ActivityIndicator
-            size={'large'}
-            color={'#404040'}
+            size={loadingSize || 'large'}
+            color={loadingColor || '#404040'}
             style={styles.activityIndicator}
           />
         )}
 
         <FastImage
+          priority={(highPriority) ? FastImage.priority.high : FastImage.priority.normal}
           style={[ styles.image, style ]}
-          onLoadEnd={() => this.setState({ loading: false })}
           {...props}
         />
       </View>

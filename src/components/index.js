@@ -24,6 +24,7 @@ import BabbleOverlayCountrySelector from './BabbleOverlayCountrySelector';
 import BabbleOverlayDismissibleView from './BabbleOverlayDismissibleView';
 import BabbleOverlayError from './BabbleOverlayError';
 import BabbleOverlayGifSelector from './BabbleOverlayGifSelector';
+import BabbleOverlayMediaViewer from './BabbleOverlayMediaViewer';
 import BabbleOverlayReactionInput from './BabbleOverlayReactionInput';
 import BabbleOverlaysContainer from './BabbleOverlaysContainer';
 import BabblePhoneField from './BabblePhoneField';
@@ -66,6 +67,7 @@ export {
   BabbleOverlayDismissibleView,
   BabbleOverlayError,
   BabbleOverlayGifSelector,
+  BabbleOverlayMediaViewer,
   BabbleOverlayReactionInput,
   BabbleOverlaysContainer,
   BabblePhoneField,

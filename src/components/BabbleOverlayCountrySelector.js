@@ -82,8 +82,8 @@ export default class BabbleOverlayCountrySelector extends Component {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.15)',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
     justifyContent: 'flex-end',
     zIndex: 99,
   },
