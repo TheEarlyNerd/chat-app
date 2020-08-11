@@ -61,7 +61,7 @@ export default class BabbleMessageComposerToolbar extends Component {
         {
           url: gif.images.original.url,
           imageUrl: gif.images.original.url,
-          contentType: 'image/gif',
+          mimetype: 'image/gif',
         },
       ],
     });

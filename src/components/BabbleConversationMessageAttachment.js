@@ -47,6 +47,6 @@ const styles = StyleSheet.create({
   video: {
     borderRadius: 4,
     height: 200,
-    width: '100%',
+    width: 300,
   }
 });

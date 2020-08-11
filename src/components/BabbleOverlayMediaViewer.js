@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, FlatList, TouchableOpacity, PanResponder, Animated, Dimensions, StyleSheet } from 'react-native';
+import Video from 'react-native-video';
 import { BabbleAutoscaleImage } from './';
 import { DownloadIcon, ShareIcon, XIcon } from './icons';
 import maestro from '../maestro';
@@ -96,19 +97,32 @@ export default class BabbleOverlayMediaViewer extends Component {
   }
 
   _renderItem = ({ item, index }) => {
-    return (
-      <BabbleAutoscaleImage
-        source={{ uri: item.url }}
-        maxWidth={windowWidth}
-        resizeMode={'contain'}
-        loadingColor={'#FFFFFF'}
-        containerStyle={styles.image}
-      />
-    );
+    if (item.mimetype.includes('image/')) {
+      return (
+        <BabbleAutoscaleImage
+          source={{ uri: item.url }}
+          maxWidth={windowWidth}
+          resizeMode={'contain'}
+          loadingColor={'#FFFFFF'}
+          containerStyle={styles.image}
+        />
+      );
+    }
+
+    if (item.mimetype.includes('video/')) {
+      return (
+        <Video
+          paused
+          source={{ uri: item.url }}
+          controls
+          style={styles.video}
+        />
+      );
+    }
   }
 
   render() {
-    const { attachments, selectedIndex } = this.props.data;
+    const { media, selectedIndex } = this.props.data;
     const { currentIndex, pagingEnabled, overlayTranslateYAnimated, panResponder } = this.state;
 
     return (
@@ -129,7 +143,7 @@ export default class BabbleOverlayMediaViewer extends Component {
           ]}
         >
           <FlatList
-            data={attachments}
+            data={media}
             contentContainerStyle={styles.contentContainer}
             renderItem={this._renderItem}
             getItemLayout={(data, index) => ({
@@ -152,9 +166,9 @@ export default class BabbleOverlayMediaViewer extends Component {
           />
         </Animated.View>
 
-        {attachments.length > 1 && (
+        {media.length > 1 && (
           <View style={styles.paginationContainer}>
-            {attachments.map((attachment, index) => (
+            {media.map((mediaItem, index) => (
               <View
                 style={[
                   styles.paginationDot,
@@ -244,5 +258,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 15,
     zIndex: 102,
+  },
+  video: {
+    height: 200,
+    width: windowWidth,
   },
 });

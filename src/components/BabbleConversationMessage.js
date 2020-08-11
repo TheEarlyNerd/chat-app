@@ -25,7 +25,7 @@ export default class BabbleConversationMessage extends Component {
     });
   }
 
-  _linkPress = url => {
+  _openUrl = url => {
     navigationHelper.push('WebBrowserNavigator', {
       screen: 'WebBrowser',
       params: { url },
@@ -67,14 +67,27 @@ export default class BabbleConversationMessage extends Component {
   _openAttachment = selectedIndex => {
     const { message: { attachments } } = this.props;
 
-    interfaceHelper.showOverlay({
-      name: 'MediaViewer',
-      data: { attachments, selectedIndex },
-    });
+    this._openMediaViewer({ media: attachments, selectedIndex });
   }
 
   _openEmbed = embed => {
-    this._linkPress(embed.url);
+    const { url, mimetype } = embed;
+
+    if (mimetype.includes('image/') || mimetype.includes('video/')) {
+      this._openMediaViewer({
+        media: [ { url, mimetype } ],
+        selectedIndex: 0,
+      });
+    } else {
+      this._openUrl(url);
+    }
+  }
+
+  _openMediaViewer = ({ media, selectedIndex }) => {
+    interfaceHelper.showOverlay({
+      name: 'MediaViewer',
+      data: { media, selectedIndex },
+    });
   }
 
   render() {
@@ -82,7 +95,7 @@ export default class BabbleConversationMessage extends Component {
     const text = this._getText();
     const parsedTextOptions = [
       {
-        onPress: this._linkPress,
+        onPress: this._openUrl,
         pattern: /(https?:\/\/|www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&/=]*[-a-zA-Z0-9@:%_+~#?&/=])*/i,
         style: styles.messageLinkText,
       },

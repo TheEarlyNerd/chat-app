@@ -32,7 +32,7 @@ export default class ApiHelper extends Helper {
     const formData = new FormData();
 
     options.files.forEach(file => {
-      formData.append(file.name, {
+      formData.append('file', {
         uri: file.uri,
         name: file.name,
         type: mime.lookup(file.uri),

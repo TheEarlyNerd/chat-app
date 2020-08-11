@@ -50,7 +50,7 @@ export default class AttachmentsHelper extends Helper {
       files: [
         {
           uri,
-          name: 'file',
+          name: uri.substring(uri.lastIndexOf('/') + 1),
         },
       ],
     });
