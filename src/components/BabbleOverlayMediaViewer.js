@@ -1,19 +1,36 @@
 import React, { Component } from 'react';
-import { View, FlatList, TouchableOpacity, Animated, Dimensions, StyleSheet } from 'react-native';
+import { View, FlatList, TouchableOpacity, PanResponder, Animated, Dimensions, StyleSheet } from 'react-native';
 import { BabbleAutoscaleImage } from './';
 import { DownloadIcon, ShareIcon, XIcon } from './icons';
 import maestro from '../maestro';
 
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export default class BabbleOverlayMediaViewer extends Component {
   state ={
     currentIndex: 0,
     pagingEnabled: true,
+    zoomScale: 1,
     opacityAnimated: new Animated.Value(0),
+    overlayTranslateYAnimated: new Animated.Value(0),
+    panResponder: PanResponder.create({
+      onMoveShouldSetPanResponder: (event, gestureState) => {
+        return Math.abs(gestureState.dy) > 20 && this.state.zoomScale === 1;
+      },
+      onPanResponderMove: (event, gestureState) => {
+        this.state.overlayTranslateYAnimated.setValue(gestureState.dy);
+      },
+      onPanResponderRelease: (event, gestureState) => {
+        if (Math.abs(gestureState.dy) > 50) {
+          this._animateTranslateY((gestureState.dy < 0) ? -windowHeight : windowHeight);
+          this._hide();
+        } else {
+          this._animateTranslateY(0);
+        }
+      },
+    }),
   }
-
-  slideDismissing = false;
 
   componentDidMount() {
     this._show();
@@ -41,6 +58,16 @@ export default class BabbleOverlayMediaViewer extends Component {
     });
   }
 
+  _animateTranslateY = toValue => {
+    return new Promise(resolve => {
+      Animated.timing(this.state.overlayTranslateYAnimated, {
+        toValue,
+        duration: 150,
+        useNativeDriver: true,
+      }).start(resolve);
+    });
+  }
+
   _download = () => {
 
   }
@@ -50,12 +77,10 @@ export default class BabbleOverlayMediaViewer extends Component {
   }
 
   _onScroll = ({ nativeEvent: { contentOffset, zoomScale } }) => {
-    if (!this.slideDismissing && zoomScale === 1 && Math.abs(contentOffset.y) > 80) {
-      this.slideDismissing = true;
-      this._hide();
-    }
-
-    this.setState({ pagingEnabled: zoomScale === 1 });
+    this.setState({
+      pagingEnabled: zoomScale === 1,
+      zoomScale,
+    });
   }
 
   _onViewableItemsChanged = ({ viewableItems, changed }) => {
@@ -71,15 +96,12 @@ export default class BabbleOverlayMediaViewer extends Component {
   }
 
   _renderItem = ({ item, index }) => {
-    const { selectedIndex } = this.props.data;
-
     return (
       <BabbleAutoscaleImage
         source={{ uri: item.url }}
         maxWidth={windowWidth}
         resizeMode={'contain'}
         loadingColor={'#FFFFFF'}
-        highPriority={selectedIndex === index}
         containerStyle={styles.image}
       />
     );
@@ -87,7 +109,7 @@ export default class BabbleOverlayMediaViewer extends Component {
 
   render() {
     const { attachments, selectedIndex } = this.props.data;
-    const { currentIndex, pagingEnabled } = this.state;
+    const { currentIndex, pagingEnabled, overlayTranslateYAnimated, panResponder } = this.state;
 
     return (
       <Animated.View style={[ styles.container, { opacity: this.state.opacityAnimated } ]}>
@@ -99,26 +121,36 @@ export default class BabbleOverlayMediaViewer extends Component {
           />
         </TouchableOpacity>
 
-        <FlatList
-          data={attachments}
-          contentContainerStyle={styles.contentContainer}
-          renderItem={this._renderItem}
-          getItemLayout={(data, index) => ({
-            length: windowWidth,
-            offset: windowWidth * index,
-            index,
-          })}
-          keyExtractor={(item, index) => `${item.id}.${index}`}
-          onScroll={this._onScroll}
-          onViewableItemsChanged={this._onViewableItemsChanged}
-          scrollEventThrottle={32}
-          initialScrollIndex={selectedIndex}
-          maximumZoomScale={3}
-          minimumZoomScale={1}
-          horizontal
-          pagingEnabled={pagingEnabled}
-          style={styles.scrollView}
-        />
+        <Animated.View
+          {...panResponder.panHandlers}
+          style={[
+            styles.flatlistContainer,
+            { transform: [ { translateY: overlayTranslateYAnimated } ] },
+          ]}
+        >
+          <FlatList
+            data={attachments}
+            contentContainerStyle={styles.contentContainer}
+            renderItem={this._renderItem}
+            getItemLayout={(data, index) => ({
+              length: windowWidth,
+              offset: windowWidth * index,
+              index,
+            })}
+            keyExtractor={(item, index) => `${item.id}.${index}`}
+            onScroll={this._onScroll}
+            onViewableItemsChanged={this._onViewableItemsChanged}
+            scrollEventThrottle={32}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            initialScrollIndex={selectedIndex}
+            maximumZoomScale={3}
+            minimumZoomScale={1}
+            bouncesZoom={false}
+            horizontal
+            pagingEnabled={pagingEnabled}
+          />
+        </Animated.View>
 
         {attachments.length > 1 && (
           <View style={styles.paginationContainer}>
@@ -181,6 +213,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 102,
   },
+  flatlistContainer: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 100,
+  },
   image: {
     width: windowWidth,
   },
@@ -202,10 +238,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     height: 10,
     width: 10,
-  },
-  scrollView: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 100,
   },
   shareButton: {
     bottom: 30,

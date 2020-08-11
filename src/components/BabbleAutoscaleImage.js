@@ -48,7 +48,7 @@ export default class BabbleAutoscaleImage extends Component {
   }
 
   render() {
-    const { highPriority, style, loadingSize, loadingColor, loadingWidth, loadingHeight, containerStyle, ...props } = this.props;
+    const { style, loadingSize, loadingColor, loadingWidth, loadingHeight, containerStyle, ...props } = this.props;
     const { adjustedWidth, adjustedHeight } = this.state;
 
     return (
@@ -70,7 +70,6 @@ export default class BabbleAutoscaleImage extends Component {
         )}
 
         <FastImage
-          priority={(highPriority) ? FastImage.priority.high : FastImage.priority.normal}
           style={[ styles.image, style ]}
           {...props}
         />
