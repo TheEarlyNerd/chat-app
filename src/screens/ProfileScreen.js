@@ -31,6 +31,10 @@ export default class ProfileScreen extends Component {
   }
 
   receiveStoreUpdate({ conversations, user }) {
+    if (!this.state.user) {
+      return;
+    }
+
     const state = { conversations: conversations.usersConversations[this.state.user.id] };
 
     if (this.state.user.id === user.user.id) {
