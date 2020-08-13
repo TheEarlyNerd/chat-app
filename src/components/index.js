@@ -1,5 +1,7 @@
 import BabbleActivity from './BabbleActivity';
 import BabbleAutoscaleImage from './BabbleAutoscaleImage';
+import BabbleAutoscaleVideo from './BabbleAutoscaleVideo';
+import BabbleAutoscaleView from './BabbleAutoscaleView';
 import BabbleButton from './BabbleButton';
 import BabbleCodeField from './BabbleCodeField';
 import BabbleConversation from './BabbleConversation';
@@ -43,6 +45,8 @@ import BabbleViewMoreButton from './BabbleViewMoreButton';
 export {
   BabbleActivity,
   BabbleAutoscaleImage,
+  BabbleAutoscaleVideo,
+  BabbleAutoscaleView,
   BabbleButton,
   BabbleCodeField,
   BabbleConversation,

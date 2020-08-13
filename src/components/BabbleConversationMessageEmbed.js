@@ -31,7 +31,9 @@ export default class BabbleConversationMessageEmbed extends Component {
           <BabbleAutoscaleImage
             maxHeight={maxHeight}
             maxWidth={maxWidth}
-            source={{ uri: imageUrl }}
+            imageProps={{
+              source: { uri: imageUrl },
+            }}
             style={styles.image}
           />
         )}

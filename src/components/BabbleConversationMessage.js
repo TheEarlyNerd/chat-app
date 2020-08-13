@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Animated, StyleSheet, Platform, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, StyleSheet, Platform, Dimensions, Linking } from 'react-native';
 import moment from 'moment';
 import ParsedText from 'react-native-parsed-text';
 import { BabbleConversationMessageAttachment, BabbleConversationMessageEmbed, BabbleUserAvatar, BabbleReaction } from './';
 import maestro from '../maestro';
+
+const windowWidth = Dimensions.get('window').width;
 
 const { conversationsManager } = maestro.managers;
 const { interfaceHelper, navigationHelper } = maestro.helpers;
@@ -93,6 +95,7 @@ export default class BabbleConversationMessage extends Component {
   render() {
     const { message: { conversationUser, attachments, embeds, authUserConversationMessageReactions, conversationMessageReactions, createdAt }, heading, style } = this.props;
     const text = this._getText();
+    const contentWidth = windowWidth - styles.content.marginLeft - styles.container.paddingHorizontal * 2;
     const parsedTextOptions = [
       {
         onPress: this._openUrl,
@@ -156,9 +159,10 @@ export default class BabbleConversationMessage extends Component {
               {attachments.map((attachment, index) => (
                 <BabbleConversationMessageAttachment
                   attachment={attachment}
+                  playVideoInline={attachments.length === 1}
                   onPress={() => this._openAttachment(index)}
-                  maxWidth={335}
-                  maxHeight={(attachments.length === 1) ? 200 : 75}
+                  maxWidth={contentWidth}
+                  maxHeight={attachments.length === 1 ? 400 : 90}
                   style={[
                     styles.attachment,
                     (attachments.length > 1) ? styles.inlineAttachment : null,
@@ -175,7 +179,7 @@ export default class BabbleConversationMessage extends Component {
                 <BabbleConversationMessageEmbed
                   embed={embed}
                   onPress={() => this._openEmbed(embed)}
-                  maxWidth={335}
+                  maxWidth={contentWidth}
                   maxHeight={(embeds.length === 1) ? 200 : 75}
                   style={[
                     styles.embed,

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, FlatList, TouchableOpacity, PanResponder, Animated, Dimensions, StyleSheet } from 'react-native';
-import Video from 'react-native-video';
-import { BabbleAutoscaleImage } from './';
+import { BabbleAutoscaleImage, BabbleAutoscaleVideo } from './';
 import { DownloadIcon, ShareIcon, XIcon } from './icons';
 import maestro from '../maestro';
 
@@ -97,32 +96,50 @@ export default class BabbleOverlayMediaViewer extends Component {
   }
 
   _renderItem = ({ item, index }) => {
+    const { selectedIndex } = this.props.data;
+
     if (item.mimetype.includes('image/')) {
       return (
         <BabbleAutoscaleImage
-          source={{ uri: item.url }}
+          sourceWidth={item.width}
+          sourceHeight={item.height}
           maxWidth={windowWidth}
-          resizeMode={'contain'}
           loadingColor={'#FFFFFF'}
-          containerStyle={styles.image}
+          imageProps={{
+            source: { uri: item.url },
+            resizeMode: 'contain',
+          }}
+          containerStyle={[
+            styles.image,
+            { width: windowWidth },
+          ]}
         />
       );
     }
 
     if (item.mimetype.includes('video/')) {
       return (
-        <Video
-          paused
-          source={{ uri: item.url }}
-          controls
-          style={styles.video}
+        <BabbleAutoscaleVideo
+          sourceWidth={item.width}
+          sourceHeight={item.height}
+          maxWidth={windowWidth}
+          loadingColor={'#FFFFFF'}
+          videoProps={{
+            paused: selectedIndex !== index,
+            source: { uri: item.url },
+            controls: true,
+          }}
+          containerStyle={[
+            styles.video,
+            { width: windowWidth },
+          ]}
         />
       );
     }
   }
 
   render() {
-    const { media, selectedIndex } = this.props.data;
+    const { media, selectedIndex, uploadPreview } = this.props.data;
     const { currentIndex, pagingEnabled, overlayTranslateYAnimated, panResponder } = this.state;
 
     return (
@@ -180,21 +197,25 @@ export default class BabbleOverlayMediaViewer extends Component {
           </View>
         )}
 
-        <TouchableOpacity onPress={this._download} style={styles.downloadButton}>
-          <DownloadIcon
-            width={33}
-            height={33}
-            style={styles.buttonIcon}
-          />
-        </TouchableOpacity>
+        {!uploadPreview && (
+          <>
+            <TouchableOpacity onPress={this._download} style={styles.downloadButton}>
+              <DownloadIcon
+                width={33}
+                height={33}
+                style={styles.buttonIcon}
+              />
+            </TouchableOpacity>
 
-        <TouchableOpacity onPress={this._share} style={styles.shareButton}>
-          <ShareIcon
-            width={33}
-            height={33}
-            style={styles.buttonIcon}
-          />
-        </TouchableOpacity>
+            <TouchableOpacity onPress={this._share} style={styles.shareButton}>
+              <ShareIcon
+                width={33}
+                height={33}
+                style={styles.buttonIcon}
+              />
+            </TouchableOpacity>
+          </>
+        )}
       </Animated.View>
     );
   }
@@ -232,7 +253,8 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   image: {
-    width: windowWidth,
+    backgroundColor: 'transparent',
+    borderRadius: 0,
   },
   paginationContainer: {
     alignItems: 'center',
@@ -260,7 +282,7 @@ const styles = StyleSheet.create({
     zIndex: 102,
   },
   video: {
-    height: 200,
-    width: windowWidth,
+    backgroundColor: 'transparent',
+    borderRadius: 0,
   },
 });

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
-import { BabbleAutoscaleImage } from './';
-import { XIcon } from './icons';
+import { BabbleAutoscaleImage, BabbleAutoscaleVideo } from './';
+import { VideoIcon, XIcon } from './icons';
 
 export default class BabbleConversationMessageComposerToolbarAttachment extends Component {
   render() {
@@ -9,19 +9,42 @@ export default class BabbleConversationMessageComposerToolbarAttachment extends 
 
     return (
       <TouchableOpacity
-        onPress={() => onPress(attachment)}
+        onPress={() => onPress()}
         style={style}
       >
-        <BabbleAutoscaleImage
-          resizeMode={'contain'}
-          minHeight={60}
-          maxHeight={60}
-          source={{ uri: attachment.url }}
-          style={styles.image}
-        />
+        {attachment.mimetype.includes('image/') && (
+          <BabbleAutoscaleImage
+            minHeight={60}
+            maxHeight={60}
+            imageProps={{
+              source: { uri: attachment.url },
+              resizeMode: 'cover',
+            }}
+          />
+        )}
+
+        {attachment.mimetype.includes('video/') && (
+          <>
+            <BabbleAutoscaleVideo
+              minHeight={60}
+              maxHeight={60}
+              videoProps={{
+                paused: true,
+                source: { uri: attachment.url },
+                resizeMode: 'cover',
+              }}
+            />
+
+            <VideoIcon
+              width={15}
+              height={15}
+              style={styles.videoIcon}
+            />
+          </>
+        )}
 
         <TouchableOpacity
-          onPress={() => onDeletePress(attachment)}
+          onPress={() => onDeletePress()}
           style={styles.deleteButton}
         >
           <XIcon
@@ -38,7 +61,7 @@ export default class BabbleConversationMessageComposerToolbarAttachment extends 
 const styles = StyleSheet.create({
   deleteButton: {
     alignItems: 'center',
-    backgroundColor: '#404040',
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderColor: '#FFFFFF',
     borderRadius: 10,
     borderWidth: 1,
@@ -52,7 +75,10 @@ const styles = StyleSheet.create({
   deleteButtonIcon: {
     color: '#FFFFFF',
   },
-  image: {
-    borderRadius: 4,
+  videoIcon: {
+    bottom: 4,
+    color: '#FFFFFF',
+    left: 4,
+    position: 'absolute',
   },
 });

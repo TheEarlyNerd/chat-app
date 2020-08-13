@@ -86,11 +86,11 @@ const styles = StyleSheet.create({
     color: '#26A6C6',
   },
   shadow: {
-    position: 'absolute',
-    top: 10,
     bottom: 0,
     left: '5%',
+    position: 'absolute',
     right: '5%',
+    top: 10,
     zIndex: -2,
     backgroundColor: '#FFF',
     shadowColor: '#252A3F',

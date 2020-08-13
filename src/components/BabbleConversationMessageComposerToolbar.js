@@ -69,7 +69,7 @@ export default class BabbleMessageComposerToolbar extends Component {
 
   _selectMedia = async source => {
     const options = {
-      maxFiles: 25,
+      maxFiles: 15,
       multiple: true,
     };
 
@@ -97,6 +97,29 @@ export default class BabbleMessageComposerToolbar extends Component {
 
       this.setState({ attachments: [ ...newAttachments, ...filteredAttachments ] });
     } catch { /* noop */ }
+  }
+
+  _deleteAttachment = attachmentIndex => {
+    const { attachments } = this.state;
+
+    this.setState({
+      attachments: attachments.filter((attachment, index) => (
+        index !== attachmentIndex
+      )),
+    });
+  }
+
+  _openAttachment = attachmentIndex => {
+    const { attachments } = this.state;
+
+    interfaceHelper.showOverlay({
+      name: 'MediaViewer',
+      data: {
+        media: attachments,
+        selectedIndex: attachmentIndex,
+        uploadPreview: true,
+      },
+    });
   }
 
   _onChangeText = text => {
@@ -149,6 +172,8 @@ export default class BabbleMessageComposerToolbar extends Component {
                     <BabbleConversationMessageComposerToolbarAttachment
                       attachment={attachment}
                       editable={!loading}
+                      onDeletePress={() => this._deleteAttachment(index)}
+                      onPress={() => this._openAttachment(index)}
                       style={styles.attachment}
                       key={`${attachment.filename}-${attachment.bytes}`}
                     />

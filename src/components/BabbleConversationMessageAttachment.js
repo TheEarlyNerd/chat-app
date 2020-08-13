@@ -1,34 +1,41 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import Video from 'react-native-video';
-import { BabbleAutoscaleImage } from './';
+import { TouchableOpacity, Text } from 'react-native';
+import { BabbleAutoscaleImage, BabbleAutoscaleVideo } from './';
 
 export default class BabbleConversationMessageAttachment extends Component {
   render() {
-    const { attachment: { url, mimetype }, onPress, maxHeight, maxWidth, style } = this.props;
+    const { attachment: { url, mimetype, width, height }, onPress, maxHeight, maxWidth, playVideoInline, style } = this.props;
     const isImage = mimetype.includes('image/');
     const isVideo = mimetype.includes('video/');
 
     return (
-      <TouchableOpacity onPress={onPress} style={style}>
+      <TouchableOpacity disabled={isVideo && playVideoInline} onPress={onPress} style={style}>
         {isImage && (
           <BabbleAutoscaleImage
             maxHeight={maxHeight}
             maxWidth={maxWidth}
-            loadingWidth={40}
-            loadingHeight={40}
+            sourceWidth={width}
+            sourceHeight={height}
             loadingSize={'small'}
-            source={{ uri: url }}
-            style={styles.image}
+            imageProps={{
+              source: { uri: url },
+            }}
           />
         )}
 
         {isVideo && (
-          <Video
-            paused
-            source={{ uri: url }}
-            controls
-            style={styles.video}
+          <BabbleAutoscaleVideo
+            maxHeight={maxHeight}
+            maxWidth={maxWidth}
+            sourceWidth={width}
+            sourceHeight={height}
+            loadingSize={'small'}
+            pointerEvents={!playVideoInline ? 'none' : 'auto'}
+            videoProps={{
+              paused: true,
+              controls: true,
+              source: { uri: url },
+            }}
           />
         )}
 
@@ -39,14 +46,3 @@ export default class BabbleConversationMessageAttachment extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  image: {
-    borderRadius: 4,
-  },
-  video: {
-    borderRadius: 4,
-    height: 200,
-    width: 300,
-  }
-});
