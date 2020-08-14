@@ -41,12 +41,12 @@ export default class BabbleConversationComposerToolbar extends Component {
   }
 
   addUser = user => {
-    const { onUserSelectionChange } = this.props;
+    const { onUserSelectionAccessLevelChange } = this.props;
     const accessLevel = this.state.accessLevel || 'private';
     const selectedUsers = [ ...this.state.selectedUsers, user ];
 
-    if (onUserSelectionChange) {
-      onUserSelectionChange({ accessLevel, selectedUsers });
+    if (onUserSelectionAccessLevelChange) {
+      onUserSelectionAccessLevelChange({ accessLevel, selectedUsers });
     }
 
     this.setState({
@@ -58,7 +58,7 @@ export default class BabbleConversationComposerToolbar extends Component {
   }
 
   removeUser = ({ userId, selectedUserIndex }) => {
-    const { onUserSelectionChange } = this.props;
+    const { onUserSelectionAccessLevelChange } = this.props;
     const accessLevel = this.accessLevel;
     const selectedUsers = this.state.selectedUsers.filter((user, index) => {
       return (
@@ -67,8 +67,8 @@ export default class BabbleConversationComposerToolbar extends Component {
       );
     });
 
-    if (onUserSelectionChange) {
-      onUserSelectionChange({ accessLevel, selectedUsers });
+    if (onUserSelectionAccessLevelChange) {
+      onUserSelectionAccessLevelChange({ accessLevel, selectedUsers });
     }
 
     this.setState({ accessLevel, selectedUsers });
@@ -136,23 +136,36 @@ export default class BabbleConversationComposerToolbar extends Component {
             iconComponent: MessageCircleIcon,
             text: 'Public',
             subtext: 'Anyone can join this conversation, send and react to messages, and invite others.',
-            onPress: () => this.setState({ accessLevel: 'public' }),
+            onPress: () => this._changeAccessLevel('public'),
           },
           {
             iconComponent: UsersIcon,
             text: 'V.I.P.',
             subtext: 'Only people you invite to this conversation can send messages. Anyone can see this conversation and react to messages.',
-            onPress: () => this.setState({ accessLevel: 'protected' }),
+            onPress: () => this._changeAccessLevel('protected'),
           },
           {
             iconComponent: LockIcon,
             text: 'Private',
             subtext: 'Only people you choose can see this conversation, send messages and react to messages.',
-            onPress: () => this.setState({ accessLevel: 'private' }),
+            onPress: () => this._changeAccessLevel('private'),
           },
         ],
       },
     });
+  }
+
+  _changeAccessLevel = accessLevel => {
+    const { onUserSelectionAccessLevelChange } = this.props;
+    const { selectedUsers } = this.state;
+
+    if (accessLevel === this.state.accessLevel) {
+      return;
+    }
+
+    this.setState({ accessLevel });
+
+    onUserSelectionAccessLevelChange({ selectedUsers, accessLevel });
   }
 
   _userPress = userIndex => {

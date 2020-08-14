@@ -14,7 +14,7 @@ export default class ConversationScreen extends Component {
 
   state = {
     conversation: null,
-    showConversationComposer: !this.props.route?.params?.conversationId,
+    composingConversation: !this.props.route?.params?.conversationId,
     loading: false,
   }
 
@@ -144,11 +144,17 @@ export default class ConversationScreen extends Component {
   }
 
   _onMessageSubmit = async ({ text, attachments, embeds }) => {
-    const { conversation } = this.state;
+    const { conversation, composingConversation } = this.state;
     const { accessLevel, title, selectedUsers } = this.conversationComposer || {};
 
     if (conversation) {
       this.messageComposer.clear();
+
+      if (composingConversation) { // edge case for composing but sending to private & existing convo for users, see _onUserSelectionAccessLevelChange
+        this.setState({ loading: true });
+        this._setConversation(await conversationsManager.loadActiveConversation(conversation.id));
+        this.setState({ loading: false, composingConversation: false });
+      }
 
       return await conversationsManager.createConversationMessage({
         conversationId: conversation.id,
@@ -172,7 +178,7 @@ export default class ConversationScreen extends Component {
     try {
       createdConversation = await conversationsManager.createConversation({
         accessLevel,
-        title,
+        title: (accessLevel !== 'private') ? title : null,
         userIds: selectedUsers.map(selectedUser => selectedUser.id),
         message: { text, attachments, embeds },
       });
@@ -185,12 +191,12 @@ export default class ConversationScreen extends Component {
     this.messageComposer.clear();
     this._setConversation(createdConversation);
     this.setState({
-      showConversationComposer: false,
+      composingConversation: false,
       loading: false,
     });
   }
 
-  _onUserSelectionChange = async ({ selectedUsers, accessLevel }) => {
+  _onUserSelectionAccessLevelChange = async ({ selectedUsers, accessLevel }) => {
     this._setConversation(null);
 
     if (accessLevel === 'private' && selectedUsers.length) {
@@ -202,7 +208,7 @@ export default class ConversationScreen extends Component {
   }
 
   render() {
-    const { conversation, showConversationComposer, loading } = this.state;
+    const { conversation, composingConversation, loading } = this.state;
     const { accessLevel, conversationMessages, conversationTypingUsers, authConversationUser } = conversation || {};
     const showViewerToolbar = accessLevel === 'protected' && (
       !authConversationUser || (
@@ -213,10 +219,10 @@ export default class ConversationScreen extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        {showConversationComposer && (
+        {composingConversation && (
           <BabbleConversationComposerToolbar
             editable={!loading}
-            onUserSelectionChange={this._onUserSelectionChange}
+            onUserSelectionAccessLevelChange={this._onUserSelectionAccessLevelChange}
             ref={component => this.conversationComposer = component}
           />
         )}
