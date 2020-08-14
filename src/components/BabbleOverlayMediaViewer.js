@@ -96,7 +96,7 @@ export default class BabbleOverlayMediaViewer extends Component {
   }
 
   _renderItem = ({ item, index }) => {
-    const { selectedIndex } = this.props.data;
+    const { currentIndex } = this.state;
 
     if (item.mimetype.includes('image/')) {
       return (
@@ -125,7 +125,7 @@ export default class BabbleOverlayMediaViewer extends Component {
           maxWidth={windowWidth}
           loadingColor={'#FFFFFF'}
           videoProps={{
-            paused: selectedIndex !== index,
+            paused: currentIndex !== index,
             source: { uri: item.url },
             controls: true,
           }}
