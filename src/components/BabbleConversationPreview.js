@@ -45,7 +45,7 @@ export default class BabbleConversationPreview extends Component {
     if (accessLevel === 'private') {
       return previewConversationUsers.filter(conversationUser => (
         conversationUser.userId !== loggedInUserId
-      ));
+      )).map(conversationUser => conversationUser.user);
     }
   }
 

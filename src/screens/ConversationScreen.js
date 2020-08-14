@@ -77,6 +77,10 @@ export default class ConversationScreen extends Component {
     const { conversation } = this.state;
     const { conversationMessages } = conversation;
 
+    if (!conversationId) {
+      return []; // FIX: prevent autoload bug on new convo, could do something cleaner?
+    }
+
     return conversationsManager.loadActiveConversationMessages({
       conversationId,
       queryParams: { before: conversationMessages[conversationMessages.length - 1].createdAt },

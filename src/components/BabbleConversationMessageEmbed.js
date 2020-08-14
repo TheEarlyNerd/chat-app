@@ -15,7 +15,7 @@ export default class BabbleConversationMessageEmbed extends Component {
   }
 
   render() {
-    const { embed: { title, description, mimetype, url, audioUrl, imageUrl, videoUrl }, onPress, maxWidth, maxHeight, style } = this.props;
+    const { embed: { title, description, mimetype, url, audioUrl, imageUrl, videoUrl, width, height }, onPress, maxWidth, maxHeight, style } = this.props;
     const { videoError } = this.state;
     const isLink = !mimetype.includes('image/') && !mimetype.includes('video/') && url;
 
@@ -31,6 +31,8 @@ export default class BabbleConversationMessageEmbed extends Component {
           <BabbleAutoscaleImage
             maxHeight={maxHeight}
             maxWidth={maxWidth}
+            sourceWidth={width}
+            sourceHeight={height}
             imageProps={{
               source: { uri: imageUrl },
             }}
