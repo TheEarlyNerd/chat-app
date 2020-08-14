@@ -119,7 +119,7 @@ export default class BabbleConversation extends Component {
   }
 
   _getItemKey = item => {
-    return `${item.id}` || `${item.nonce}`;
+    return (item.nonce) ? `${item.nonce}` : `${item.id}`;
   }
 
   render() {

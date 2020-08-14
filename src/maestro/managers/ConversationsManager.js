@@ -618,12 +618,16 @@ export default class ConversationsManager extends Manager {
         }
 
         if (type === 'active') {
-          conversation.conversationMessages = conversation.conversationMessages.filter(conversationMessage => (
-            conversationMessage.nonce !== message.nonce
-          ));
+          const existingIndex = conversation.conversationMessages.findIndex(conversationMessage => {
+            return conversationMessage.nonce && conversationMessage.nonce === message.nonce;
+          });
 
-          conversation.conversationMessages.push(message);
-          conversation.conversationMessages.sort(this._conversationMessagesSorter);
+          if (existingIndex !== -1) {
+            conversation.conversationMessages[existingIndex] = message;
+          } else {
+            conversation.conversationMessages.push(message);
+            conversation.conversationMessages.sort(this._conversationMessagesSorter);
+          }
         } else {
           conversation.previewConversationMessage = message;
         }
