@@ -36,7 +36,12 @@ export default class BabbleOverlayError extends Component {
     const Icon = iconComponent || FrownIcon;
 
     return (
-      <Animated.View style={[ styles.container, { transform: [ { translateY: containerTranslateYAnimated } ] } ]}>
+      <Animated.View
+        style={[
+          styles.container,
+          { transform: [ { translateY: containerTranslateYAnimated } ] },
+        ]}
+      >
         <Icon
           width={25}
           height={25}

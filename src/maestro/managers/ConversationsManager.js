@@ -28,8 +28,8 @@ export default class ConversationsManager extends Manager {
     }, false);
 
     if (hash !== lastConversationsHash) {
-      this._syncConversationEvents();
       this.updateStore({ lastConversationsHash: hash });
+      this._syncConversationEvents();
     }
   }
 
@@ -945,7 +945,7 @@ export default class ConversationsManager extends Manager {
     });
   }
 
-  _iterateConversationTypes = (modifierFunction, updateStore = true) => {
+  _iterateConversationTypes = (iteratorFunction, updateStore = true) => {
     const { store } = this;
     const activeConversations = (store.activeConversations) ? [ ...store.activeConversations ] : null;
     const exploreConversations = (store.exploreConversations) ? [ ...store.exploreConversations ] : null;
@@ -955,35 +955,35 @@ export default class ConversationsManager extends Manager {
     const usersConversations = (store.usersConversations) ? { ...store.usersConversations } : null;
     // could make this more DRY.
     if (Array.isArray(activeConversations)) {
-      modifierFunction({
+      iteratorFunction({
         conversations: activeConversations,
         type: 'active',
       });
     }
 
     if (Array.isArray(exploreConversations)) {
-      modifierFunction({
+      iteratorFunction({
         conversations: exploreConversations,
         type: 'explore',
       });
     }
 
     if (Array.isArray(feedConversations)) {
-      modifierFunction({
+      iteratorFunction({
         conversations: feedConversations,
         type: 'feed',
       });
     }
 
     if (Array.isArray(privateConversations)) {
-      modifierFunction({
+      iteratorFunction({
         conversations: privateConversations,
         type: 'private',
       });
     }
 
     if (Array.isArray(recentConversations)) {
-      modifierFunction({
+      iteratorFunction({
         conversations: recentConversations,
         type: 'recent',
       });
@@ -991,7 +991,7 @@ export default class ConversationsManager extends Manager {
 
     if (typeof usersConversations === 'object') {
       Object.values(usersConversations).forEach(userConversations => {
-        modifierFunction({
+        iteratorFunction({
           conversations: userConversations,
           type: 'users',
         });
