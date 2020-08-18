@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { BabbleTiledIconsBackground, BabbleUserAvatar } from './';
+import { BabbleTiledIconsBackground, BabbleUserAvatar, BabbleConnectionStatusBar } from './';
 import { BellIcon, MessageSquareIcon, HeartIcon } from './icons';
 import maestro from '../maestro';
 
@@ -34,58 +34,62 @@ export default class BabbleHeader extends Component {
     const { navigation } = descriptor;
 
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.headerLeft}>
-          {!!user && (
-            <BabbleUserAvatar
-              avatarAttachment={user.avatarAttachment}
-              lastActiveAt={new Date() /* TODO: This should be settable by the user, if they're in the app they'll show active to other users right now due to any backend requests setting server side lastActiveAt */}
-              size={40}
-              imageStyle={styles.userButton}
-              onPress={() => {
-                navigation.push('ProfileNavigator', {
-                  screen: 'Profile',
-                  params: { userId: user.id },
-                });
-              }}
-            />
-          )}
-        </View>
-
-        <View style={styles.headerCenter}>
-          <Text style={[ styles.text, styles.babbleLogoText ]}>Babble</Text>
-        </View>
-
-        <View style={styles.headerRight}>
-          <TouchableOpacity
-            onPress={() => navigation.push('ActivityNavigator')}
-            style={styles.activityButton}
-          >
-            <BellIcon
-              width={23}
-              height={23}
-              style={styles.activityButtonIcon}
-            />
-
-            {Array.isArray(activity) && !!activity[0] && activity[0].createdAt > user.lastViewedActivityAt && (
-              <View style={styles.activityNewIcon} />
+      <SafeAreaView>
+        <View style={styles.container}>
+          <View style={styles.headerLeft}>
+            {!!user && (
+              <BabbleUserAvatar
+                avatarAttachment={user.avatarAttachment}
+                lastActiveAt={new Date() /* TODO: This should be settable by the user, if they're in the app they'll show active to other users right now due to any backend requests setting server side lastActiveAt */}
+                size={40}
+                imageStyle={styles.userButton}
+                onPress={() => {
+                  navigation.push('ProfileNavigator', {
+                    screen: 'Profile',
+                    params: { userId: user.id },
+                  });
+                }}
+              />
             )}
-          </TouchableOpacity>
+          </View>
+
+          <View style={styles.headerCenter}>
+            <Text style={[ styles.text, styles.babbleLogoText ]}>Babble</Text>
+          </View>
+
+          <View style={styles.headerRight}>
+            <TouchableOpacity
+              onPress={() => navigation.push('ActivityNavigator')}
+              style={styles.activityButton}
+            >
+              <BellIcon
+                width={23}
+                height={23}
+                style={styles.activityButtonIcon}
+              />
+
+              {Array.isArray(activity) && !!activity[0] && activity[0].createdAt > user.lastViewedActivityAt && (
+                <View style={styles.activityNewIcon} />
+              )}
+            </TouchableOpacity>
+          </View>
+
+          <BabbleTiledIconsBackground
+            iconComponents={[ MessageSquareIcon, HeartIcon ]}
+            iconSize={20}
+            iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
+            iconSpacing={37}
+            linearGradientProps={{
+              colors: [ '#299BCB', '#1ACCB4' ],
+              locations: [ 0, 0.7 ],
+              useAngle: true,
+              angle: 36,
+            }}
+            style={styles.backgroundGradient}
+          />
         </View>
 
-        <BabbleTiledIconsBackground
-          iconComponents={[ MessageSquareIcon, HeartIcon ]}
-          iconSize={20}
-          iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
-          iconSpacing={37}
-          linearGradientProps={{
-            colors: [ '#299BCB', '#1ACCB4' ],
-            locations: [ 0, 0.7 ],
-            useAngle: true,
-            angle: 36,
-          }}
-          style={styles.backgroundGradient}
-        />
+        <BabbleConnectionStatusBar />
       </SafeAreaView>
     );
   }

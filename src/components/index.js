@@ -4,6 +4,7 @@ import BabbleAutoscaleVideo from './BabbleAutoscaleVideo';
 import BabbleAutoscaleView from './BabbleAutoscaleView';
 import BabbleButton from './BabbleButton';
 import BabbleCodeField from './BabbleCodeField';
+import BabbleConnectionStatusBar from './BabbleConnectionStatusBar';
 import BabbleConversation from './BabbleConversation';
 import BabbleConversationComposerToolbar from './BabbleConversationComposerToolbar';
 import BabbleConversationHeaderTitle from './BabbleConversationHeaderTitle';
@@ -49,6 +50,7 @@ export {
   BabbleAutoscaleView,
   BabbleButton,
   BabbleCodeField,
+  BabbleConnectionStatusBar,
   BabbleConversation,
   BabbleConversationComposerToolbar,
   BabbleConversationHeaderTitle,

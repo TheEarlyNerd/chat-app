@@ -20,7 +20,7 @@ export default class BabbleConversationHeaderTitle extends Component {
     this.swapSubtextTimeout = setTimeout(() => {
       this.setState({ subtext: this._getSubtext() });
       this._toggleSubtext(true);
-    }, 3500);
+    }, 4000);
   }
 
   componentWillUnmount() {

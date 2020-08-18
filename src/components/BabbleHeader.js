@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
-import { BabbleTiledIconsBackground } from './';
+import { BabbleTiledIconsBackground, BabbleConnectionStatusBar } from './';
 import { ArrowLeftIcon, MessageSquareIcon, HeartIcon, XIcon } from './icons';
 
 const BabbleHeader = ({ scene }) => {
@@ -11,68 +11,72 @@ const BabbleHeader = ({ scene }) => {
   const { rightButtonTitle, rightButtonComponent, showRightLoading, onRightButtonPress, backEnabled, closeEnabled } = options || params || {};
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerLeft}>
-        {(backEnabled || closeEnabled) && (
-          <TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-            {closeEnabled && (
-              <XIcon
-                width={33}
-                height={33}
-                style={styles.backIcon}
-              />
-            )}
+    <SafeAreaView>
+      <View style={styles.container}>
+        <View style={styles.headerLeft}>
+          {(backEnabled || closeEnabled) && (
+            <TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
+              {closeEnabled && (
+                <XIcon
+                  width={33}
+                  height={33}
+                  style={styles.backIcon}
+                />
+              )}
 
-            {!closeEnabled && (
-              <ArrowLeftIcon
-                width={33}
-                height={33}
-                style={styles.backIcon}
-              />
-            )}
-          </TouchableOpacity>
-        )}
+              {!closeEnabled && (
+                <ArrowLeftIcon
+                  width={33}
+                  height={33}
+                  style={styles.backIcon}
+                />
+              )}
+            </TouchableOpacity>
+          )}
+        </View>
+
+        <View style={styles.headerCenter}>
+          {!!title && typeof title === 'string' && (
+            <Text numberOfLines={1} style={[ styles.text, styles.titleText ]}>{title}</Text>
+          )}
+
+          {React.isValidElement(title) && title}
+        </View>
+
+        <View style={styles.headerRight}>
+          {(!!rightButtonTitle || !!rightButtonComponent) && (
+            <TouchableOpacity disabled={showRightLoading} onPress={onRightButtonPress}>
+              {!showRightLoading && !rightButtonComponent && (
+                <Text style={styles.rightButtonText}>{rightButtonTitle}</Text>
+              )}
+
+              {!showRightLoading && !!rightButtonComponent && (
+                rightButtonComponent
+              )}
+
+              {showRightLoading && (
+                <ActivityIndicator color={'#FFFFFF'} />
+              )}
+            </TouchableOpacity>
+          )}
+        </View>
+
+        <BabbleTiledIconsBackground
+          iconComponents={[ MessageSquareIcon, HeartIcon ]}
+          iconSize={20}
+          iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
+          iconSpacing={37}
+          linearGradientProps={{
+            colors: [ '#299BCB', '#1ACCB4' ],
+            locations: [ 0, 0.7 ],
+            useAngle: true,
+            angle: 36,
+          }}
+          style={styles.backgroundGradient}
+        />
       </View>
 
-      <View style={styles.headerCenter}>
-        {!!title && typeof title === 'string' && (
-          <Text numberOfLines={1} style={[ styles.text, styles.titleText ]}>{title}</Text>
-        )}
-
-        {React.isValidElement(title) && title}
-      </View>
-
-      <View style={styles.headerRight}>
-        {(!!rightButtonTitle || !!rightButtonComponent) && (
-          <TouchableOpacity disabled={showRightLoading} onPress={onRightButtonPress}>
-            {!showRightLoading && !rightButtonComponent && (
-              <Text style={styles.rightButtonText}>{rightButtonTitle}</Text>
-            )}
-
-            {!showRightLoading && !!rightButtonComponent && (
-              rightButtonComponent
-            )}
-
-            {showRightLoading && (
-              <ActivityIndicator color={'#FFFFFF'} />
-            )}
-          </TouchableOpacity>
-        )}
-      </View>
-
-      <BabbleTiledIconsBackground
-        iconComponents={[ MessageSquareIcon, HeartIcon ]}
-        iconSize={20}
-        iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
-        iconSpacing={37}
-        linearGradientProps={{
-          colors: [ '#299BCB', '#1ACCB4' ],
-          locations: [ 0, 0.7 ],
-          useAngle: true,
-          angle: 36,
-        }}
-        style={styles.backgroundGradient}
-      />
+      <BabbleConnectionStatusBar />
     </SafeAreaView>
   );
 };

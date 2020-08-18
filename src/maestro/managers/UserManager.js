@@ -164,7 +164,10 @@ export default class UserManager extends Manager {
   }
 
   logout() {
+    const { eventsManager } = this.maestro.managers;
     const { navigationHelper } = this.maestro.helpers;
+
+    eventsManager.unsubscribeAll();
 
     this.maestro._linkedInstances.forEach(linkedInstance => {
       const instanceName = linkedInstance.constructor.name;

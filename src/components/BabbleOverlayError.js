@@ -70,15 +70,15 @@ export default class BabbleOverlayError extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
+    flexDirection: 'row',
     left: 0,
     minHeight: 100,
-    zIndex: 2,
-    flexDirection: 'row',
-    paddingTop: 56,
     paddingBottom: 20,
+    paddingTop: 56,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 2,
   },
   errorIcon: {
     color: '#FFFFFF',
