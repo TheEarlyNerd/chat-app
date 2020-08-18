@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { BabbleCodeField, BabbleButton, BabbleTiledIconsBackground } from '../components';
 import { LockIcon, CheckCircleIcon } from '../components/icons';
 import maestro from '../maestro';
@@ -75,6 +76,12 @@ export default class PhoneLoginCodeScreen extends Component {
             }}
             style={styles.backgroundGradient}
           />
+
+          <FastImage
+            resizeMode={'contain'}
+            source={require('../assets/images/loginCodeBackground.png')}
+            style={styles.backgroundImage}
+          />
         </View>
 
         <View style={styles.formContainer}>
@@ -112,6 +119,12 @@ const styles = StyleSheet.create({
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
     zIndex: -1,
+  },
+  backgroundImage: {
+    aspectRatio: 1.6332,
+    bottom: 0,
+    position: 'absolute',
+    width: '100%',
   },
   container: {
     flex: 1,

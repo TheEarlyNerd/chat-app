@@ -101,11 +101,12 @@ export default class BabbleConversationPreview extends Component {
   }
 
   _getTime = () => {
-    const { previewConversationMessage } = this.props.conversation;
+    const { conversation } = this.props;
+    const { previewConversationMessage } = conversation;
 
     return (previewConversationMessage)
       ? timeHelper.fromNow(previewConversationMessage.createdAt)
-      : null;
+      : timeHelper.fromNow(conversation.updatedAt);
   }
 
   _isUnread = () => {

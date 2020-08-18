@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ActivityIndicator, LayoutAnimation, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import maestro from '../maestro';
 
 const { appManager, eventsManager } = maestro.managers;
@@ -27,7 +27,6 @@ export default class BabbleConnectionStatusBar extends Component {
       if (name === 'APP_NETWORK_STATE_CHANGED') {
         this.setState({ networkConnected: value.isConnected });
       }
-
     }
   }
 

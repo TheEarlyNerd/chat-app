@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Linking } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { BabbleButton, BabbleTiledIconsBackground } from '../components';
 import { BellIcon, SmileIcon } from '../components/icons';
 import maestro from '../maestro';
@@ -67,6 +68,12 @@ export default class SetupIOSNotificationsScreen extends Component {
             }}
             style={styles.backgroundGradient}
           />
+
+          <FastImage
+            resizeMode={'contain'}
+            source={require('../assets/images/enableNotificationsBackground.png')}
+            style={styles.backgroundImage}
+          />
         </View>
 
         <View style={styles.formContainer}>
@@ -91,6 +98,12 @@ const styles = StyleSheet.create({
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
     zIndex: -1,
+  },
+  backgroundImage: {
+    aspectRatio: 0.6855,
+    bottom: 0,
+    position: 'absolute',
+    width: '100%',
   },
   container: {
     flex: 1,

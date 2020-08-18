@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, KeyboardAvoidingView, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { BabblePhoneField, BabbleButton, BabbleTiledIconsBackground } from '../components';
 import { MessageSquareIcon, HeartIcon } from '../components/icons';
 import maestro from '../maestro';
@@ -60,6 +61,12 @@ export default class LandingScreen extends Component {
             }}
             style={styles.backgroundGradient}
           />
+
+          <FastImage
+            resizeMode={'contain'}
+            source={require('../assets/images/landingBackground.png')}
+            style={styles.backgroundImage}
+          />
         </View>
 
         <View style={styles.formContainer}>
@@ -89,39 +96,46 @@ export default class LandingScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   animationContainer: {
-    flex: 1,
     alignItems: 'center',
-  },
-  formContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 30,
-  },
-  phoneFieldContainer: {
-    marginBottom: 35,
-  },
-  logoText: {
-    color: '#FFFFFF',
-    fontFamily: 'Lobster-Regular',
-    fontSize: 60,
-    marginTop: 60,
-    letterSpacing: -3,
-    shadowColor: '#252A3F',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
   },
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
     zIndex: -1,
   },
+  backgroundImage: {
+    aspectRatio: 1.0522,
+    bottom: 0,
+    position: 'absolute',
+    width: '100%',
+  },
+  container: {
+    flex: 1,
+  },
   continueButton: {
     marginBottom: 20,
+  },
+  formContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 30,
+  },
+  logoText: {
+    color: '#FFFFFF',
+    fontFamily: 'Lobster-Regular',
+    fontSize: 60,
+    letterSpacing: -3,
+    marginTop: 60,
+    shadowColor: '#252A3F',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    zIndex: 2,
+  },
+  phoneFieldContainer: {
+    marginBottom: 35,
   },
   termsButtonText: {
     color: '#9B9B9B',
