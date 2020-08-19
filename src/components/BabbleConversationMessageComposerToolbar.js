@@ -3,7 +3,7 @@ import { KeyboardAvoidingView, View, TextInput, Text, ScrollView, TouchableOpaci
 import { HeaderHeightContext } from '@react-navigation/stack';
 import ImagePicker from 'react-native-image-crop-picker';
 import { BabbleConversationMessageComposerToolbarAttachment } from './';
-import { FileTextIcon, CameraIcon, ArrowUpIcon, ImageIcon } from './icons';
+import { FileTextIcon, CameraIcon, ArrowUpIcon, ImageIcon, XIcon } from './icons';
 import maestro from '../maestro';
 
 const { interfaceHelper } = maestro.helpers;
@@ -144,74 +144,91 @@ export default class BabbleMessageComposerToolbar extends Component {
             keyboardVerticalOffset={headerHeight + styles.container.paddingVertical}
             style={[ styles.container, style ]}
           >
-            <TouchableOpacity
-              onPress={this._showAttachmentsActionSheet}
-              style={[ styles.button, styles.leftButton ]}
-            >
-              <ImageIcon
-                width={22}
-                height={22}
-                style={styles.buttonIcon}
-              />
-            </TouchableOpacity>
+            {false && ( /* TODO: Add support for replies. */
+              <View style={styles.reply}>
+                <Text style={styles.replyTitleText}>Replying to <Text style={styles.replyTitleNameText}>Lang Spay</Text></Text>
+                <Text numberOfLines={3} style={styles.replyMessageText}>I'm baby drinking vinegar yuccie prism irony raclette organic ennui taxidermy art party flexitarian chicharrones typewriter. Pork belly vexillologist helvetica kombucha freegan succulents. Poutine photo booth disrupt readymade chambray craft beer authentic pork belly adaptogen retro sustainable. Lumbersexual gochujang waistcoat, photo booth hell of church-key portland raw denim.</Text>
 
-            <TouchableOpacity
-              onPress={this._showGifSelector}
-              style={[ styles.button, styles.leftButton ]}
-            >
-              <Text style={styles.buttonText}>GIF</Text>
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.replyCancelButton}>
+                  <XIcon
+                    width={22}
+                    height={22}
+                    style={styles.replyCancelIcon}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
 
-            <View style={styles.inputContainer}>
-              {!!attachments?.length && (
-                <ScrollView
-                  horizontal
-                  style={styles.attachmentsScrollView}
-                >
-                  {attachments.map((attachment, index) => (
-                    <BabbleConversationMessageComposerToolbarAttachment
-                      attachment={attachment}
-                      editable={!loading}
-                      onDeletePress={() => this._deleteAttachment(index)}
-                      onPress={() => this._openAttachment(index)}
-                      style={styles.attachment}
-                      key={`${attachment.filename}-${attachment.bytes}`}
-                    />
-                  ))}
-                </ScrollView>
-              )}
-
-              <TextInput
-                multiline
-                placeholderColor={'#909090'}
-                placeholder={'Message...'}
-                onChangeText={this._onChangeText}
-                editable={!loading}
-                value={text}
-                style={styles.textInput}
-              />
-            </View>
-
-            <TouchableOpacity
-              onPress={() => onSubmit({ text, attachments })}
-              disabled={loading || (!text.length && !attachments?.length)}
-              style={styles.sendButton}
-            >
-              {loading && (
-                <ActivityIndicator color={'#2A99CC'} />
-              )}
-
-              {!loading && (
-                <ArrowUpIcon
-                  width={21}
-                  height={21}
-                  style={[
-                    styles.buttonIcon,
-                    (!text.length && !attachments?.length) ? styles.buttonIconDisabled : null,
-                  ]}
+            <View style={styles.toolbar}>
+              <TouchableOpacity
+                onPress={this._showAttachmentsActionSheet}
+                style={[ styles.button, styles.leftButton ]}
+              >
+                <ImageIcon
+                  width={22}
+                  height={22}
+                  style={styles.buttonIcon}
                 />
-              )}
-            </TouchableOpacity>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={this._showGifSelector}
+                style={[ styles.button, styles.leftButton ]}
+              >
+                <Text style={styles.buttonText}>GIF</Text>
+              </TouchableOpacity>
+
+              <View style={styles.inputContainer}>
+                {!!attachments?.length && (
+                  <ScrollView
+                    horizontal
+                    style={styles.attachmentsScrollView}
+                  >
+                    {attachments.map((attachment, index) => (
+                      <BabbleConversationMessageComposerToolbarAttachment
+                        attachment={attachment}
+                        editable={!loading}
+                        onDeletePress={() => this._deleteAttachment(index)}
+                        onPress={() => this._openAttachment(index)}
+                        style={styles.attachment}
+                        key={`${attachment.filename}-${attachment.bytes}`}
+                      />
+                    ))}
+                  </ScrollView>
+                )}
+
+                <TextInput
+                  multiline
+                  placeholderColor={'#909090'}
+                  placeholder={'Message...'}
+                  onChangeText={this._onChangeText}
+                  editable={!loading}
+                  value={text}
+                  style={styles.textInput}
+                />
+              </View>
+
+              <TouchableOpacity
+                onPress={() => onSubmit({ text, attachments })}
+                disabled={loading || (!text.length && !attachments?.length)}
+                style={styles.sendButton}
+              >
+                {loading && (
+                  <ActivityIndicator color={'#2A99CC'} />
+                )}
+
+                {!loading && (
+                  <ArrowUpIcon
+                    width={21}
+                    height={21}
+                    style={[
+                      styles.buttonIcon,
+                      (!text.length && !attachments?.length) ? styles.buttonIconDisabled : null,
+                    ]}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
           </KeyboardAvoidingView>
         )}
       </HeaderHeightContext.Consumer>
@@ -247,10 +264,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   container: {
-    alignItems: 'center',
     borderTopColor: '#D8D8D8',
     borderTopWidth: 0.5,
-    flexDirection: 'row',
     paddingHorizontal: 15,
     paddingVertical: 10,
   },
@@ -263,6 +278,32 @@ const styles = StyleSheet.create({
   },
   leftButton: {
     marginRight: 15,
+  },
+  reply: {
+    marginBottom: 10,
+  },
+  replyCancelButton: {
+    position: 'absolute',
+    right: 8,
+  },
+  replyCancelIcon: {
+    color: '#2A99CC',
+  },
+  replyMessageText: {
+    color: '#797979',
+    fontFamily: 'NunitoSans-SemiBold',
+    fontSize: 14,
+    marginRight: 8,
+  },
+  replyTitleNameText: {
+    fontFamily: 'NunitoSans-Bold',
+    fontSize: 14,
+  },
+  replyTitleText: {
+    color: '#323643',
+    fontFamily: 'NunitoSans-SemiBold',
+    fontSize: 14,
+    marginBottom: 2,
   },
   sendButton: {
     alignItems: 'center',
@@ -286,5 +327,9 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingHorizontal: 15,
     paddingTop: 8,
+  },
+  toolbar: {
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 });

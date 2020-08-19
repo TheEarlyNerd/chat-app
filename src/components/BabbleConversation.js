@@ -45,6 +45,16 @@ export default class BabbleConversation extends Component {
     }
   }
 
+  _rowOpen = (rowKey, rowMap, toValue) => {
+    if (toValue > 0) { // left row (reply)
+      setTimeout(() => {
+        this._closeRow(rowMap[rowKey]);
+
+        console.log('TODO: Support replies');
+      }, 750);
+    }
+  }
+
   _closeRow = swipeRow => {
     return new Promise(resolve => {
       swipeRow.closeRow();
@@ -139,12 +149,14 @@ export default class BabbleConversation extends Component {
           onScrollBeginDrag={this._scrollBeginDrag}
           onContentSizeChange={this._contentSizeChange}
           onSwipeValueChange={this._swipeValueChange}
+          onRowOpen={this._rowOpen}
           onScroll={this._onScroll}
           onEndReached={this._endReached}
           onEndReachedThreshold={0.5}
           scrollEventThrottle={150}
           closeOnRowBeginSwipe
           closeOnScroll={false}
+          /*leftOpenValue={60} TODO: Support replies */
           rightOpenValue={-145}
           recalculateHiddenLayout
           contentContainerStyle={styles.contentContainer}

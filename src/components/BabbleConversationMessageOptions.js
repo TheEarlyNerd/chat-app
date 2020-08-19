@@ -104,7 +104,9 @@ export default class BabbleConversationMessageOptions extends Component {
     return (
       <Animated.View style={[ styles.container, style ]}>
         <View style={styles.leftOptions}>
+          {/* TODO: Support replies}
           <CornerUpLeftIcon width={22} height={22} style={styles.optionIcon} />
+          {*/}
         </View>
 
         <View style={styles.rightOptions}>
