@@ -187,9 +187,9 @@ export default class BabbleConversationComposerToolbar extends Component {
     const { accessLevel, title, selectedUserIndex, search, selectedUsers, searchUsers, showSearchUsersList, loadingSearch } = this.state;
 
     return (
-      <View>
+      <View style={styles.container}>
         <TouchableWithoutFeedback onPress={this._toolbarPress}>
-          <View style={[ styles.container, style ]}>
+          <View style={[ styles.toolbarContainer, style ]}>
             <Text style={styles.labelText}>{(accessLevel === 'protected' ? 'Invite:' : 'To:')}</Text>
 
             {selectedUsers.map((selectedUser, index) => (
@@ -265,7 +265,7 @@ export default class BabbleConversationComposerToolbar extends Component {
 
         {accessLevel !== 'private' && (
           <TouchableWithoutFeedback onPress={() => this.titleTextInput.focus()}>
-            <View style={styles.container}>
+            <View style={styles.toolbarContainer}>
               <Text style={styles.labelText}>Title:</Text>
 
               <TextInput
@@ -289,6 +289,7 @@ export default class BabbleConversationComposerToolbar extends Component {
             noResultsMessage={'No users found'}
             onPress={this.addUser}
             keyboardShouldPersistTaps={'always'}
+            contentContainerStyle={styles.usersList}
           />
         )}
       </View>
@@ -329,13 +330,7 @@ const styles = StyleSheet.create({
     width: 8,
   },
   container: {
-    alignItems: 'center',
-    borderBottomColor: '#D8D8D8',
-    borderBottomWidth: 0.5,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding: 15,
-    width: '100%',
+    flexShrink: 1,
   },
   labelText: {
     color: '#909090',
@@ -358,6 +353,15 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     paddingVertical: 5,
   },
+  toolbarContainer: {
+    alignItems: 'center',
+    borderBottomColor: '#D8D8D8',
+    borderBottomWidth: 0.5,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 15,
+    width: '100%',
+  },
   user: {
     alignItems: 'center',
     backgroundColor: '#F1F2F6',
@@ -369,5 +373,8 @@ const styles = StyleSheet.create({
   },
   userSelected: {
     backgroundColor: '#2A99CC',
+  },
+  usersList: {
+    paddingBottom: 30,
   },
 });

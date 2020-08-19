@@ -39,6 +39,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>To take photos and video with your camera, please grant Babble access.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>To find friends, family and acquaintances, please grant Babble access.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>

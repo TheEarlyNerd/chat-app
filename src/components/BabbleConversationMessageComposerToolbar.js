@@ -144,7 +144,7 @@ export default class BabbleMessageComposerToolbar extends Component {
             keyboardVerticalOffset={headerHeight + styles.container.paddingVertical}
             style={[ styles.container, style ]}
           >
-            {false && ( /* TODO: Add support for replies. */
+            {false && (/* TODO: Add support for replies. */
               <View style={styles.reply}>
                 <Text style={styles.replyTitleText}>Replying to <Text style={styles.replyTitleNameText}>Lang Spay</Text></Text>
                 <Text numberOfLines={3} style={styles.replyMessageText}>I'm baby drinking vinegar yuccie prism irony raclette organic ennui taxidermy art party flexitarian chicharrones typewriter. Pork belly vexillologist helvetica kombucha freegan succulents. Poutine photo booth disrupt readymade chambray craft beer authentic pork belly adaptogen retro sustainable. Lumbersexual gochujang waistcoat, photo booth hell of church-key portland raw denim.</Text>
