@@ -4,6 +4,7 @@ import BabbleAutoscaleVideo from './BabbleAutoscaleVideo';
 import BabbleAutoscaleView from './BabbleAutoscaleView';
 import BabbleButton from './BabbleButton';
 import BabbleCodeField from './BabbleCodeField';
+import BabbleConnectDeviceContactsView from './BabbleConnectDeviceContactsView';
 import BabbleConnectionStatusBar from './BabbleConnectionStatusBar';
 import BabbleConversation from './BabbleConversation';
 import BabbleConversationComposerToolbar from './BabbleConversationComposerToolbar';
@@ -50,6 +51,7 @@ export {
   BabbleAutoscaleView,
   BabbleButton,
   BabbleCodeField,
+  BabbleConnectDeviceContactsView,
   BabbleConnectionStatusBar,
   BabbleConversation,
   BabbleConversationComposerToolbar,

@@ -5,8 +5,8 @@ import PushNotification from 'react-native-push-notification';
 
 const APNS_TOKEN_KEY = 'APNS_TOKEN';
 const FCM_REGISTRATION_ID_KEY = 'FCM_REGISTRATION_ID';
-const NOTIFICATION_PERMISSIONS_REQUESTED_KEY = 'NOTIFICATION_PERMISSIONS_REQUESTED';
-const NOTIFICATION_PERMISSIONS_STATE_KEY = 'NOTIFICATIONS_PERMISSIONS_STATE';
+const NOTIFICATIONS_PERMISSION_REQUESTED_KEY = 'NOTIFICATIONS_PERMISSION_REQUESTED';
+const NOTIFICATIONS_PERMISSION_STATE_KEY = 'NOTIFICATIONS_PERMISSIONS_STATE';
 
 export default class NotificationsManager extends Manager {
   static get instanceKey() {
@@ -38,11 +38,11 @@ export default class NotificationsManager extends Manager {
       this.updateStore({ fcmRegistrationId });
     });
 
-    asyncStorageHelper.getItem(NOTIFICATION_PERMISSIONS_REQUESTED_KEY).then(permissionsRequested => {
+    asyncStorageHelper.getItem(NOTIFICATIONS_PERMISSION_REQUESTED_KEY).then(permissionsRequested => {
       this.updateStore({ permissionsRequested });
     });
 
-    asyncStorageHelper.getItem(NOTIFICATION_PERMISSIONS_STATE_KEY).then(permissionsState => {
+    asyncStorageHelper.getItem(NOTIFICATIONS_PERMISSION_STATE_KEY).then(permissionsState => {
       this.updateStore({ permissionsState }); // TODO: check permissions can delay, so we need to cache to prevent weird races
     });
 
@@ -68,7 +68,7 @@ export default class NotificationsManager extends Manager {
 
     const permissionsState = await PushNotification.requestPermissions();
 
-    asyncStorageHelper.setItem(NOTIFICATION_PERMISSIONS_REQUESTED_KEY, true);
+    asyncStorageHelper.setItem(NOTIFICATIONS_PERMISSION_REQUESTED_KEY, true);
 
     this._syncPermissionsState(permissionsState);
     this.updateStore({ permissionsRequested: true });
@@ -131,7 +131,7 @@ export default class NotificationsManager extends Manager {
   _syncPermissionsState = permissionsState => {
     const { asyncStorageHelper } = this.maestro.helpers;
 
-    asyncStorageHelper.setItem(NOTIFICATION_PERMISSIONS_STATE_KEY, permissionsState);
+    asyncStorageHelper.setItem(NOTIFICATIONS_PERMISSION_STATE_KEY, permissionsState);
 
     this.updateStore({ permissionsState });
   }

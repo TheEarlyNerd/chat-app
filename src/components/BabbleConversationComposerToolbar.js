@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, StyleSheet } from 'react-native';
-import { BabbleConversationUserList, BabbleUserAvatar } from './';
+import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, LayoutAnimation, StyleSheet } from 'react-native';
+import { BabbleConversationUserList, BabbleUserAvatar, BabbleConnectDeviceContactsView } from './';
 import { UsersIcon, MessageCircleIcon, LockIcon, ChevronDownIcon } from './icons';
 import maestro from '../maestro';
 
-const { userManager } = maestro.managers;
+const { deviceContactsManager, userManager } = maestro.managers;
 const { interfaceHelper } = maestro.helpers;
 
 export default class BabbleConversationComposerToolbar extends Component {
   state = {
     accessLevel: null,
-    search: null,
+    search: '',
     title: null,
     selectedUserIndex: null,
     selectedUsers: [],
     searchUsers: [],
+    contactUsers: [],
     showSearchUsersList: false,
     loadingSearch: false,
   }
@@ -24,8 +25,35 @@ export default class BabbleConversationComposerToolbar extends Component {
   titleTextInput = null;
   lastKeyPress = null;
 
+  componentDidMount() {
+    maestro.link(this);
+
+    if (deviceContactsManager.requestedPermission()) {
+      deviceContactsManager.loadContacts();
+    }
+  }
+
   componentWillUnmount() {
+    maestro.unlink(this);
+
     clearTimeout(this.searchTextInputTimeout);
+  }
+
+  receiveStoreUpdate({ deviceContacts }) {
+    const { contacts } = deviceContacts;
+
+    if (contacts) {
+      this.setState({
+        contactUsers: contacts,
+        searchUsers: contacts,
+      });
+    }
+  }
+
+  receiveEvent(name, value) {
+    if (name === 'APP_STATE_CHANGED' && value === 'active' && deviceContactsManager.requestedPermission() && !deviceContactsManager.grantedPermission()) {
+      deviceContactsManager.loadContacts();
+    }
   }
 
   get accessLevel() {
@@ -52,9 +80,9 @@ export default class BabbleConversationComposerToolbar extends Component {
     this.setState({
       accessLevel,
       search: '',
-      selectedUsers,
       searchUsers: [],
-    });
+      selectedUsers,
+    }, () => this._toggleSearchUsersList(false));
   }
 
   removeUser = ({ userId, selectedUserIndex }) => {
@@ -71,7 +99,10 @@ export default class BabbleConversationComposerToolbar extends Component {
       onUserSelectionAccessLevelChange({ accessLevel, selectedUsers });
     }
 
-    this.setState({ accessLevel, selectedUsers });
+    this.setState({
+      accessLevel,
+      selectedUsers,
+    });
   }
 
   _onKeyPress = ({ nativeEvent }) => {
@@ -102,29 +133,92 @@ export default class BabbleConversationComposerToolbar extends Component {
       }
     }
 
-    this._search(text);
+    this.setState(state, () => this._search(text));
+  }
 
-    this.setState(state);
+  _onFocus = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
+    this._toggleSearchUsersList(true);
+  }
+
+  _onBlur = () => {
+    this._toggleSearchUsersList(false);
+  }
+
+  _getSearchUsers = async search => {
+    const { selectedUsers } = this.state;
+    const selectedUserIds = selectedUsers.map(selectedUser => selectedUser.id);
+
+    return (await userManager.searchUsers(search)).filter(searchUser => (
+      !selectedUserIds.includes(searchUser.id)
+    ));
+  }
+
+  _getSuggestedUsers = search => {
+    const { selectedUsers, contactUsers } = this.state;
+    const selectedUserIds = selectedUsers.map(selectedUser => selectedUser.id);
+
+    if (!contactUsers?.length) {
+      return [];
+    }
+
+    return contactUsers.filter(contactUser => (
+      !selectedUserIds.includes(contactUser.id) && (!search || contactUser.name.includes(search))
+    ));
+  }
+
+  _getToPlaceholder = () => {
+    const { accessLevel, selectedUsers, showSearchUsersList } = this.state;
+
+    if (([ 'protected', 'private' ].includes(accessLevel) || showSearchUsersList) && !selectedUsers.length) {
+      return 'Type to search users...';
+    }
+
+    if (!selectedUsers.length && (!accessLevel || accessLevel === 'public')) {
+      return 'The World';
+    }
+
+    return '';
   }
 
   _search = search => {
     clearTimeout(this.searchTextInputTimeout);
 
     if (!search) {
+      this._toggleSearchUsersList(false);
       return this.setState({ loadingSearch: false });
     }
 
+    this._toggleSearchUsersList(true);
     this.setState({ loadingSearch: true });
 
     this.searchTextInputTimeout = setTimeout(async () => {
-      const { selectedUsers } = this.state;
-      const selectedUserIds = selectedUsers.map(selectedUser => selectedUser.id);
-      const searchUsers = (await userManager.searchUsers(search)).filter(searchUser => {
-        return !selectedUserIds.includes(searchUser.id);
-      });
+      const searchAppUsers = await this._getSearchUsers(search);
+      const searchSuggestedUsers = this._getSuggestedUsers(search);
+
+      const searchUsers = [ ...searchAppUsers, ...searchSuggestedUsers ].sort((a, b) => (
+        (a.name > b.name) ? 1 : (a.name < b.name) ? -1 : 0
+      ));
 
       this.setState({ searchUsers, loadingSearch: false });
-    }, 500);
+    }, 400);
+  }
+
+  _toggleSearchUsersList = show => {
+    const { selectedUsers, search } = this.state;
+    const state = { showSearchUsersList: show };
+
+    if (show && !search && selectedUsers.length) {
+      state.showSearchUsersList = false;
+    }
+
+    if (!show && !search && !selectedUsers.length && this.searchTextInput.isFocused()) {
+      state.showSearchUsersList = true;
+      state.searchUsers = this._getSuggestedUsers();
+    }
+
+    this.setState(state);
   }
 
   _accessLevelPress = () => {
@@ -178,18 +272,21 @@ export default class BabbleConversationComposerToolbar extends Component {
     this.setState({ selectedUserIndex: null });
   }
 
-  _toggleSearchUsersList = show => {
-    this.setState({ showSearchUsersList: show });
-  }
-
   render() {
     const { editable, style } = this.props;
     const { accessLevel, title, selectedUserIndex, search, selectedUsers, searchUsers, showSearchUsersList, loadingSearch } = this.state;
+    const canAccessContacts = deviceContactsManager.grantedPermission();
 
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          (showSearchUsersList) ? styles.focused : null,
+          style,
+        ]}
+      >
         <TouchableWithoutFeedback onPress={this._toolbarPress}>
-          <View style={[ styles.toolbarContainer, style ]}>
+          <View style={styles.toolbarContainer}>
             <Text style={styles.labelText}>{(accessLevel === 'protected' ? 'Invite:' : 'To:')}</Text>
 
             {selectedUsers.map((selectedUser, index) => (
@@ -226,10 +323,11 @@ export default class BabbleConversationComposerToolbar extends Component {
               caretHidden={selectedUserIndex !== null}
               onKeyPress={this._onKeyPress}
               onChangeText={this._onChangeText}
-              onFocus={() => this._toggleSearchUsersList(true)}
-              onBlur={() => this._toggleSearchUsersList(false)}
+              onFocus={this._onFocus}
+              onBlur={this._onBlur}
               editable={editable !== undefined ? editable : true}
-              placeholder={(!selectedUsers.length && (!accessLevel || accessLevel === 'public')) ? 'The World' : ''}
+              placeholder={this._getToPlaceholder()}
+              placeholderTextColor={'#D8D8D8'}
               returnKeyType={'done'}
               value={search}
               style={styles.textInput}
@@ -263,7 +361,7 @@ export default class BabbleConversationComposerToolbar extends Component {
           </View>
         </TouchableWithoutFeedback>
 
-        {accessLevel !== 'private' && (
+        {accessLevel !== 'private' && !showSearchUsersList && (
           <TouchableWithoutFeedback onPress={() => this.titleTextInput.focus()}>
             <View style={styles.toolbarContainer}>
               <Text style={styles.labelText}>Title:</Text>
@@ -271,6 +369,7 @@ export default class BabbleConversationComposerToolbar extends Component {
               <TextInput
                 onChangeText={text => this.setState({ title: text })}
                 placeholder={'What do you want to talk about?'}
+                placeholderTextColor={'#D8D8D8'}
                 returnKeyType={'done'}
                 editable={editable !== undefined ? editable : true}
                 value={title}
@@ -282,15 +381,24 @@ export default class BabbleConversationComposerToolbar extends Component {
         )}
 
         {showSearchUsersList && (
-          <BabbleConversationUserList
-            loading={loadingSearch}
-            users={searchUsers}
-            disableNoResultsMessage={!search}
-            noResultsMessage={'No users found'}
-            onPress={this.addUser}
-            keyboardShouldPersistTaps={'always'}
-            contentContainerStyle={styles.usersList}
-          />
+          <View style={styles.usersListContainer}>
+            {(!!search || (selectedUsers.length === 0 && canAccessContacts)) && (
+              <BabbleConversationUserList
+                loading={loadingSearch}
+                users={searchUsers}
+                disableNoResultsMessage={!search}
+                noResultsMessage={'No users found'}
+                onPress={this.addUser}
+                keyboardShouldPersistTaps={'handled'}
+                contentContainerStyle={styles.usersList}
+                ListHeaderComponent={(!search && !selectedUsers.length) ? <Text style={styles.suggestedText}>My Contacts</Text> : null}
+              />
+            )}
+
+            {!canAccessContacts && !selectedUsers.length && !search && (
+              <BabbleConnectDeviceContactsView contentContainerStyle={styles.connectDeviceContactsContainer} />
+            )}
+          </View>
         )}
       </View>
     );
@@ -300,6 +408,7 @@ export default class BabbleConversationComposerToolbar extends Component {
 const styles = StyleSheet.create({
   accessLevelButton: {
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
     borderColor: '#2A99CC',
     borderRadius: 4,
     borderWidth: 1,
@@ -329,8 +438,16 @@ const styles = StyleSheet.create({
     top: -2,
     width: 8,
   },
+  connectDeviceContactsContainer: {
+    marginTop: 130,
+  },
   container: {
+    backgroundColor: '#FFFFFF',
     flexShrink: 1,
+  },
+  focused: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 99,
   },
   labelText: {
     color: '#909090',
@@ -345,6 +462,13 @@ const styles = StyleSheet.create({
     color: '#2A99CC',
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: 14,
+  },
+  suggestedText: {
+    color: '#404040',
+    fontFamily: 'NunitoSans-Bold',
+    fontSize: 14,
+    paddingBottom: 5,
+    paddingHorizontal: 15,
   },
   textInput: {
     color: '#404040',
@@ -376,5 +500,9 @@ const styles = StyleSheet.create({
   },
   usersList: {
     paddingBottom: 30,
+  },
+  usersListContainer: {
+    backgroundColor: '#FFFFFF',
+    height: '100%',
   },
 });

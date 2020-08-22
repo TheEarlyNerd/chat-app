@@ -1,4 +1,6 @@
 import { Helper } from 'react-native-maestro';
+import * as RNLocalize from 'react-native-localize';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
 export default class DataHelper extends Helper {
   static get instanceKey() {
@@ -39,5 +41,29 @@ export default class DataHelper extends Helper {
       : normalize(dataObject);
 
     return dataObject;
+  }
+
+  normalizePhoneNumber = phoneNumber => {
+    if (!phoneNumber) {
+      return;
+    }
+
+    let parsedPhoneNumber = parsePhoneNumberFromString(phoneNumber);
+
+    if (!parsedPhoneNumber) {
+      parsedPhoneNumber = parsePhoneNumberFromString(phoneNumber, RNLocalize.getCountry());
+    }
+
+    if (!parsedPhoneNumber) {
+      const deviceLocales = RNLocalize.getLocales();
+
+      deviceLocales.forEach(({ countryCode }) => {
+        if (!parsedPhoneNumber) {
+          parsedPhoneNumber = parsePhoneNumberFromString(phoneNumber, countryCode);
+        }
+      });
+    }
+
+    return (parsedPhoneNumber) ? parsedPhoneNumber.number.replace('+', '') : false;
   }
 }

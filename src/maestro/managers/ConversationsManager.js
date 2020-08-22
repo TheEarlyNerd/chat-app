@@ -44,11 +44,11 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
-  async getPrivateConversationByUserIds(userIds) { // TODO: review implementation
+  async getPrivateConversation({ userIds, phones }) {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.get({
       path: '/conversations',
-      queryParams: { privateUserIds: userIds },
+      queryParams: { privateUserIds: userIds, privatePhones: phones },
     });
 
     if (![ 200, 204 ].includes(response.code)) {

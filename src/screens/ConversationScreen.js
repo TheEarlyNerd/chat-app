@@ -200,8 +200,9 @@ export default class ConversationScreen extends Component {
     this._setConversation(null);
 
     if (accessLevel === 'private' && selectedUsers.length) {
-      const userIds = selectedUsers.map(user => user.id);
-      const conversation = await conversationsManager.getPrivateConversationByUserIds(userIds);
+      const userIds = selectedUsers.map(user => (!user.isContact) ? user.id : null).filter(userId => !!userId);
+      const phones = selectedUsers.map(user => (user.isContact) ? user.phone : null).filter(phone => !!phone);
+      const conversation = await conversationsManager.getPrivateConversation({ userIds, phones });
 
       this.setState({ conversation });
     }

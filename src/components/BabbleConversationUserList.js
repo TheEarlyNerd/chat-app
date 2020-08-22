@@ -17,7 +17,14 @@ export default class BabbleConversationUserList extends Component {
 
         <View style={styles.details}>
           <Text style={styles.nameText}>{item.name}</Text>
-          <Text style={styles.usernameText}>@{item.username}</Text>
+
+          {!!item.username && (
+            <Text style={styles.subtext}>@{item.username}</Text>
+          )}
+
+          {!!item.phone && (
+            <Text style={styles.subtext}>+{item.phone}</Text>
+          )}
         </View>
       </TouchableOpacity>
     );
@@ -33,7 +40,7 @@ export default class BabbleConversationUserList extends Component {
 
   _renderLoading = () => {
     return (
-      <ActivityIndicator size={'large'} />
+      <ActivityIndicator size={'large'} style={styles.loading} />
     );
   }
 
@@ -44,7 +51,7 @@ export default class BabbleConversationUserList extends Component {
       <FlatList
         data={users}
         renderItem={this._renderUser}
-        keyExtractor={item => `${item.id}`}
+        keyExtractor={(item, index) => (item.id) ? `${item.id}` : `${index}-${item.name}`}
         style={[ styles.container, style ]}
         ListEmptyComponent={(!loading && !disableNoResultsMessage) ? this._renderNoResultsMessage : null}
         ListFooterComponent={(loading) ? this._renderLoading : null}
@@ -68,10 +75,18 @@ const styles = StyleSheet.create({
     marginTop: 15,
     textAlign: 'center',
   },
+  loading: {
+    marginTop: 10,
+  },
   nameText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
     fontSize: 14,
+  },
+  subtext: {
+    color: '#797979',
+    fontFamily: 'NunitoSans-Bold',
+    fontSize: 12,
   },
   user: {
     alignItems: 'center',
@@ -79,10 +94,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     width: '100%',
-  },
-  usernameText: {
-    color: '#797979',
-    fontFamily: 'NunitoSans-Bold',
-    fontSize: 12,
   },
 });
