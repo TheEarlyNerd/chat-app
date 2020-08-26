@@ -60,7 +60,7 @@ export default class BabbleProfileHeader extends Component {
 
           <View style={styles.details}>
             <Text style={styles.nameText}>{user.name}</Text>
-            <Text style={styles.usernameText}>@{user.username}</Text>
+            <Text style={styles.usernameText}>{user.username ? `@${user.username}` : '(Invited to Babble)'}</Text>
           </View>
 
           <View style={styles.followers}>

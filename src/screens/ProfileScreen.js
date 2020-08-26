@@ -21,7 +21,7 @@ export default class ProfileScreen extends Component {
 
     this.setState({ user });
 
-    this.props.navigation.setOptions({ title: `@${user.username}` });
+    this.props.navigation.setOptions({ title: (user.username) ? `@${user.username}` : 'Invited User' });
 
     this._loadConversations();
   }

@@ -38,7 +38,7 @@ export default class BabbleUserPreview extends Component {
 
         <View style={styles.content}>
           <Text numberOfLines={1} style={styles.nameText}>{user.name}</Text>
-          <Text numberOfLines={1} style={styles.usernameText}>@{user.username}</Text>
+          <Text numberOfLines={1} style={styles.usernameText}>{user.username ? `@${user.username}` : '(Invited to Babble)'}</Text>
           {!!user.about && (
             <Text numberOfLines={3} style={styles.aboutText}>{user.about}</Text>
           )}
