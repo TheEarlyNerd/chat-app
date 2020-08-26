@@ -180,9 +180,8 @@ export default class UserManager extends Manager {
     setTimeout(() => {
       this._setLoggedInUser(null);
 
-      Object.values(this.maestro.managers).forEach(maestroManager => {
-        maestroManager.resetStore();
-      });
+      this.maestro.managers.activityManager.resetStore();
+      this.maestro.managers.conversationsManager.resetStore();
     }, 1000);
 
     navigationHelper.reset('Landing');
