@@ -1,4 +1,4 @@
-import { PermissionsAndroid, Platform, Linking } from 'react-native';
+import { PermissionsAndroid, Platform } from 'react-native';
 import Contacts from 'react-native-contacts';
 import { Manager } from 'react-native-maestro';
 
@@ -94,13 +94,13 @@ export default class DeviceContactsManager extends Manager {
           phone = (!phone && phoneNumber.label === 'main') ? phoneNumber.number : phone;
           phone = (!phone && phoneNumber.label === 'home') ? phoneNumber.number : phone;
           phone = (phoneNumber.label === 'mobile') ? phoneNumber.number : phone;
-          phone = (!phone && contact.phoneNumbers.length - 1 === index) ? phoneNumber.number : phone;
+          phone = (!phone && contact.phoneNumbers.length - 1 === index) ? contact.phoneNumbers[0].number : phone;
 
           return phone;
         }, null),
       );
 
-      return { id, name, lastActiveAt, avatarAttachment, phone, isContact: true };
+      return { id, name, lastActiveAt, avatarAttachment, phone, isPhoneContact: true };
     }).filter(contact => contact.phone && contact.name).sort((a, b) => {
       if (a.name > b.name) { return 1; }
       if (a.name < b.name) { return -1; }

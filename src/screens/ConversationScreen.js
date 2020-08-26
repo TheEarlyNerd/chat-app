@@ -176,10 +176,17 @@ export default class ConversationScreen extends Component {
     this.setState({ loading: true });
 
     try {
+      const userIds = selectedUsers.map(selectedUser => (!selectedUser.isPhoneContact) ? selectedUser.id : null).filter(userId => !!userId);
+      const phoneUsers = selectedUsers.map(selectedUser => (selectedUser.isPhoneContact) ? ({
+        phone: selectedUser.phone,
+        name: selectedUser.name,
+      }) : null).filter(phoneUser => !!phoneUser);
+
       createdConversation = await conversationsManager.createConversation({
         accessLevel,
         title: (accessLevel !== 'private') ? title : null,
-        userIds: selectedUsers.map(selectedUser => selectedUser.id),
+        userIds,
+        phoneUsers,
         message: { text, attachments, embeds },
       });
     } catch (error) {
@@ -200,8 +207,8 @@ export default class ConversationScreen extends Component {
     this._setConversation(null);
 
     if (accessLevel === 'private' && selectedUsers.length) {
-      const userIds = selectedUsers.map(user => (!user.isContact) ? user.id : null).filter(userId => !!userId);
-      const phones = selectedUsers.map(user => (user.isContact) ? user.phone : null).filter(phone => !!phone);
+      const userIds = selectedUsers.map(user => (!user.isPhoneContact) ? user.id : null).filter(userId => !!userId);
+      const phones = selectedUsers.map(user => (user.isPhoneContact) ? user.phone : null).filter(phone => !!phone);
       const conversation = await conversationsManager.getPrivateConversation({ userIds, phones });
 
       this.setState({ conversation });

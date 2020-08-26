@@ -181,7 +181,7 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
-  async createConversation({ accessLevel, title, userIds, message }) {
+  async createConversation({ accessLevel, title, userIds, phoneUsers, message }) {
     const { apiHelper } = this.maestro.helpers;
     const { userManager } = this.maestro.managers;
     const attachments = await this._createAttachments(message.attachments);
@@ -192,6 +192,7 @@ export default class ConversationsManager extends Manager {
         accessLevel,
         title,
         userIds,
+        phoneUsers,
         message: {
           ...message,
           attachmentIds: attachments.map(attachment => attachment.id),
