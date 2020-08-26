@@ -177,12 +177,13 @@ export default class UserManager extends Manager {
       }
     });
 
-    this._setLoggedInUser(null);
+    setTimeout(() => {
+      this._setLoggedInUser(null);
 
-    // TODO: maestro should support resetting all manager stores..
-    Object.values(this.maestro.managers).forEach(maestroManager => {
-      maestroManager.resetStore();
-    });
+      Object.values(this.maestro.managers).forEach(maestroManager => {
+        maestroManager.resetStore();
+      });
+    }, 1000);
 
     navigationHelper.reset('Landing');
   }
