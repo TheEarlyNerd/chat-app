@@ -58,6 +58,7 @@ export default class BabbleConversationPreviewsList extends Component {
         style={[ styles.container, style ]}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListFooterComponent={(lazyLoading) ? this._renderLoading : null}
+        showsVerticalScrollIndicator={false}
         refreshing={refreshing}
         onRefresh={this._refresh}
         onEndReached={this._endReached}

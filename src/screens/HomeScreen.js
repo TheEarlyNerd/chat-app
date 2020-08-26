@@ -307,6 +307,7 @@ export default class HomeScreen extends Component {
           keyExtractor={(item, index) => `${item.id}.${index}`}
           ItemSeparatorComponent={this._renderItemSeparator}
           ListFooterComponent={(lazyLoading) ? this._renderLoading : null}
+          showsVerticalScrollIndicator={false}
           refreshing={refreshing}
           onRefresh={this._refresh}
           onEndReached={this._endReached}
