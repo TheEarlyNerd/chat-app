@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { BabbleTiledIconsBackground, BabbleUserAvatar, BabbleConnectionStatusBar } from './';
-import { BellIcon, MessageSquareIcon, HeartIcon } from './icons';
+import { BabbleBackground, BabbleUserAvatar, BabbleConnectionStatusBar } from './';
+import { BellIcon } from './icons';
 import maestro from '../maestro';
 
 const { activityManager, userManager } = maestro.managers;
@@ -74,11 +74,7 @@ export default class BabbleHeader extends Component {
             </TouchableOpacity>
           </View>
 
-          <BabbleTiledIconsBackground
-            iconComponents={[ MessageSquareIcon, HeartIcon ]}
-            iconSize={20}
-            iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
-            iconSpacing={37}
+          <BabbleBackground
             linearGradientProps={{
               colors: [ '#299BCB', '#1ACCB4' ],
               locations: [ 0, 0.7 ],

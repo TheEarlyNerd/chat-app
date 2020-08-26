@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Animated, LayoutAnimation, StyleSheet, Alert } from 'react-native';
-import { BabbleTiledIconsBackground } from './';
-import { CornerUpLeftIcon, EditIcon, Trash2Icon, ShareIcon, SmileIcon, MoreHorizontalIcon, MessageSquareIcon, AlertTriangleIcon } from './icons';
+import { BabbleBackground } from './';
+import { EditIcon, Trash2Icon, ShareIcon, SmileIcon, MoreHorizontalIcon, AlertTriangleIcon } from './icons';
 import maestro from '../maestro';
 
 const { conversationsManager, userManager } = maestro.managers;
@@ -73,11 +73,11 @@ export default class BabbleConversationMessageOptions extends Component {
     });
 
     if (userManager.store.user.id === conversationUser.userId) {
-      actions.push({
+      /*actions.push({
         iconComponent: EditIcon,
         text: 'Edit',
         onPress: this._editPress,
-      });
+      });*/
 
       actions.push({
         iconComponent: Trash2Icon,
@@ -116,8 +116,8 @@ export default class BabbleConversationMessageOptions extends Component {
           </TouchableOpacity>
 
           {(userManager.store.user.id === conversationUser.userId) && (
-            <TouchableOpacity onPress={this._editPress} style={styles.option}>
-              <EditIcon width={22} height={22} style={styles.optionIcon} />
+            <TouchableOpacity onPress={this._deletePress} style={styles.option}>
+              <Trash2Icon width={22} height={22} style={styles.optionIcon} />
             </TouchableOpacity>
           )}
 
@@ -132,11 +132,7 @@ export default class BabbleConversationMessageOptions extends Component {
           </TouchableOpacity>
         </View>
 
-        <BabbleTiledIconsBackground
-          iconComponents={[ MessageSquareIcon ]}
-          iconSize={20}
-          iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
-          iconSpacing={37}
+        <BabbleBackground
           linearGradientProps={{
             colors: [ '#299BCB', '#1ACCB4' ],
             locations: [ 0, 1 ],

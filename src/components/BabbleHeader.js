@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
-import { BabbleTiledIconsBackground, BabbleConnectionStatusBar } from './';
-import { ArrowLeftIcon, MessageSquareIcon, HeartIcon, XIcon } from './icons';
+import { BabbleBackground, BabbleConnectionStatusBar } from './';
+import { ArrowLeftIcon, XIcon } from './icons';
 
 const BabbleHeader = ({ scene }) => {
   const { descriptor } = scene;
@@ -61,11 +61,7 @@ const BabbleHeader = ({ scene }) => {
           )}
         </View>
 
-        <BabbleTiledIconsBackground
-          iconComponents={[ MessageSquareIcon, HeartIcon ]}
-          iconSize={20}
-          iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
-          iconSpacing={37}
+        <BabbleBackground
           linearGradientProps={{
             colors: [ '#299BCB', '#1ACCB4' ],
             locations: [ 0, 0.7 ],

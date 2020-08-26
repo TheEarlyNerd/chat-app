@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { BabbleCodeField, BabbleButton, BabbleTiledIconsBackground } from '../components';
-import { LockIcon, CheckCircleIcon } from '../components/icons';
+import { BabbleCodeField, BabbleButton, BabbleBackground } from '../components';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
@@ -63,11 +62,7 @@ export default class PhoneLoginCodeScreen extends Component {
         style={styles.container}
       >
         <View style={styles.animationContainer}>
-          <BabbleTiledIconsBackground
-            iconComponents={[ LockIcon, CheckCircleIcon ]}
-            iconSize={20}
-            iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
-            iconSpacing={37}
+          <BabbleBackground
             linearGradientProps={{
               colors: [ '#299BCB', '#1ACCB4' ],
               locations: [ 0, 0.7 ],

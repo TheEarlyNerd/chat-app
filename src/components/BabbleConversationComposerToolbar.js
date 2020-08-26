@@ -229,7 +229,7 @@ export default class BabbleConversationComposerToolbar extends Component {
           {
             iconComponent: MessageCircleIcon,
             text: 'Public',
-            subtext: 'Anyone can join this conversation, send and react to messages, and invite others.',
+            subtext: 'Anyone can view and join this conversation, send and react to messages, and invite others.',
             onPress: () => this._changeAccessLevel('public'),
           },
           {
@@ -287,7 +287,7 @@ export default class BabbleConversationComposerToolbar extends Component {
       >
         <TouchableWithoutFeedback onPress={this._toolbarPress}>
           <View style={styles.toolbarContainer}>
-            <Text style={styles.labelText}>{(accessLevel === 'protected' ? 'Invite:' : 'To:')}</Text>
+            <Text style={styles.labelText}>{(accessLevel !== 'private' ? 'Invite:' : 'To:')}</Text>
 
             {selectedUsers.map((selectedUser, index) => (
               <TouchableOpacity

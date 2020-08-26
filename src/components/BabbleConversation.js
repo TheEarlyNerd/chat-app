@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Animated, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, Animated, ActivityIndicator, Keyboard, StyleSheet } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { BabbleConversationMessage, BabbleConversationMessageOptions } from './';
 
@@ -10,6 +10,10 @@ export default class BabbleConversation extends Component {
   state = {
     autoscroll: true,
     lazyLoading: false,
+  }
+
+  scrollToEnd = animated => {
+    this.swipeListView.scrollToOffset({ offset: 0, animated });
   }
 
   _getTypingText = () => {
@@ -25,6 +29,10 @@ export default class BabbleConversation extends Component {
   }
 
   _scrollBeginDrag = () => {
+    if (this.state.autoscroll) {
+      Keyboard.dismiss();
+    }
+
     this.setState({ autoscroll: false });
   }
 
@@ -33,7 +41,7 @@ export default class BabbleConversation extends Component {
     const { autoscroll } = this.state;
 
     if (messages && autoscroll) {
-      this.swipeListView.scrollToOffset({ offset: 0, animated: false });
+      this.scrollToEnd(false);
     }
   }
 

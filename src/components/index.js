@@ -37,7 +37,7 @@ import BabbleReaction from './BabbleReaction';
 import BabbleSearchField from './BabbleSearchField';
 import BabbleSettingField from './BabbleSettingField';
 import BabbleTextField from './BabbleTextField';
-import BabbleTiledIconsBackground from './BabbleTiledIconsBackground';
+import BabbleBackground from './BabbleBackground';
 import BabbleUserAvatar from './BabbleUserAvatar';
 import BabbleUserAvatarGroup from './BabbleUserAvatarGroup';
 import BabbleUserPreview from './BabbleUserPreview';
@@ -84,7 +84,7 @@ export {
   BabbleSearchField,
   BabbleSettingField,
   BabbleTextField,
-  BabbleTiledIconsBackground,
+  BabbleBackground,
   BabbleUserAvatar,
   BabbleUserAvatarGroup,
   BabbleUserPreview,

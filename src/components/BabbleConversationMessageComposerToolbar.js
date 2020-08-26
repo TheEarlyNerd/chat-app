@@ -69,6 +69,7 @@ export default class BabbleMessageComposerToolbar extends Component {
 
   _selectMedia = async source => {
     const options = {
+      mediaType: 'any',
       maxFiles: 15,
       multiple: true,
     };

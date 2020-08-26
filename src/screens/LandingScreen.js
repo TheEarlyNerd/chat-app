@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { View, KeyboardAvoidingView, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { BabblePhoneField, BabbleButton, BabbleTiledIconsBackground } from '../components';
-import { MessageSquareIcon, HeartIcon } from '../components/icons';
+import { BabblePhoneField, BabbleButton, BabbleBackground } from '../components';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
@@ -48,11 +47,7 @@ export default class LandingScreen extends Component {
         <View style={styles.animationContainer}>
           <Text style={styles.logoText}>Babble</Text>
 
-          <BabbleTiledIconsBackground
-            iconComponents={[ MessageSquareIcon, HeartIcon ]}
-            iconSize={20}
-            iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
-            iconSpacing={37}
+          <BabbleBackground
             linearGradientProps={{
               colors: [ '#299BCB', '#1ACCB4' ],
               locations: [ 0, 0.7 ],

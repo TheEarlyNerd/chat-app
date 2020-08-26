@@ -8,6 +8,7 @@ const { conversationsManager } = maestro.managers;
 const { navigationHelper, interfaceHelper } = maestro.helpers;
 
 export default class ConversationScreen extends Component {
+  conversation = null;
   conversationComposer = null;
   messageComposer = null;
   typingTimeout = null;
@@ -148,6 +149,7 @@ export default class ConversationScreen extends Component {
     const { accessLevel, title, selectedUsers } = this.conversationComposer || {};
 
     if (conversation) {
+      this.conversation.scrollToEnd();
       this.messageComposer.clear();
 
       if (composingConversation) { // edge case for composing but sending to private & existing convo for users, see _onUserSelectionAccessLevelChange
@@ -239,6 +241,7 @@ export default class ConversationScreen extends Component {
           loadMessages={this._loadMessages}
           messages={conversationMessages}
           typingUsers={conversationTypingUsers}
+          ref={component => this.conversation = component}
         />
 
         {!!conversation && showViewerToolbar && (

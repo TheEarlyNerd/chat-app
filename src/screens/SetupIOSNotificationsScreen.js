@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Linking } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { BabbleButton, BabbleTiledIconsBackground } from '../components';
-import { BellIcon, SmileIcon } from '../components/icons';
+import { BabbleButton, BabbleBackground } from '../components';
 import maestro from '../maestro';
 
 const { userManager, notificationsManager } = maestro.managers;
@@ -55,11 +54,7 @@ export default class SetupIOSNotificationsScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.animationContainer}>
-          <BabbleTiledIconsBackground
-            iconComponents={[ BellIcon, SmileIcon ]}
-            iconSize={20}
-            iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
-            iconSpacing={37}
+          <BabbleBackground
             linearGradientProps={{
               colors: [ '#299BCB', '#1ACCB4' ],
               locations: [ 0, 0.7 ],

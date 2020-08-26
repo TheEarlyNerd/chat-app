@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Animated, StyleSheet, Platform, Dimensions, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, StyleSheet, Platform, Dimensions, Keyboard, Linking } from 'react-native';
 import moment from 'moment';
 import ParsedText from 'react-native-parsed-text';
 import { BabbleConversationMessageAttachment, BabbleConversationMessageEmbed, BabbleUserAvatar, BabbleReaction } from './';
@@ -28,6 +28,8 @@ export default class BabbleConversationMessage extends Component {
   }
 
   _openUrl = url => {
+    Keyboard.dismiss();
+
     navigationHelper.push('WebBrowserNavigator', {
       screen: 'WebBrowser',
       params: { url },
@@ -86,6 +88,8 @@ export default class BabbleConversationMessage extends Component {
   }
 
   _openMediaViewer = ({ media, selectedIndex }) => {
+    Keyboard.dismiss();
+
     interfaceHelper.showOverlay({
       name: 'MediaViewer',
       data: { media, selectedIndex },

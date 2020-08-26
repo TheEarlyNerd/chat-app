@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, Animated, StyleSheet } from 'react-native';
-import { BabbleTiledIconsBackground } from './';
-import { AlertTriangleIcon, FrownIcon } from './icons';
+import { BabbleBackground } from './';
+import { FrownIcon } from './icons';
 import maestro from '../maestro';
 
 export default class BabbleOverlayError extends Component {
@@ -50,11 +50,7 @@ export default class BabbleOverlayError extends Component {
 
         <Text style={styles.errorText}>{message}</Text>
 
-        <BabbleTiledIconsBackground
-          iconComponents={[ AlertTriangleIcon ]}
-          iconSize={20}
-          iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
-          iconSpacing={20}
+        <BabbleBackground
           linearGradientProps={{
             colors: [ '#EA5446', '#F54444' ],
             locations: [ 0, 0.7 ],

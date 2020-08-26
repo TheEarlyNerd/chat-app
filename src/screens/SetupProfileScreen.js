@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Dimensions, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { BabbleTextField, BabbleUsernameField, BabbleButton, BabbleTiledIconsBackground, BabbleUserAvatar } from '../components';
-import { SmileIcon, CameraIcon } from '../components/icons';
+import { BabbleTextField, BabbleUsernameField, BabbleButton, BabbleBackground, BabbleUserAvatar } from '../components';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
@@ -82,11 +81,7 @@ export default class SetupProfileScreen extends Component {
             <Text style={[ styles.previewText, styles.previewUsernameText ]}>@{username}</Text>
           )}
 
-          <BabbleTiledIconsBackground
-            iconComponents={[ SmileIcon, CameraIcon ]}
-            iconSize={20}
-            iconStyle={{ color: '#FFFFFF', opacity: 0.25 }}
-            iconSpacing={37}
+          <BabbleBackground
             linearGradientProps={{
               colors: [ '#299BCB', '#1ACCB4' ],
               locations: [ 0, 0.7 ],

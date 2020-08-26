@@ -18,7 +18,7 @@ const BabbleUserAvatar = props => {
     style,
   } = props;
   const defaultAvatar = props.defaultAvatar || require('../assets/images/default-avatar.png');
-  const lastActiveThreshold = 60 * 60 * 1000; // 60 minutes
+  const lastActiveThreshold = 24 * 60 * 60 * 1000; // 24 hours for now.. otherwise //60 * 60 * 1000; // 60 minutes
 
   return (
     <TouchableOpacity
