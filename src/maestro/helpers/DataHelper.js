@@ -1,10 +1,20 @@
 import { Helper } from 'react-native-maestro';
 import * as RNLocalize from 'react-native-localize';
-import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import { AsYouType, parsePhoneNumberFromString } from 'libphonenumber-js';
 
 export default class DataHelper extends Helper {
   static get instanceKey() {
     return 'dataHelper';
+  }
+
+  formatPhoneNumber = (countryCode, phoneNumber) => {
+    try {
+      const formatter = new AsYouType({ defaultCallingCode: countryCode });
+
+      return formatter.input(phoneNumber);
+    } catch (error) {
+      return phoneNumber;
+    }
   }
 
   normalizeDataObject = dataObject => {

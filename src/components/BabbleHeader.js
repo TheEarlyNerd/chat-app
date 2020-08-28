@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
     marginTop: -1,
   },
   backIcon: {
-    borderColor: '#FFFFFF',
     color: '#FFFFFF',
   },
   backgroundGradient: {

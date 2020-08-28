@@ -75,7 +75,7 @@ export default initialRouteName => {
         name={'PhoneLoginCode'}
         component={PhoneLoginCodeScreen}
         options={{
-          gestureEnabled: false,
+          gestureEnabled: true,
           headerShown: false,
         }}
       />

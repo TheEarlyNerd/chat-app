@@ -34,7 +34,7 @@ export default class BabblePhoneField extends Component {
     this.setState({ phone: updatedPhone });
 
     if (onPhoneChange) {
-      onPhoneChange(`${country.phoneCode}${updatedPhone}`);
+      onPhoneChange(`${country.phoneCode}`, `${country.phoneCode}${updatedPhone}`);
     }
   }
 

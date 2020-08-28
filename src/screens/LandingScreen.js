@@ -8,13 +8,14 @@ const { userManager } = maestro.managers;
 
 export default class LandingScreen extends Component {
   state = {
+    countryCode: '',
     phone: '',
     error: '',
     loading: false,
   }
 
   _submit = async () => {
-    const { phone } = this.state;
+    const { countryCode, phone } = this.state;
     const validPhone = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(phone);
 
     if (!validPhone) {
@@ -25,14 +26,14 @@ export default class LandingScreen extends Component {
 
     try {
       await userManager.requestPhoneLoginCode(phone);
+
+      // visually pleasing, continue doesn't flash on screen transition.
+      setTimeout(() => this.setState({ loading: false }), 1000);
     } catch (error) {
-      return this.setState({
-        error: error.message,
-        loading: false,
-      });
+      this.setState({ error: error.message, loading: false });
     }
 
-    this.props.navigation.navigate('PhoneLoginCode', { phone });
+    this.props.navigation.navigate('PhoneLoginCode', { countryCode, phone });
   }
 
   render() {
@@ -66,7 +67,7 @@ export default class LandingScreen extends Component {
 
         <View style={styles.formContainer}>
           <BabblePhoneField
-            onPhoneChange={phone => this.setState({ phone })}
+            onPhoneChange={(countryCode, phone) => this.setState({ countryCode, phone })}
             containerStyle={styles.phoneFieldContainer}
             error={error}
           />

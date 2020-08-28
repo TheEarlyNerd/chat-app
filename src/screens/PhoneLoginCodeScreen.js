@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import { KeyboardAvoidingView, View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { BabbleCodeField, BabbleButton, BabbleBackground } from '../components';
+import { ArrowLeftIcon } from '../components/icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
-const { navigationHelper } = maestro.helpers;
+const { navigationHelper, dataHelper } = maestro.helpers;
 
 export default class PhoneLoginCodeScreen extends Component {
   state = {
     sendingText: true,
+    resendingText: false,
     loading: true,
     error: null,
   }
@@ -28,6 +30,18 @@ export default class PhoneLoginCodeScreen extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.loginCodeDelayTimeout);
+  }
+
+  _resend = async () => {
+    const { phone } = this.props.route.params;
+
+    this.setState({ resendingText: true });
+
+    await userManager.requestPhoneLoginCode(phone);
+
+    setTimeout(() => {
+      this.setState({ resendingText: false });
+    }, 5500); // give time for text to arrive.
   }
 
   _submit = async () => {
@@ -53,7 +67,8 @@ export default class PhoneLoginCodeScreen extends Component {
   }
 
   render() {
-    const { sendingText, loading, error } = this.state;
+    const { countryCode, phone } = this.props.route.params;
+    const { sendingText, resendingText, loading, error } = this.state;
 
     return (
       <KeyboardAvoidingView
@@ -61,6 +76,14 @@ export default class PhoneLoginCodeScreen extends Component {
         keyboardVerticalOffset={-40}
         style={styles.container}
       >
+        <TouchableOpacity onPress={() => navigationHelper.pop()} style={styles.backButton}>
+          <ArrowLeftIcon
+            width={33}
+            height={33}
+            style={styles.backIcon}
+          />
+        </TouchableOpacity>
+
         <View style={styles.animationContainer}>
           <BabbleBackground
             linearGradientProps={{
@@ -96,8 +119,8 @@ export default class PhoneLoginCodeScreen extends Component {
           </BabbleButton>
 
           {!sendingText && (
-            <TouchableOpacity style={styles.resendButton}>
-              <Text style={styles.resendButtonText}>Resend Code</Text>
+            <TouchableOpacity onPress={this._resend} style={styles.resendButton}>
+              <Text style={styles.resendButtonText}>{resendingText ? `Resending code to +${dataHelper.formatPhoneNumber(countryCode, phone)}...` : 'Resend Code'}</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -110,6 +133,15 @@ const styles = StyleSheet.create({
   animationContainer: {
     alignItems: 'center',
     flex: 1,
+  },
+  backButton: {
+    left: 15,
+    position: 'absolute',
+    top: 60,
+    zIndex: 1,
+  },
+  backIcon: {
+    color: '#FFFFFF',
   },
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
