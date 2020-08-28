@@ -19,9 +19,9 @@ export default class BabbleConversationViewerToolbar extends Component {
 
     try {
       if (!conversation.authConversationUser) {
-        conversationsManager.joinConversation(conversation.id);
+        await conversationsManager.joinConversation(conversation.id);
       } else {
-        conversationsManager.leaveConversation(conversation.id);
+        await conversationsManager.leaveConversation(conversation.id);
       }
     } catch (error) {
       interfaceHelper.showError({ message: error.message });
