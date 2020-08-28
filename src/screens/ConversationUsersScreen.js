@@ -21,6 +21,7 @@ export default class ConversationUsersScreen extends Component {
     return (
       <BabbleUserPreview
         user={item.user}
+        style={styles.user}
       />
     );
   }
@@ -60,5 +61,8 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 15,
     paddingTop: 20,
+  },
+  user: {
+    marginBottom: 20,
   },
 });

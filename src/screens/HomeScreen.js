@@ -224,6 +224,7 @@ export default class HomeScreen extends Component {
     return (
       <BabbleViewMoreButton
         onPress={() => this._openConversationsList({ title, type })}
+        style={styles.viewMoreButton}
       />
     );
   }
@@ -404,5 +405,8 @@ const styles = StyleSheet.create({
   },
   userPreview: {
     paddingHorizontal: 15,
+  },
+  viewMoreButton: {
+    marginTop: -15,
   },
 });

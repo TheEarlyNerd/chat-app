@@ -186,7 +186,10 @@ export default class ConversationDetailsScreen extends Component {
           ))}
 
           {!!conversationUsers && conversation.usersCount > 5 && (
-            <BabbleViewMoreButton onPress={this._openConversationUsers} />
+            <BabbleViewMoreButton
+              onPress={this._openConversationUsers}
+              style={styles.viewMoreButton}
+            />
           )}
         </BabbleSettingField>
 
@@ -243,5 +246,8 @@ const styles = StyleSheet.create({
   },
   red: {
     color: '#F54444',
+  },
+  viewMoreButton: {
+    marginTop: 15,
   },
 });

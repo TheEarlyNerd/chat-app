@@ -5,7 +5,7 @@ const BabbleViewMoreButton = props => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
-      style={styles.button}
+      style={[ styles.button, props.style ]}
     >
       <Text style={styles.text}>View More</Text>
     </TouchableOpacity>
@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 1,
     marginBottom: 35,
-    marginTop: -15,
     paddingHorizontal: 10,
     paddingVertical: 5,
   },

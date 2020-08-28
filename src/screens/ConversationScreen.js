@@ -213,7 +213,11 @@ export default class ConversationScreen extends Component {
       const phones = selectedUsers.map(user => (user.isPhoneContact) ? user.phone : null).filter(phone => !!phone);
       const conversation = await conversationsManager.getPrivateConversation({ userIds, phones });
 
+      this.props.navigation.setOptions({ title: (conversation) ? 'New Message' : 'New Conversation' });
+
       this.setState({ conversation });
+    } else {
+      this.props.navigation.setOptions({ title: 'New Conversation' });
     }
   }
 
