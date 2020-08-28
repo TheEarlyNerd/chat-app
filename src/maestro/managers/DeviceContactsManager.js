@@ -36,6 +36,10 @@ export default class DeviceContactsManager extends Manager {
     const load = () => {
       return new Promise(resolve => {
         Contacts.getAll((error, contacts) => {
+          if (error) {
+            return resolve(false);
+          }
+
           this._syncPermission(!error);
 
           contacts = this._normalizeContacts(contacts);

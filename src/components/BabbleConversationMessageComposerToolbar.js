@@ -3,7 +3,7 @@ import { KeyboardAvoidingView, View, TextInput, Text, ScrollView, TouchableOpaci
 import { HeaderHeightContext } from '@react-navigation/stack';
 import ImagePicker from 'react-native-image-crop-picker';
 import { BabbleConversationMessageComposerToolbarAttachment } from './';
-import { FileTextIcon, CameraIcon, ArrowUpIcon, ImageIcon, XIcon } from './icons';
+import { CameraIcon, ArrowUpIcon, ImageIcon, VideoIcon, XIcon } from './icons';
 import maestro from '../maestro';
 
 const { interfaceHelper } = maestro.helpers;
@@ -28,17 +28,18 @@ export default class BabbleMessageComposerToolbar extends Component {
         actions: [
           {
             iconComponent: CameraIcon,
-            text: 'Open Camera',
-            onPress: () => this._selectMedia('camera'),
+            text: 'Take Photo',
+            onPress: () => this._selectMedia('photo'),
+          },
+          {
+            iconComponent: VideoIcon,
+            text: 'Record Video',
+            onPress: () => this._selectMedia('video'),
           },
           {
             iconComponent: ImageIcon,
-            text: 'Open Photo Library',
+            text: 'Media Library',
             onPress: () => this._selectMedia('library'),
-          },
-          {
-            iconComponent: FileTextIcon,
-            text: 'Open Files',
           },
         ],
       },
@@ -69,15 +70,19 @@ export default class BabbleMessageComposerToolbar extends Component {
 
   _selectMedia = async source => {
     const options = {
-      mediaType: 'any',
+      mediaType: (source === 'video') ? 'video' : 'any',
       maxFiles: 15,
       multiple: true,
     };
 
     try {
-      const media = (source === 'camera')
+      let media = (source !== 'library')
         ? await ImagePicker.openCamera(options)
         : await ImagePicker.openPicker(options);
+
+      if (source !== 'library') {
+        media = [ media ];
+      }
 
       const newAttachments = media.map(item => ({
         filename: item.filename,
@@ -97,7 +102,9 @@ export default class BabbleMessageComposerToolbar extends Component {
       });
 
       this.setState({ attachments: [ ...newAttachments, ...filteredAttachments ] });
-    } catch { /* noop */ }
+    } catch (error) {
+      interfaceHelper.showError({ message: error.message });
+    }
   }
 
   _deleteAttachment = attachmentIndex => {
