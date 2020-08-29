@@ -53,7 +53,7 @@ export default class SetupIOSNotificationsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.animationContainer}>
+        <View style={styles.topContainer}>
           <BabbleBackground
             linearGradientProps={{
               colors: [ '#299BCB', '#1ACCB4' ],
@@ -86,7 +86,7 @@ export default class SetupIOSNotificationsScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  animationContainer: {
+  topContainer: {
     alignItems: 'center',
     flex: 3,
   },

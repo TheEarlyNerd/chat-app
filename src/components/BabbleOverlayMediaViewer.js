@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, TouchableOpacity, PanResponder, Animated, Dimensions, StyleSheet } from 'react-native';
+import { View, FlatList, TouchableOpacity, PanResponder, Animated, Dimensions, StyleSheet, Alert } from 'react-native';
 import { BabbleAutoscaleImage, BabbleAutoscaleVideo } from './';
 import { DownloadIcon, ShareIcon, XIcon } from './icons';
 import maestro from '../maestro';
@@ -69,11 +69,11 @@ export default class BabbleOverlayMediaViewer extends Component {
   }
 
   _download = () => {
-
+    Alert.alert('TO DO!', 'This feature is not finished!');
   }
 
   _share = () => {
-
+    Alert.alert('TO DO!', 'This feature is not finished!');
   }
 
   _onScroll = ({ nativeEvent: { contentOffset, zoomScale } }) => {

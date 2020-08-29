@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   fieldContainer: {
-    marginBottom: 35,
+    marginBottom: 25,
   },
   formContainer: {
     alignItems: 'center',

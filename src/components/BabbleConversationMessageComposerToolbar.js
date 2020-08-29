@@ -149,7 +149,7 @@ export default class BabbleMessageComposerToolbar extends Component {
         {headerHeight => (
           <KeyboardAvoidingView
             behavior={'padding'}
-            keyboardVerticalOffset={headerHeight + styles.container.paddingVertical}
+            keyboardVerticalOffset={headerHeight}
             style={[ styles.container, style ]}
           >
             {false && (/* TODO: Add support for replies. */
@@ -339,5 +339,6 @@ const styles = StyleSheet.create({
   toolbar: {
     alignItems: 'center',
     flexDirection: 'row',
+    paddingBottom: 10,
   },
 });

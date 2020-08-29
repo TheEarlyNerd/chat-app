@@ -36,6 +36,10 @@ export default class BabbleConversationMessageOptions extends Component {
 
   }
 
+  _sharePress = () => {
+    Alert.alert('TO DO!', 'Sharing is still being built into Babble!');
+  }
+
   _reactPress = () => {
     interfaceHelper.showOverlay({
       name: 'ReactionInput',

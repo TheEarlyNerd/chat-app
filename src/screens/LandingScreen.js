@@ -4,6 +4,7 @@ import FastImage from 'react-native-fast-image';
 import { BabblePhoneField, BabbleButton, BabbleBackground } from '../components';
 import maestro from '../maestro';
 
+const { interfaceHelper } = maestro.helpers;
 const { userManager } = maestro.managers;
 
 export default class LandingScreen extends Component {
@@ -42,10 +43,10 @@ export default class LandingScreen extends Component {
     return (
       <KeyboardAvoidingView
         behavior={'padding'}
-        keyboardVerticalOffset={-85}
+        keyboardVerticalOffset={interfaceHelper.deviceValue({ xs: -50, default: -85 })}
         style={styles.container}
       >
-        <View style={styles.animationContainer}>
+        <View style={styles.topContainer}>
           <Text style={styles.logoText}>Babble</Text>
 
           <BabbleBackground
@@ -92,10 +93,6 @@ export default class LandingScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  animationContainer: {
-    alignItems: 'center',
-    flex: 1,
-  },
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
     zIndex: -1,
@@ -114,7 +111,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     alignItems: 'center',
-    flex: 1,
+    flex: interfaceHelper.deviceValue({ default: 1, xs: 1.15 }),
     justifyContent: 'center',
     paddingHorizontal: 30,
   },
@@ -131,7 +128,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   phoneFieldContainer: {
-    marginBottom: 35,
+    marginBottom: 25,
   },
   termsButtonText: {
     color: '#9B9B9B',
@@ -141,5 +138,9 @@ const styles = StyleSheet.create({
   },
   termsButtonTextBold: {
     fontFamily: 'NunitoSans-Bold',
+  },
+  topContainer: {
+    alignItems: 'center',
+    flex: 1,
   },
 });

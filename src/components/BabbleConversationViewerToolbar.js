@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopColor: '#D8D8D8',
     borderTopWidth: 0.5,
+    marginBottom: interfaceHelper.deviceValue({ default: 15, notchAdjustment: -15 }),
     paddingHorizontal: 15,
   },
   detailsText: {

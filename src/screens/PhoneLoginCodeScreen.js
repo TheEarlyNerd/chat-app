@@ -6,7 +6,7 @@ import { ArrowLeftIcon } from '../components/icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
-const { navigationHelper, dataHelper } = maestro.helpers;
+const { navigationHelper, dataHelper, interfaceHelper } = maestro.helpers;
 
 export default class PhoneLoginCodeScreen extends Component {
   state = {
@@ -73,7 +73,7 @@ export default class PhoneLoginCodeScreen extends Component {
     return (
       <KeyboardAvoidingView
         behavior={'padding'}
-        keyboardVerticalOffset={-40}
+        keyboardVerticalOffset={interfaceHelper.deviceValue({ xs: -7, default: -30 })}
         style={styles.container}
       >
         <TouchableOpacity onPress={() => navigationHelper.pop()} style={styles.backButton}>
@@ -84,7 +84,7 @@ export default class PhoneLoginCodeScreen extends Component {
           />
         </TouchableOpacity>
 
-        <View style={styles.animationContainer}>
+        <View style={styles.topContainer}>
           <BabbleBackground
             linearGradientProps={{
               colors: [ '#299BCB', '#1ACCB4' ],
@@ -119,7 +119,11 @@ export default class PhoneLoginCodeScreen extends Component {
           </BabbleButton>
 
           {!sendingText && (
-            <TouchableOpacity onPress={this._resend} style={styles.resendButton}>
+            <TouchableOpacity
+              onPress={this._resend}
+              disabled={resendingText}
+              style={styles.resendButton}
+            >
               <Text style={styles.resendButtonText}>{resendingText ? `Resending code to +${dataHelper.formatPhoneNumber(countryCode, phone)}...` : 'Resend Code'}</Text>
             </TouchableOpacity>
           )}
@@ -130,14 +134,10 @@ export default class PhoneLoginCodeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  animationContainer: {
-    alignItems: 'center',
-    flex: 1,
-  },
   backButton: {
     left: 15,
     position: 'absolute',
-    top: 60,
+    top: interfaceHelper.deviceValue({ default: 30, notchAdjustment: 20 }),
     zIndex: 1,
   },
   backIcon: {
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     alignItems: 'center',
-    flex: 1,
+    flex: interfaceHelper.deviceValue({ default: 1, xs: 1.4 }),
     justifyContent: 'center',
     paddingHorizontal: 30,
   },
@@ -173,5 +173,9 @@ const styles = StyleSheet.create({
     color: '#666666',
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: 18,
+  },
+  topContainer: {
+    alignItems: 'center',
+    flex: 1,
   },
 });
