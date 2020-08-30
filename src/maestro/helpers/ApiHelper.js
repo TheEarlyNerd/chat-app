@@ -6,7 +6,7 @@ export default class ApiHelper extends Helper {
     return 'apiHelper';
   }
 
-  _host = (__DEV__) ? 'http://localhost:8000' : 'https://api.webabble.com';
+  _host = (__DEV__) ? 'http://localhost:8000' : 'https://api.usebabble.com';
 
   get(options) {
     return this._request({ ...options, method: 'GET' });
