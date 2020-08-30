@@ -91,35 +91,37 @@ export default class ConversationScreen extends Component {
   _showMoreActionSheet = () => {
     const { conversation } = this.state;
     const { id, authUserConversationRepost } = conversation;
+    const actions = [
+      {
+        iconComponent: InfoIcon,
+        text: 'View Info',
+        subtext: 'See additional details about this conversation and its participants.',
+        onPress: () => {
+          navigationHelper.push('ConversationInfo', { conversation });
+        },
+      },
+    ];
+
+    if (conversation.accessLevel !== 'private') {
+      actions.unshift({
+        iconComponent: RepeatIcon,
+        text: (!authUserConversationRepost) ? 'Repost' : 'Delete Repost',
+        subtext: (!authUserConversationRepost) ? 'This conversation will be reposted to your profile and the feeds of your followers.' : 'Your repost of this conversation will be deleted and removed from the feeds of your followers.',
+        onPress: () => {
+          if (!authUserConversationRepost) {
+            conversationsManager.createConversationRepost(id);
+            Alert.alert('Reposted', 'This conversation has been reposted to your profile and feeds of your followers.');
+          } else {
+            conversationsManager.deleteConversationRepost(id);
+            Alert.alert('Repost Deleted', 'This conversation repost has been deleted and removed from your profile and the feeds of your followers.');
+          }
+        },
+      });
+    }
 
     interfaceHelper.showOverlay({
       name: 'ActionSheet',
-      data: {
-        actions: [
-          {
-            iconComponent: RepeatIcon,
-            text: (!authUserConversationRepost) ? 'Repost' : 'Delete Repost',
-            subtext: (!authUserConversationRepost) ? 'This conversation will be reposted to your profile and the feeds of your followers.' : 'Your repost of this conversation will be deleted and removed from the feeds of your followers.',
-            onPress: () => {
-              if (!authUserConversationRepost) {
-                conversationsManager.createConversationRepost(id);
-                Alert.alert('Reposted', 'This conversation has been reposted to your profile and feeds of your followers.');
-              } else {
-                conversationsManager.deleteConversationRepost(id);
-                Alert.alert('Repost Deleted', 'This conversation repost has been deleted and removed from your profile and the feeds of your followers.');
-              }
-            },
-          },
-          {
-            iconComponent: InfoIcon,
-            text: 'View Info',
-            subtext: 'See additional details about this conversation and its participants.',
-            onPress: () => {
-              navigationHelper.push('ConversationInfo', { conversation });
-            },
-          },
-        ],
-      },
+      data: { actions },
     });
   }
 

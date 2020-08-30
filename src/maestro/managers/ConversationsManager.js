@@ -426,6 +426,7 @@ export default class ConversationsManager extends Manager {
     }
 
     this._removeConversationAuthConversationUser(conversationId);
+    this._removePrivateConversation(conversationId);
     this._removeRecentConversation(conversationId);
   }
 

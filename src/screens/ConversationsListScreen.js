@@ -43,11 +43,11 @@ export default class CovnersationsListScreen extends Component {
     const { conversations } = this.state;
     const queryParams = { limit: 15 };
 
-    if (conversations && !refresh && type === 'feed') {
+    if (conversations?.length && !refresh && type === 'feed') {
       queryParams.before = conversations[conversations.length - 1].createdAt;
     }
 
-    if (conversations && !refresh && [ 'recent', 'private', 'explore' ].includes(type)) {
+    if (conversations?.length && !refresh && [ 'recent', 'private', 'explore' ].includes(type)) {
       queryParams.staler = conversations[conversations.length - 1].updatedAt;
     }
 
