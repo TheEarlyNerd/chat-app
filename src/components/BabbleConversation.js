@@ -77,7 +77,7 @@ export default class BabbleConversation extends Component {
   }
 
   _endReached = async () => {
-    const { messages, loadMessages } = this.props;
+    const { messages, loadOldMessages } = this.props;
     const { lazyLoading } = this.state;
 
     if (lazyLoading || lazyLoading === null || !messages) {
@@ -86,9 +86,9 @@ export default class BabbleConversation extends Component {
 
     this.setState({ lazyLoading: true });
 
-    const loadedMessages = await loadMessages();
+    const loadedOldMessages = await loadOldMessages();
 
-    this.setState({ lazyLoading: (loadedMessages.length) ? false : null });
+    this.setState({ lazyLoading: (loadedOldMessages.length) ? false : null });
   }
 
   _renderMessage = ({ item, index }) => {

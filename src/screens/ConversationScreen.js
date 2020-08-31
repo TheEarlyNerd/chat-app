@@ -72,18 +72,38 @@ export default class ConversationScreen extends Component {
     this._setConversation(conversation);
   }
 
-  _loadMessages = () => {
-    const params = this.props.route.params || {};
-    const { conversationId } = params;
+  receiveEvent(name, value) {
+    const { conversation } = this.state;
+
+    if (conversation && name === 'APP_STATE_CHANGED' && value === 'active') {
+      this._loadNewMessages();
+    }
+  }
+
+  _loadNewMessages = () => {
     const { conversation } = this.state;
     const { conversationMessages } = conversation;
 
-    if (!conversationId) {
+    if (!conversation.id) {
+      return [];
+    }
+
+    return conversationsManager.loadActiveConversationMessages({
+      conversationId: conversation.id,
+      queryParams: { after: conversationMessages[0].createdAt },
+    });
+  }
+
+  _loadOldMessages = () => {
+    const { conversation } = this.state;
+    const { conversationMessages } = conversation;
+
+    if (!conversation.id) {
       return []; // FIX: prevent autoload bug on new convo, could do something cleaner?
     }
 
     return conversationsManager.loadActiveConversationMessages({
-      conversationId,
+      conversationId: conversation.id,
       queryParams: { before: conversationMessages[conversationMessages.length - 1].createdAt },
     });
   }
@@ -244,7 +264,7 @@ export default class ConversationScreen extends Component {
         )}
 
         <BabbleConversation
-          loadMessages={this._loadMessages}
+          loadOldMessages={this._loadOldMessages}
           messages={conversationMessages}
           typingUsers={conversationTypingUsers}
           ref={component => this.conversation = component}
