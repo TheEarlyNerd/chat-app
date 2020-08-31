@@ -97,9 +97,4 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
  [RNCPushNotificationIOS didReceiveLocalNotification:notification];
 }
 
--(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
-{
-  completionHandler(UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionBadge);
-}
-
 @end
