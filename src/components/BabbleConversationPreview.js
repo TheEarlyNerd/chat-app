@@ -11,7 +11,7 @@ export default class BabbleConversationPreview extends Component {
   _onPress = () => {
     const { conversation } = this.props;
 
-    navigationHelper.push('Conversation', { conversationId: conversation.id });
+    navigationHelper.navigate('Conversation', { conversationId: conversation.id });
   }
 
   _getAvatarAttachment = () => {

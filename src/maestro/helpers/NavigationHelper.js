@@ -1,5 +1,5 @@
 import { Helper } from 'react-native-maestro';
-import { StackActions } from '@react-navigation/native';
+import { StackActions, CommonActions } from '@react-navigation/native';
 
 export default class NavigationHelper extends Helper {
   static get instanceKey() {
@@ -14,6 +14,13 @@ export default class NavigationHelper extends Helper {
 
   push(routeName, params) {
     this._navigation.dispatch(StackActions.push(routeName, params));
+  }
+
+  navigate(routeName, params) { // won't allow same route on the stack more than 1 time whereas push will.
+    this._navigation.dispatch(CommonActions.navigate({
+      name: routeName,
+      params,
+    }));
   }
 
   reset(routeName, params) {

@@ -128,8 +128,8 @@ export default class NotificationsManager extends Manager {
     const { navigationHelper } = this.maestro.helpers;
     const conversationId = notification?.data?.data?.conversationId;
 
-    if (conversationId) {
-      navigationHelper.push('Conversation', { conversationId });
+    if (notification.userInteraction && conversationId) {
+      navigationHelper.navigate('Conversation', { conversationId });
     }
 
     notification.finish(PushNotificationIOS.FetchResult.NoData);
