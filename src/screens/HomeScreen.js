@@ -188,7 +188,7 @@ export default class HomeScreen extends Component {
     this.setState({ lazyLoading: true });
 
     const loadedConversations = await conversationsManager.loadExploreConversations({
-      staler: exploreConversations[exploreConversations.length - 1].updatedAt,
+      staler: exploreConversations[exploreConversations.length - 1].lastMessageAt,
     });
 
     this.setState({ lazyLoading: (loadedConversations.length) ? false : null });

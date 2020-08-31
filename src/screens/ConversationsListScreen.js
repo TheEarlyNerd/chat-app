@@ -48,7 +48,7 @@ export default class CovnersationsListScreen extends Component {
     }
 
     if (conversations?.length && !refresh && [ 'recent', 'private', 'explore' ].includes(type)) {
-      queryParams.staler = conversations[conversations.length - 1].updatedAt;
+      queryParams.staler = conversations[conversations.length - 1].lastMessageAt;
     }
 
     if (type === 'recent') {

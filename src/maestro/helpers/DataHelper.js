@@ -38,6 +38,7 @@ export default class DataHelper extends Helper {
       if (value.deletedAt) { value.deletedAt = new Date(value.deletedAt); }
       if (value.lastActiveAt) { value.lastActiveAt = new Date(value.lastActiveAt); }
       if (value.lastReadAt) { value.lastReadAt = new Date(value.lastReadAt); }
+      if (value.lastMessageAt) { value.lastMessageAt = new Date(value.lastMessageAt); }
       if (value.lastViewedActivityAt) { value.lastViewedActivityAt = new Date(value.lastViewedActivityAt); }
       if (value.typingAt) { value.typingAt = new Date(value.typingAt); }
       if (value.closedAt) { value.closedAt = new Date(value.closedAt); }

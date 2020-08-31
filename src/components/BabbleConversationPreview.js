@@ -106,7 +106,7 @@ export default class BabbleConversationPreview extends Component {
 
     return (previewConversationMessage)
       ? timeHelper.fromNow(previewConversationMessage.createdAt)
-      : timeHelper.fromNow(conversation.updatedAt);
+      : timeHelper.fromNow(conversation.lastMessageAt);
   }
 
   _isUnread = () => {
