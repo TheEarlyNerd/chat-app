@@ -90,10 +90,10 @@ export default class ConversationScreen extends Component {
   }
 
   _loadNewMessages = () => {
-    const { conversation } = this.state;
+    const { conversation, composingConversation } = this.state;
     const { conversationMessages } = conversation;
 
-    if (!conversation.id) {
+    if (!conversation.id || composingConversation) {
       return [];
     }
 
@@ -104,10 +104,10 @@ export default class ConversationScreen extends Component {
   }
 
   _loadOldMessages = () => {
-    const { conversation } = this.state;
+    const { conversation, composingConversation } = this.state;
     const { conversationMessages } = conversation;
 
-    if (!conversation.id) {
+    if (!conversation.id || composingConversation) {
       return []; // FIX: prevent autoload bug on new convo, could do something cleaner?
     }
 
