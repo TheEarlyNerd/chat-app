@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, View, TextInput, Text, ScrollView, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
-import { HeaderHeightContext } from '@react-navigation/stack';
+import { View, TextInput, Text, ScrollView, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import { BabbleConversationMessageComposerToolbarAttachment } from './';
 import { CameraIcon, ArrowUpIcon, ImageIcon, VideoIcon, XIcon } from './icons';
@@ -143,103 +142,94 @@ export default class BabbleMessageComposerToolbar extends Component {
   render() {
     const { onSubmit, loading, style } = this.props;
     const { text, attachments } = this.state;
-
     return (
-      <HeaderHeightContext.Consumer>
-        {headerHeight => (
-          <KeyboardAvoidingView
-            behavior={'padding'}
-            keyboardVerticalOffset={headerHeight}
-            style={[ styles.container, style ]}
-          >
-            {false && (/* TODO: Add support for replies. */
-              <View style={styles.reply}>
-                <Text style={styles.replyTitleText}>Replying to <Text style={styles.replyTitleNameText}>Lang Spay</Text></Text>
-                <Text numberOfLines={3} style={styles.replyMessageText}>I'm baby drinking vinegar yuccie prism irony raclette organic ennui taxidermy art party flexitarian chicharrones typewriter. Pork belly vexillologist helvetica kombucha freegan succulents. Poutine photo booth disrupt readymade chambray craft beer authentic pork belly adaptogen retro sustainable. Lumbersexual gochujang waistcoat, photo booth hell of church-key portland raw denim.</Text>
+      <View style={[ styles.container, style ]}>
+        {false && (/* TODO: Add support for replies. */
+          <View style={styles.reply}>
+            <Text style={styles.replyTitleText}>Replying to <Text style={styles.replyTitleNameText}>Lang Spay</Text></Text>
+            <Text numberOfLines={3} style={styles.replyMessageText}>I'm baby drinking vinegar yuccie prism irony raclette organic ennui taxidermy art party flexitarian chicharrones typewriter. Pork belly vexillologist helvetica kombucha freegan succulents. Poutine photo booth disrupt readymade chambray craft beer authentic pork belly adaptogen retro sustainable. Lumbersexual gochujang waistcoat, photo booth hell of church-key portland raw denim.</Text>
 
-                <TouchableOpacity style={styles.replyCancelButton}>
-                  <XIcon
-                    width={22}
-                    height={22}
-                    style={styles.replyCancelIcon}
+            <TouchableOpacity style={styles.replyCancelButton}>
+              <XIcon
+                width={22}
+                height={22}
+                style={styles.replyCancelIcon}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+
+        <View style={styles.toolbar}>
+          <TouchableOpacity
+            onPress={this._showAttachmentsActionSheet}
+            style={[ styles.button, styles.leftButton ]}
+          >
+            <ImageIcon
+              width={22}
+              height={22}
+              style={styles.buttonIcon}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={this._showGifSelector}
+            style={[ styles.button, styles.leftButton ]}
+          >
+            <Text style={styles.buttonText}>GIF</Text>
+          </TouchableOpacity>
+
+          <View style={styles.inputContainer}>
+            {!!attachments?.length && (
+              <ScrollView
+                horizontal
+                style={styles.attachmentsScrollView}
+              >
+                {attachments.map((attachment, index) => (
+                  <BabbleConversationMessageComposerToolbarAttachment
+                    attachment={attachment}
+                    editable={!loading}
+                    onDeletePress={() => this._deleteAttachment(index)}
+                    onPress={() => this._openAttachment(index)}
+                    style={styles.attachment}
+                    key={`${attachment.filename}-${attachment.bytes}`}
                   />
-                </TouchableOpacity>
-              </View>
+                ))}
+              </ScrollView>
             )}
 
-            <View style={styles.toolbar}>
-              <TouchableOpacity
-                onPress={this._showAttachmentsActionSheet}
-                style={[ styles.button, styles.leftButton ]}
-              >
-                <ImageIcon
-                  width={22}
-                  height={22}
-                  style={styles.buttonIcon}
-                />
-              </TouchableOpacity>
+            <TextInput
+              multiline
+              placeholderColor={'#909090'}
+              placeholder={'Message...'}
+              onChangeText={this._onChangeText}
+              editable={!loading}
+              value={text}
+              style={styles.textInput}
+            />
+          </View>
 
-              <TouchableOpacity
-                onPress={this._showGifSelector}
-                style={[ styles.button, styles.leftButton ]}
-              >
-                <Text style={styles.buttonText}>GIF</Text>
-              </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => onSubmit({ text, attachments })}
+            disabled={loading || (!text.length && !attachments?.length)}
+            style={styles.sendButton}
+          >
+            {loading && (
+              <ActivityIndicator color={'#2A99CC'} />
+            )}
 
-              <View style={styles.inputContainer}>
-                {!!attachments?.length && (
-                  <ScrollView
-                    horizontal
-                    style={styles.attachmentsScrollView}
-                  >
-                    {attachments.map((attachment, index) => (
-                      <BabbleConversationMessageComposerToolbarAttachment
-                        attachment={attachment}
-                        editable={!loading}
-                        onDeletePress={() => this._deleteAttachment(index)}
-                        onPress={() => this._openAttachment(index)}
-                        style={styles.attachment}
-                        key={`${attachment.filename}-${attachment.bytes}`}
-                      />
-                    ))}
-                  </ScrollView>
-                )}
-
-                <TextInput
-                  multiline
-                  placeholderColor={'#909090'}
-                  placeholder={'Message...'}
-                  onChangeText={this._onChangeText}
-                  editable={!loading}
-                  value={text}
-                  style={styles.textInput}
-                />
-              </View>
-
-              <TouchableOpacity
-                onPress={() => onSubmit({ text, attachments })}
-                disabled={loading || (!text.length && !attachments?.length)}
-                style={styles.sendButton}
-              >
-                {loading && (
-                  <ActivityIndicator color={'#2A99CC'} />
-                )}
-
-                {!loading && (
-                  <ArrowUpIcon
-                    width={21}
-                    height={21}
-                    style={[
-                      styles.buttonIcon,
-                      (!text.length && !attachments?.length) ? styles.buttonIconDisabled : null,
-                    ]}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-          </KeyboardAvoidingView>
-        )}
-      </HeaderHeightContext.Consumer>
+            {!loading && (
+              <ArrowUpIcon
+                width={21}
+                height={21}
+                style={[
+                  styles.buttonIcon,
+                  (!text.length && !attachments?.length) ? styles.buttonIconDisabled : null,
+                ]}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>
     );
   }
 }
@@ -339,6 +329,5 @@ const styles = StyleSheet.create({
   toolbar: {
     alignItems: 'center',
     flexDirection: 'row',
-    paddingBottom: 10,
   },
 });

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { SafeAreaView, ActivityIndicator, Alert, StyleSheet } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, ActivityIndicator, Alert, Dimensions, StyleSheet } from 'react-native';
 import { BabbleConversationComposerToolbar, BabbleConversationHeaderTitle, BabbleConversation, BabbleConversationMessageComposerToolbar, BabbleConversationViewerToolbar } from '../components';
 import { AlertTriangleIcon, RepeatIcon, InfoIcon, MoreVerticalIcon } from '../components/icons';
 import maestro from '../maestro';
 
 const { conversationsManager } = maestro.managers;
 const { navigationHelper, interfaceHelper } = maestro.helpers;
+
+const windowHeight = Dimensions.get('window').height;
 
 export default class ConversationScreen extends Component {
   conversation = null;
@@ -17,6 +19,7 @@ export default class ConversationScreen extends Component {
     conversation: null,
     composingConversation: !this.props.route?.params?.conversationId,
     loading: false,
+    keyboardVerticalOffset: 0,
   }
 
   componentDidMount() {
@@ -78,6 +81,12 @@ export default class ConversationScreen extends Component {
     if (conversation && name === 'APP_STATE_CHANGED' && value === 'active') {
       this._loadNewMessages();
     }
+  }
+
+  _onLayout = ({ nativeEvent }) => {
+    this.setState({
+      keyboardVerticalOffset: windowHeight - nativeEvent.layout.height,
+    });
   }
 
   _loadNewMessages = () => {
@@ -244,7 +253,7 @@ export default class ConversationScreen extends Component {
   }
 
   render() {
-    const { conversation, composingConversation, loading } = this.state;
+    const { conversation, composingConversation, loading, keyboardVerticalOffset } = this.state;
     const { accessLevel, conversationMessages, conversationTypingUsers, authConversationUser } = conversation || {};
     const showViewerToolbar = accessLevel === 'protected' && (
       !authConversationUser || (
@@ -254,34 +263,40 @@ export default class ConversationScreen extends Component {
     );
 
     return (
-      <SafeAreaView style={styles.container}>
-        {composingConversation && (
-          <BabbleConversationComposerToolbar
-            editable={!loading}
-            onUserSelectionAccessLevelChange={this._onUserSelectionAccessLevelChange}
-            ref={component => this.conversationComposer = component}
+      <SafeAreaView style={styles.container} onLayout={this._onLayout}>
+        <KeyboardAvoidingView
+          behavior={'padding'}
+          keyboardVerticalOffset={keyboardVerticalOffset}
+          style={styles.container}
+        >
+          {composingConversation && (
+            <BabbleConversationComposerToolbar
+              editable={!loading}
+              onUserSelectionAccessLevelChange={this._onUserSelectionAccessLevelChange}
+              ref={component => this.conversationComposer = component}
+            />
+          )}
+
+          <BabbleConversation
+            loadOldMessages={this._loadOldMessages}
+            messages={conversationMessages}
+            typingUsers={conversationTypingUsers}
+            ref={component => this.conversation = component}
           />
-        )}
 
-        <BabbleConversation
-          loadOldMessages={this._loadOldMessages}
-          messages={conversationMessages}
-          typingUsers={conversationTypingUsers}
-          ref={component => this.conversation = component}
-        />
+          {!!conversation && showViewerToolbar && (
+            <BabbleConversationViewerToolbar conversation={conversation} />
+          )}
 
-        {!!conversation && showViewerToolbar && (
-          <BabbleConversationViewerToolbar conversation={conversation} />
-        )}
-
-        {(!conversation || !showViewerToolbar) && (
-          <BabbleConversationMessageComposerToolbar
-            onTyping={this._onTyping}
-            onSubmit={this._onMessageSubmit}
-            loading={loading}
-            ref={component => this.messageComposer = component}
-          />
-        )}
+          {(!conversation || !showViewerToolbar) && (
+            <BabbleConversationMessageComposerToolbar
+              onTyping={this._onTyping}
+              onSubmit={this._onMessageSubmit}
+              loading={loading}
+              ref={component => this.messageComposer = component}
+            />
+          )}
+        </KeyboardAvoidingView>
       </SafeAreaView>
     );
   }

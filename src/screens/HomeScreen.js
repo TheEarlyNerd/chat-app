@@ -46,6 +46,12 @@ export default class HomeScreen extends Component {
     });
   }
 
+  receiveEvent(name, value) {
+    if (name === 'APP_STATE_CHANGED' && value === 'active') {
+      this._loadConversations();
+    }
+  }
+
   _openConversationsList = ({ title, type }) => {
     navigationHelper.push('ConversationsList', { title, type });
   }
