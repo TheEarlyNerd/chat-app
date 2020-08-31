@@ -5,67 +5,36 @@ import { BabbleFieldLabel, BabbleTextField } from './';
 export default class BabbleCodeField extends Component {
   state = {
     focusedTextFieldIndex: 0,
+    value: '',
   }
 
-  textFields = [];
+  textField = null;
 
   get value() {
-    return this.textFields.map(textField => textField.value).join('');
+    return this.state.value;
   }
 
   focus() {
-    this.textFields[0].focus();
-  }
-
-  _onKeyPress = ({ nativeEvent }) => {
-    const { key } = nativeEvent;
-    const { focusedTextFieldIndex } = this.state;
-    const currentTextField = this.textFields[focusedTextFieldIndex];
-    const indexShift = (key !== 'Backspace') ? 1 : -1;
-
-    if (indexShift === 1) {
-      if (focusedTextFieldIndex >= this.textFields.length - 1) {
-        return;
-      }
-
-      if (currentTextField.value && !this.textFields[focusedTextFieldIndex + indexShift].value) {
-        this.textFields[focusedTextFieldIndex + indexShift].value = key;
-      }
-    }
-
-    if (indexShift === -1) {
-      if (focusedTextFieldIndex <= 0 || currentTextField.value) {
-        return currentTextField.clear();
-      }
-
-      if (!currentTextField.value) {
-        this.textFields[focusedTextFieldIndex + indexShift].clear();
-      }
-    }
-
-    this.textFields[focusedTextFieldIndex + indexShift].focus();
+    this.textField.focus();
   }
 
   render() {
-    const { label, codeLength, error, style } = this.props;
+    const { label, error, style } = this.props;
 
     return (
       <View style={[ styles.container, style ]}>
         <BabbleFieldLabel containerStyle={styles.fieldLabel}>{label}</BabbleFieldLabel>
 
         <View style={styles.codeContainer}>
-          {Array(codeLength).fill(null).map((value, index) => (
-            <BabbleTextField
-              maxLength={1}
-              onKeyPress={this._onKeyPress}
-              onFocus={() => this.setState({ focusedTextFieldIndex: index })}
-              keyboardType={'phone-pad'}
-              containerStyle={styles.textField}
-              style={styles.textFieldInput}
-              key={index}
-              ref={component => this.textFields[index] = component}
-            />
-          ))}
+          <BabbleTextField
+            maxLength={6}
+            keyboardType={'phone-pad'}
+            textContentType={'oneTimeCode'}
+            onChangeText={text => this.setState({ value: text })}
+            containerStyle={styles.textField}
+            style={styles.textFieldInput}
+            ref={component => this.textField = component}
+          />
 
           {!!error && (
             <Text style={styles.errorText}>{error}</Text>
@@ -95,10 +64,8 @@ const styles = StyleSheet.create({
   fieldLabel: {
     marginBottom: 8,
   },
-  textField: {
-    width: 50,
-  },
   textFieldInput: {
+    letterSpacing: 15,
     textAlign: 'center',
   },
 });
