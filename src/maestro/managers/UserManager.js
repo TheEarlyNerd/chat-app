@@ -169,14 +169,6 @@ export default class UserManager extends Manager {
 
     eventsManager.unsubscribeAll();
 
-    this.maestro._linkedInstances.forEach(linkedInstance => {
-      const instanceName = linkedInstance.constructor.name;
-
-      if (instanceName !== 'App' && !instanceName.includes('Manager')) {
-        this.maestro.unlink(linkedInstance);
-      }
-    });
-
     setTimeout(() => {
       this._setLoggedInUser(null);
 
