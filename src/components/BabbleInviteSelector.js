@@ -93,7 +93,9 @@ export default class BabbleInviteSelector extends Component {
     this.searchTimeout = setTimeout(async () => {
       const searchAppUsers = (search) ? await this._getSearchUsers(search) : [];
       const searchContactUsers = this._getContactUsers(search);
-      const searchUsers = [ ...searchAppUsers, ...searchContactUsers ].sort((a, b) => (
+      const searchUsers = [ ...searchAppUsers, ...searchContactUsers ].filter(user => (
+        !!user.phone || !!user.username
+      )).sort((a, b) => (
         (a.name > b.name) ? 1 : (a.name < b.name) ? -1 : 0
       ));
 

@@ -196,7 +196,9 @@ export default class BabbleConversationComposerToolbar extends Component {
     this.searchTextInputTimeout = setTimeout(async () => {
       const searchAppUsers = await this._getSearchUsers(search);
       const searchContactUsers = this._getContactUsers(search);
-      const searchUsers = [ ...searchAppUsers, ...searchContactUsers ].sort((a, b) => (
+      const searchUsers = [ ...searchAppUsers, ...searchContactUsers ].filter(user => (
+        !!user.phone || !!user.username
+      )).sort((a, b) => (
         (a.name > b.name) ? 1 : (a.name < b.name) ? -1 : 0
       ));
 
