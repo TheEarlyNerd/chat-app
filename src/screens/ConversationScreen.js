@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, SafeAreaView, ActivityIndicator, Alert, Dimensions, StyleSheet } from 'react-native';
 import { BabbleConversationComposerToolbar, BabbleConversationHeaderTitle, BabbleConversation, BabbleConversationMessageComposerToolbar, BabbleConversationViewerToolbar } from '../components';
-import { AlertTriangleIcon, RepeatIcon, InfoIcon, MoreVerticalIcon } from '../components/icons';
+import { AlertTriangleIcon, RepeatIcon, InfoIcon, MoreVerticalIcon, UserPlusIcon } from '../components/icons';
 import maestro from '../maestro';
 
 const { conversationsManager } = maestro.managers;
@@ -119,20 +119,32 @@ export default class ConversationScreen extends Component {
 
   _showMoreActionSheet = () => {
     const { conversation } = this.state;
-    const { id, authUserConversationRepost } = conversation;
-    const actions = [
-      {
-        iconComponent: InfoIcon,
-        text: 'View Info',
-        subtext: 'See additional details about this conversation and its participants.',
+    const { id, accessLevel, authConversationUser, authUserConversationRepost, usersCount } = conversation;
+    const hasInvitePermission = (authConversationUser) ? (
+      authConversationUser.permissions.includes('CONVERSATION_ADMIN') ||
+      authConversationUser.permissions.includes('CONVERSATION_USERS_CREATE')
+    ) : false;
+
+    const actions = [];
+
+    if ((conversation.accessLevel === 'public' || hasInvitePermission) && (accessLevel !== 'private' || usersCount > 2)) {
+      actions.push({
+        iconComponent: UserPlusIcon,
+        text: 'Invite Others',
+        subtext: 'Send invitations to other users or people in your contact list to join this conversation.',
         onPress: () => {
-          navigationHelper.push('ConversationInfo', { conversation });
+          interfaceHelper.showOverlay({
+            name: 'UsersSelector',
+            data: {
+              conversationId: conversation.id,
+            },
+          });
         },
-      },
-    ];
+      });
+    }
 
     if (conversation.accessLevel !== 'private') {
-      actions.unshift({
+      actions.push({
         iconComponent: RepeatIcon,
         text: (!authUserConversationRepost) ? 'Repost' : 'Delete Repost',
         subtext: (!authUserConversationRepost) ? 'This conversation will be reposted to your profile and the feeds of your followers.' : 'Your repost of this conversation will be deleted and removed from the feeds of your followers.',
@@ -147,6 +159,15 @@ export default class ConversationScreen extends Component {
         },
       });
     }
+
+    actions.push({
+      iconComponent: InfoIcon,
+      text: 'View Info',
+      subtext: 'See additional details about this conversation and its participants.',
+      onPress: () => {
+        navigationHelper.push('ConversationInfo', { conversation });
+      },
+    });
 
     interfaceHelper.showOverlay({
       name: 'ActionSheet',

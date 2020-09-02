@@ -15,7 +15,7 @@ export default class BabbleConnectDeviceContactsView extends Component {
   }
 
   render() {
-    const { contentContainerStyle, style } = this.props;
+    const { promptText, contentContainerStyle, style } = this.props;
 
     return (
       <ScrollView
@@ -24,7 +24,7 @@ export default class BabbleConnectDeviceContactsView extends Component {
         style={[ styles.container, style ]}
       >
         <Text style={styles.titleText}>Babble Is Better With Friends!</Text>
-        <Text style={styles.subtext}>Chat with your contacts, or invite them to conversations.</Text>
+        <Text style={styles.subtext}>{promptText}</Text>
         <BabbleButton onPress={this._enableDeviceContacts} style={styles.button}>Connect My Contacts</BabbleButton>
       </ScrollView>
     );

@@ -37,6 +37,7 @@ export default class DeviceContactsManager extends Manager {
       return new Promise(resolve => {
         Contacts.getAll((error, contacts) => {
           if (error) {
+            this._syncPermission(false);
             return resolve(false);
           }
 

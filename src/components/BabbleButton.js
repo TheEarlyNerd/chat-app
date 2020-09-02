@@ -70,12 +70,14 @@ const styles = StyleSheet.create({
   },
   buttonInverted: {
     backgroundColor: '#FFFFFF',
+    borderColor: '#26A6C6',
     borderRadius: 4,
+    borderWidth: 1,
   },
   linearGradientBackground: {
     ...StyleSheet.absoluteFillObject,
-    zIndex: -1,
     borderRadius: 4,
+    zIndex: -1,
   },
   text: {
     color: '#FFFFFF',

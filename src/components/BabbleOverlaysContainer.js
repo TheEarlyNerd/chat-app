@@ -3,8 +3,9 @@ import {
   BabbleOverlayActionSheet,
   BabbleOverlayCountrySelector,
   BabbleOverlayGifSelector,
+  BabbleOverlayUsersSelector,
   BabbleOverlayMediaViewer,
-  BabbleOverlayReactionInput,
+  BabbleOverlayReactionSelector,
   BabbleOverlayError,
 } from './';
 import maestro from '../maestro';
@@ -55,12 +56,16 @@ export default class BabbleOverlayContainer extends Component {
         overlayComponents.push(<BabbleOverlayGifSelector data={data} key={overlayName} />);
       }
 
+      if (overlayName === 'UsersSelector') {
+        overlayComponents.push(<BabbleOverlayUsersSelector data={data} key={overlayName} />);
+      }
+
       if (overlayName === 'MediaViewer') {
         overlayComponents.push(<BabbleOverlayMediaViewer data={data} key={overlayName} />);
       }
 
-      if (overlayName === 'ReactionInput') {
-        overlayComponents.push(<BabbleOverlayReactionInput data={data} key={overlayName} />);
+      if (overlayName === 'ReactionSelector') {
+        overlayComponents.push(<BabbleOverlayReactionSelector data={data} key={overlayName} />);
       }
 
       if (overlayName === 'Error') {

@@ -233,6 +233,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     alignItems: 'center',
+    paddingBottom: 30,
     paddingHorizontal: 15,
   },
   loadingIndicator: {
@@ -248,6 +249,7 @@ const styles = StyleSheet.create({
     color: '#F54444',
   },
   viewMoreButton: {
+    marginBottom: 0,
     marginTop: 15,
   },
 });

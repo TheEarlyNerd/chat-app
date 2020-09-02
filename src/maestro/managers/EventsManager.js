@@ -156,8 +156,6 @@ export default class EventsManager extends Manager {
     const event = messageObject.event;
     const data = dataHelper.normalizeDataObject(messageObject.data);
 
-    console.log(messageObject);
-
     if (event === 'CONVERSATION_CREATE') {
       conversationsManager._addUpdateRecentConversation(data);
 

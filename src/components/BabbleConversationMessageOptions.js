@@ -42,7 +42,7 @@ export default class BabbleConversationMessageOptions extends Component {
 
   _reactPress = () => {
     interfaceHelper.showOverlay({
-      name: 'ReactionInput',
+      name: 'ReactionSelector',
       data: {
         conversationId: this.props.conversationId,
         conversationMessageId: this.props.id, // maybe change it to props.conversationMessage.id?

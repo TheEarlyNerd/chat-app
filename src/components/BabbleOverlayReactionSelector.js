@@ -4,7 +4,7 @@ import maestro from '../maestro';
 
 const { conversationsManager } = maestro.managers;
 
-export default class BabbleOverlayReactionInput extends Component {
+export default class BabbleOverlayReactionSelector extends Component {
   dismissibleView = null;
 
   componentDidMount() {
@@ -18,7 +18,7 @@ export default class BabbleOverlayReactionInput extends Component {
   _hide = async () => {
     await this.dismissibleView.hide();
 
-    maestro.dispatchEvent('OVERLAYS:HIDE', { name: 'ReactionInput' });
+    maestro.dispatchEvent('OVERLAYS:HIDE', { name: 'ReactionSelector' });
   }
 
   _emojiPress = emoji => {

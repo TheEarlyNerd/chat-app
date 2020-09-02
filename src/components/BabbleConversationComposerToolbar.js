@@ -155,7 +155,7 @@ export default class BabbleConversationComposerToolbar extends Component {
     ));
   }
 
-  _getSuggestedUsers = search => {
+  _getContactUsers = search => {
     const { selectedUsers, contactUsers } = this.state;
     const selectedUserIds = selectedUsers.map(selectedUser => selectedUser.id);
 
@@ -195,9 +195,8 @@ export default class BabbleConversationComposerToolbar extends Component {
 
     this.searchTextInputTimeout = setTimeout(async () => {
       const searchAppUsers = await this._getSearchUsers(search);
-      const searchSuggestedUsers = this._getSuggestedUsers(search);
-
-      const searchUsers = [ ...searchAppUsers, ...searchSuggestedUsers ].sort((a, b) => (
+      const searchContactUsers = this._getContactUsers(search);
+      const searchUsers = [ ...searchAppUsers, ...searchContactUsers ].sort((a, b) => (
         (a.name > b.name) ? 1 : (a.name < b.name) ? -1 : 0
       ));
 
@@ -215,7 +214,7 @@ export default class BabbleConversationComposerToolbar extends Component {
 
     if (!show && !search && !selectedUsers.length && this.searchTextInput.isFocused()) {
       state.showSearchUsersList = true;
-      state.searchUsers = this._getSuggestedUsers();
+      state.searchUsers = this._getContactUsers();
     }
 
     this.setState(state);
@@ -396,7 +395,10 @@ export default class BabbleConversationComposerToolbar extends Component {
             )}
 
             {!canAccessContacts && !selectedUsers.length && !search && (
-              <BabbleConnectDeviceContactsView contentContainerStyle={styles.connectDeviceContactsContainer} />
+              <BabbleConnectDeviceContactsView
+                promptText={'Chat with your contacts, or invite them to conversations.'}
+                contentContainerStyle={styles.connectDeviceContactsContainer}
+              />
             )}
           </View>
         )}

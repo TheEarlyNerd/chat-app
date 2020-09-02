@@ -4,10 +4,14 @@ import { BabbleUserAvatar } from './';
 
 export default class BabbleConversationUserList extends Component {
   _renderUser = ({ item, index }) => {
-    const { onPress } = this.props;
+    const { onPress, renderUserAction, userStyle } = this.props;
 
     return (
-      <TouchableOpacity onPress={() => onPress(item)} style={styles.user}>
+      <TouchableOpacity
+        onPress={() => onPress(item)}
+        disabled={!onPress}
+        style={[ styles.user, userStyle ]}
+      >
         <BabbleUserAvatar
           avatarAttachment={item.avatarAttachment}
           lastActiveAt={item.lastActiveAt}
@@ -26,6 +30,12 @@ export default class BabbleConversationUserList extends Component {
             <Text style={styles.subtext}>+{item.phone}</Text>
           )}
         </View>
+
+        {!!renderUserAction && (
+          <View style={styles.action}>
+            {renderUserAction(item)}
+          </View>
+        )}
       </TouchableOpacity>
     );
   }
@@ -45,13 +55,14 @@ export default class BabbleConversationUserList extends Component {
   }
 
   render() {
-    const { users, onPress, loading, disableNoResultsMessage, style, ...props } = this.props;
+    const { users, onPress, loading, disableNoResultsMessage, contentContainerStyle, style, ...props } = this.props;
 
     return (
       <FlatList
         data={users}
         renderItem={this._renderUser}
         keyExtractor={(item, index) => (item.id) ? `${item.id}` : `${index}-${item.name}`}
+        contentContainerStyle={contentContainerStyle}
         style={[ styles.container, style ]}
         ListEmptyComponent={(!loading && !disableNoResultsMessage) ? this._renderNoResultsMessage : null}
         ListFooterComponent={(loading) ? this._renderLoading : null}
@@ -62,10 +73,14 @@ export default class BabbleConversationUserList extends Component {
 }
 
 const styles = StyleSheet.create({
+  action: {
+
+  },
   container: {
     paddingTop: 15,
   },
   details: {
+    flex: 1,
     marginLeft: 15,
   },
   emptyText: {

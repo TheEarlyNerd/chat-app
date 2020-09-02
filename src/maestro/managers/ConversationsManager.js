@@ -306,6 +306,33 @@ export default class ConversationsManager extends Manager {
     return response.body;
   }
 
+  async createConversationUser({ conversationId, userId, phoneUser }) {
+    const { apiHelper } = this.maestro.helpers;
+
+    const response = await apiHelper.put({
+      path: `/conversations/${conversationId}/users`,
+      data: {
+        userId,
+        phoneUser,
+      },
+    });
+
+    if (response.code !== 200) {
+      throw new Error(response.body);
+    }
+
+    const conversation = this._getLoadedConversationById(conversationId);
+
+    this._updateConversation({
+      conversationId,
+      fields: {
+        usersCount: conversation.usersCount + 1,
+      },
+    });
+
+    return response.body;
+  }
+
   async createConversationRepost(conversationId) {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.put({
@@ -934,6 +961,24 @@ export default class ConversationsManager extends Manager {
     if (type === 'users') {
       return (store.usersConversations) ? { ...this.store.usersConversations } : {};
     }
+  }
+
+  _getLoadedConversationById = conversationId => {
+    let loadedConversation = null;
+
+    this._iterateConversationTypes(({ conversations, type }) => {
+      if (loadedConversation) {
+        return;
+      }
+
+      conversations.forEach(conversation => {
+        if (!loadedConversation && conversation.id === conversationId) {
+          loadedConversation = conversation;
+        }
+      });
+    }, false);
+
+    return loadedConversation;
   }
 
   _updateConversationsByType = ({ conversations, type }) => {

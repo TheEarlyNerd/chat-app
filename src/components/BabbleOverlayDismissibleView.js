@@ -99,6 +99,8 @@ const styles = StyleSheet.create({
   },
   overlay: {
     backgroundColor: '#FFFFFF',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
     borderRadius: 10,
     width: '100%',
   },
