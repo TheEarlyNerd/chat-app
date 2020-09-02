@@ -201,7 +201,7 @@ export default class BabbleConversationComposerToolbar extends Component {
       ));
 
       this.setState({ searchUsers, loadingSearch: false });
-    }, 400);
+    }, 350);
   }
 
   _toggleSearchUsersList = show => {
@@ -388,7 +388,6 @@ export default class BabbleConversationComposerToolbar extends Component {
                 disableNoResultsMessage={!search}
                 noResultsMessage={'No users found'}
                 onPress={this.addUser}
-                keyboardShouldPersistTaps={'handled'}
                 contentContainerStyle={styles.usersList}
                 ListHeaderComponent={(!search && !selectedUsers.length) ? <Text style={styles.suggestedText}>My Contacts</Text> : null}
               />

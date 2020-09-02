@@ -66,6 +66,7 @@ export default class BabbleConversationUserList extends Component {
         style={[ styles.container, style ]}
         ListEmptyComponent={(!loading && !disableNoResultsMessage) ? this._renderNoResultsMessage : null}
         ListFooterComponent={(loading) ? this._renderLoading : null}
+        keyboardShouldPersistTaps={'handled'}
         {...props}
       />
     );

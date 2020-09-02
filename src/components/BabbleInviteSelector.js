@@ -30,10 +30,14 @@ export default class BabbleInviteSelector extends Component {
   }
 
   receiveStoreUpdate({ deviceContacts }) {
+    const { searchUsers } = this.state;
     const { contacts } = deviceContacts;
 
     if (contacts) {
-      this.setState({ contactUsers: contacts, searchUsers: contacts });
+      this.setState({
+        searchUsers: (!searchUsers.length) ? contacts : searchUsers,
+        contactUsers: contacts,
+      });
     }
   }
 
@@ -80,7 +84,11 @@ export default class BabbleInviteSelector extends Component {
   _search = search => {
     clearTimeout(this.searchTimeout);
 
-    this.setState({ search, loadingSearch: true });
+    this.setState({
+      search,
+      searchUsers: [],
+      loadingSearch: true,
+    });
 
     this.searchTimeout = setTimeout(async () => {
       const searchAppUsers = (search) ? await this._getSearchUsers(search) : [];
@@ -90,7 +98,7 @@ export default class BabbleInviteSelector extends Component {
       ));
 
       this.setState({ searchUsers, loadingSearch: false });
-    }, 400);
+    }, 350);
   }
 
   _renderUserAction = user => {
