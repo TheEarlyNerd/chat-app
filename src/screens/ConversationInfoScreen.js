@@ -100,7 +100,7 @@ export default class ConversationDetailsScreen extends Component {
       return navigation.setOptions({ showRightLoading: false });
     }
 
-    navigation.pop();
+    navigationHelper.pop();
   }
 
   _openConversationUsers = () => {

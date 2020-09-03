@@ -28,29 +28,30 @@ export default class InterfaceHelper extends Helper {
 
   deviceValue = options => {
     const notchAdjustment = (DeviceInfo.hasNotch() && options.notchAdjustment) ? options.notchAdjustment : 0;
+    let result = (notchAdjustment)
+      ? (options.xs + notchAdjustment) || (options.default + notchAdjustment)
+      : options.xs || options.default;
 
-    if (width >= 1280) {
-      return (options.xxl + notchAdjustment) || (options.default + notchAdjustment);
+    if (width >= 411 && options.sm) {
+      result = (notchAdjustment) ? (options.sm + notchAdjustment) : options.sm;
     }
 
-    if (width >= 1024) {
-      return (options.xl + notchAdjustment) || (options.default + notchAdjustment);
+    if (width >= 568 && options.md) {
+      result = (notchAdjustment) ? (options.md + notchAdjustment) : options.md;
     }
 
-    if (width >= 768) {
-      return (options.lg + notchAdjustment) || (options.default + notchAdjustment);
+    if (width >= 768 && options.lg) {
+      result = (notchAdjustment) ? (options.lg + notchAdjustment) : options.lg;
     }
 
-    if (width >= 568) {
-      return (options.md + notchAdjustment) || (options.default + notchAdjustment);
+    if (width >= 1024 && options.xl) {
+      result = (notchAdjustment) ? (options.xl + notchAdjustment) : options.xl;
     }
 
-    if (width >= 411) {
-      return (options.sm + notchAdjustment) || (options.default + notchAdjustment);
+    if (width >= 1280 & options.xxl) {
+      result = (notchAdjustment) ? (options.xxl + notchAdjustment) : options.xxl;
     }
 
-    if (width <= 410) {
-      return (options.xs + notchAdjustment) || (options.default + notchAdjustment);
-    }
+    return result;
   }
 }

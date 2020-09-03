@@ -155,15 +155,16 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    flexDirection: interfaceHelper.deviceValue({ default: 'column', lg: 'row' }),
   },
   continueButton: {
     marginTop: 35,
   },
   formContainer: {
     alignItems: 'center',
-    flex: interfaceHelper.deviceValue({ default: 1, xs: 1.4 }),
+    flex: interfaceHelper.deviceValue({ default: 1, xs: 1.4, lg: 1 }),
     justifyContent: 'center',
-    paddingHorizontal: 30,
+    paddingHorizontal: interfaceHelper.deviceValue({ default: 30, lg: 60 }),
   },
   resendButton: {
     marginTop: 10,
@@ -176,6 +177,6 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     alignItems: 'center',
-    flex: 1,
+    flex: interfaceHelper.deviceValue({ default: 1, lg: 1.618 }),
   },
 });

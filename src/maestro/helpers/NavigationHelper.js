@@ -7,6 +7,8 @@ export default class NavigationHelper extends Helper {
   }
 
   _navigation = null;
+  _splitSidebarNavigation = null;
+  _splitContentNavigation = null;
 
   pop(numberOfScreens = 1) {
     this._navigation.dispatch(StackActions.pop(numberOfScreens));
@@ -29,5 +31,13 @@ export default class NavigationHelper extends Helper {
 
   setNavigation(navigation) {
     this._navigation = navigation;
+  }
+
+  setSplitSidebarNavigation(navigation) {
+    this._splitSidebarNavigation = navigation;
+  }
+
+  setSplitContentNavigation(navigation) {
+    this._splitContentNavigation = navigation;
   }
 }

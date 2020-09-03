@@ -11,6 +11,7 @@ import LandingScreen from '../screens/LandingScreen';
 import PhoneLoginCodeScreen from '../screens/PhoneLoginCodeScreen';
 import SetupIOSNotificationsScreen from '../screens/SetupIOSNotificationsScreen';
 import SetupProfileScreen from '../screens/SetupProfileScreen';
+import SplitEmptyStateScreen from '../screens/SplitEmptyStateScreen';
 
 export default initialRouteName => {
   const MainStack = createStackNavigator();
@@ -94,6 +95,14 @@ export default initialRouteName => {
         component={SetupProfileScreen}
         options={{
           gestureEnabled: false,
+          headerShown: false,
+        }}
+      />
+
+      <MainStack.Screen
+        name={'SplitEmptyState'}
+        component={SplitEmptyStateScreen}
+        options={{
           headerShown: false,
         }}
       />

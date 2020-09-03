@@ -5,6 +5,7 @@ import { BellIcon } from './icons';
 import maestro from '../maestro';
 
 const { activityManager, userManager } = maestro.managers;
+const { navigationHelper } = maestro.helpers;
 
 export default class BabbleHeader extends Component {
   state = {
@@ -44,7 +45,7 @@ export default class BabbleHeader extends Component {
                 size={40}
                 imageStyle={styles.userButton}
                 onPress={() => {
-                  navigation.push('ProfileNavigator', {
+                  navigationHelper.push('ProfileNavigator', {
                     screen: 'Profile',
                     params: { userId: user.id },
                   });
@@ -59,7 +60,7 @@ export default class BabbleHeader extends Component {
 
           <View style={styles.headerRight}>
             <TouchableOpacity
-              onPress={() => navigation.push('ActivityNavigator')}
+              onPress={() => navigationHelper.push('ActivityNavigator')}
               style={styles.activityButton}
             >
               <BellIcon

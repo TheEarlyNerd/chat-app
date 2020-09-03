@@ -6,7 +6,7 @@ import { ChevronRightIcon } from '../components/icons';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
-const { attachmentsHelper, interfaceHelper } = maestro.helpers;
+const { attachmentsHelper, interfaceHelper, navigationHelper } = maestro.helpers;
 
 export default class ProfileEditScreen extends Component {
   state = {
@@ -58,7 +58,7 @@ export default class ProfileEditScreen extends Component {
       return navigation.setOptions({ showRightLoading: false });
     }
 
-    navigation.pop();
+    navigationHelper.pop();
   }
 
   render() {

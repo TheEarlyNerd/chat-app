@@ -40,10 +40,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -3 },
   },
   linearGradient: {
-    bottom: 0,
-    left: -100,
-    position: 'absolute',
-    right: -100,
+    ...StyleSheet.absoluteFillObject,
     top: -100,
     zIndex: -1,
   },

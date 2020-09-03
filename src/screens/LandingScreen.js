@@ -100,27 +100,30 @@ const styles = StyleSheet.create({
   backgroundImage: {
     aspectRatio: 1.0522,
     bottom: 0,
+    left: 0,
     position: 'absolute',
-    width: '100%',
+    right: 0,
+    zIndex: -1,
   },
   container: {
     flex: 1,
+    flexDirection: interfaceHelper.deviceValue({ default: 'column', lg: 'row' }),
   },
   continueButton: {
     marginBottom: 20,
   },
   formContainer: {
     alignItems: 'center',
-    flex: interfaceHelper.deviceValue({ default: 1, xs: 1.15 }),
+    flex: interfaceHelper.deviceValue({ default: 1, xs: 1.15, lg: 1 }),
     justifyContent: 'center',
-    paddingHorizontal: 30,
+    paddingHorizontal: interfaceHelper.deviceValue({ default: 30, lg: 60 }),
   },
   logoText: {
     color: '#FFFFFF',
     fontFamily: 'Lobster-Regular',
-    fontSize: 60,
+    fontSize: interfaceHelper.deviceValue({ default: 60, lg: 90 }),
     letterSpacing: -3,
-    marginTop: 60,
+    marginTop: interfaceHelper.deviceValue({ default: 60, lg: 60 }),
     shadowColor: '#252A3F',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
@@ -141,6 +144,7 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     alignItems: 'center',
-    flex: 1,
+    backgroundColor: '#fF0000',
+    flex: interfaceHelper.deviceValue({ default: 1, lg: 1.618 }),
   },
 });

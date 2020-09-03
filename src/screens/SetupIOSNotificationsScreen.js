@@ -5,6 +5,7 @@ import { BabbleButton, BabbleBackground } from '../components';
 import maestro from '../maestro';
 
 const { userManager, notificationsManager } = maestro.managers;
+const { interfaceHelper } = maestro.helpers;
 
 export default class SetupIOSNotificationsScreen extends Component {
   state = {
@@ -86,10 +87,6 @@ export default class SetupIOSNotificationsScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  topContainer: {
-    alignItems: 'center',
-    flex: 3,
-  },
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
     zIndex: -1,
@@ -102,6 +99,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    flexDirection: interfaceHelper.deviceValue({ default: 'column', lg: 'row' }),
   },
   formContainer: {
     alignItems: 'center',
@@ -117,5 +115,9 @@ const styles = StyleSheet.create({
     color: '#666666',
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: 18,
+  },
+  topContainer: {
+    alignItems: 'center',
+    flex: interfaceHelper.deviceValue({ default: 3, lg: 2 }),
   },
 });

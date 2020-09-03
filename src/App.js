@@ -54,14 +54,10 @@ export default class App extends Component {
 
   render() {
     const { initialRouteName, containerOpacityAnimated } = this.state;
-    const navigationTheme = {
-      colors: { background: '#FFFFFF' },
-    };
-
     return (
       <Animated.View style={{ flex: 1, opacity: containerOpacityAnimated }}>
         <NavigationContainer
-          theme={navigationTheme}
+          theme={{ colors: { background: '#FFFFFF' } }}
           ref={navigation => navigationHelper.setNavigation(navigation)}
           key={`navigation_base_${initialRouteName}`}
         >
