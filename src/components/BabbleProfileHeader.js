@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   aboutText: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBoldItalic',
-    fontSize: 14,
+    fontSize: 15,
     marginTop: 20,
   },
   avatarActivityIcon: {
@@ -168,6 +168,6 @@ const styles = StyleSheet.create({
   usernameText: {
     color: '#797979',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
+    fontSize: 15,
   },
 });

@@ -111,12 +111,12 @@ const styles = StyleSheet.create({
   labelText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 16,
+    fontSize: 17,
   },
   lengthText: {
     color: '#ADADAD',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 14,
+    fontSize: 15,
     textAlign: 'right',
     width: '100%',
   },
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   textInput: {
     color: '#323643',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 16,
+    fontSize: 15,
     marginTop: 5,
     width: '100%',
   },
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   valueText: {
     color: '#ADADAD',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 16,
+    fontSize: 15,
     marginTop: 5,
   },
 });

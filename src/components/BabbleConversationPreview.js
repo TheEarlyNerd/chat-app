@@ -143,6 +143,7 @@ export default class BabbleConversationPreview extends Component {
           <BabbleUserAvatar
             avatarAttachment={this._getAvatarAttachment()}
             lastActiveAt={this._getLastActiveAt()}
+            statusIconStyle={styles.avatarActivityIcon}
             disabled
             size={50}
           />
@@ -208,6 +209,11 @@ const styles = StyleSheet.create({
     color: '#797979',
     marginTop: 1,
   },
+  avatarActivityIcon: {
+    borderRadius: 10,
+    height: 13,
+    width: 13,
+  },
   bulletText: {
     fontSize: 10,
     paddingHorizontal: 3,
@@ -216,6 +222,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
+    paddingVertical: 8,
   },
   content: {
     flex: 1,
@@ -244,6 +251,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: 13,
+    marginTop: -1,
   },
   previewTextUnread: {
     color: '#404040',
@@ -257,7 +265,6 @@ const styles = StyleSheet.create({
     color: '#404040',
     flex: 1,
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 15,
-    marginBottom: 1,
+    fontSize: 16,
   },
 });

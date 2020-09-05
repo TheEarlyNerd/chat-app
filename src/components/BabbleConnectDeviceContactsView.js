@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   subtext: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 16,
+    fontSize: 15,
     marginBottom: 15,
     textAlign: 'center',
   },

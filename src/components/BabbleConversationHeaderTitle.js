@@ -120,12 +120,12 @@ const styles = StyleSheet.create({
   subtext: {
     color: '#FFFFFFCC',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
+    fontSize: 13,
   },
   subtextContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    marginTop: -2,
+    marginTop: -1,
   },
   textContainer: {
     flex: 1,
@@ -133,7 +133,8 @@ const styles = StyleSheet.create({
   titleText: {
     color: '#FFFFFF',
     fontFamily: 'NunitoSans-Black',
-    fontSize: 16,
+    fontSize: 18,
+    marginTop: -3,
     shadowColor: '#252A3F',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,

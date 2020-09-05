@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   countText: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 12,
+    fontSize: 13,
     marginLeft: 3,
   },
   reacted: {
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   reactionText: {
     color: '#000000',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 12,
+    fontSize: 13,
     lineHeight: 17,
   },
 });

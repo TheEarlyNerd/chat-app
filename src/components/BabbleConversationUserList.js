@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   emptyText: {
     color: '#797979',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
+    fontSize: 15,
     marginTop: 15,
     textAlign: 'center',
   },
@@ -97,12 +97,12 @@ const styles = StyleSheet.create({
   nameText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
+    fontSize: 15,
   },
   subtext: {
     color: '#797979',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 12,
+    fontSize: 13,
   },
   user: {
     alignItems: 'center',

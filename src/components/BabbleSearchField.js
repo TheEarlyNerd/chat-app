@@ -54,7 +54,7 @@ export default class BabbleSearchField extends Component {
           onChangeText={this._onChangeText}
           value={search}
           containerStyle={styles.textFieldContainer}
-          style={[ styles.textField, style ]}
+          style={style}
           inputPrefix={(
             <SearchIcon
               width={20}

@@ -56,7 +56,6 @@ export default class BabbleConversationPreviewsList extends Component {
         renderItem={this._renderConversationPreview}
         keyExtractor={item => `${item.id}`}
         style={[ styles.container, style ]}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListFooterComponent={(lazyLoading) ? this._renderLoading : null}
         showsVerticalScrollIndicator={false}
         refreshing={refreshing}
@@ -72,11 +71,5 @@ export default class BabbleConversationPreviewsList extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  separator: {
-    borderBottomColor: '#E8E8E8',
-    borderBottomWidth: 0.5,
-    marginBottom: 15,
-    paddingTop: 15,
   },
 });

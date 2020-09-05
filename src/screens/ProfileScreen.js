@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: 30,
     paddingHorizontal: 15,
-    paddingTop: 40,
+    paddingTop: 30,
   },
   footer: {
     marginTop: 20,

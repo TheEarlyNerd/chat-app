@@ -190,7 +190,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
     justifyContent: 'flex-end',
-    paddingBottom: 15,
     paddingTop: 20,
   },
   typingContainer: {

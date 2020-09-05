@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
   accessLevelButtonText: {
     color: '#2A99CC',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 14,
+    fontSize: 15,
     marginLeft: 5,
     marginRight: 2.5,
   },
@@ -464,12 +464,12 @@ const styles = StyleSheet.create({
   nameText: {
     color: '#2A99CC',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 14,
+    fontSize: 15,
   },
   suggestedText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
+    fontSize: 15,
     paddingBottom: 5,
     paddingHorizontal: 15,
   },

@@ -299,10 +299,6 @@ export default class HomeScreen extends Component {
       return <View style={styles.spacer} />;
     }
 
-    if (!leadingItem.header && !leadingItem.viewMore && !leadingItem.noResults && !leadingItem.search) {
-      return <View style={styles.separator} />;
-    }
-
     return null;
   }
 
@@ -364,7 +360,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
     paddingBottom: 10,
     paddingHorizontal: 15,
     paddingTop: 10,
@@ -403,24 +398,18 @@ const styles = StyleSheet.create({
   noResultsText: {
     color: '#797979',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
+    fontSize: 15,
     textAlign: 'center',
   },
   searchField: {
     marginBottom: 30,
     paddingHorizontal: 15,
   },
-  separator: {
-    borderBottomColor: '#E8E8E8',
-    borderBottomWidth: 0.5,
-    marginBottom: 15,
-    marginHorizontal: 15,
-    paddingTop: 15,
-  },
   spacer: {
     height: 40,
   },
   userPreview: {
+    marginVertical: 10,
     paddingHorizontal: 15,
   },
   viewMoreButton: {

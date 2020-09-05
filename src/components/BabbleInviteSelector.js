@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     width: 90,
   },
   inviteButtonText: {
-    fontSize: 14,
+    fontSize: 15,
   },
   list: {
   },

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet, Platform, Dimensions, Keyboard, Linking } from 'react-native';
-import moment from 'moment';
 import ParsedText from 'react-native-parsed-text';
 import { BabbleConversationMessageAttachment, BabbleConversationMessageEmbed, BabbleUserAvatar, BabbleReaction } from './';
 import maestro from '../maestro';
@@ -8,7 +7,7 @@ import maestro from '../maestro';
 const windowWidth = Dimensions.get('window').width;
 
 const { conversationsManager } = maestro.managers;
-const { interfaceHelper, navigationHelper } = maestro.helpers;
+const { interfaceHelper, timeHelper, navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationMessage extends Component {
   _getText = () => {
@@ -130,7 +129,7 @@ export default class BabbleConversationMessage extends Component {
           <BabbleUserAvatar
             avatarAttachment={conversationUser.user.avatarAttachment}
             lastActiveAt={conversationUser.user.lastActiveAt}
-            size={40}
+            size={45}
             onPress={() => this._userPress(conversationUser.userId)}
             style={styles.avatar}
           />
@@ -148,7 +147,7 @@ export default class BabbleConversationMessage extends Component {
                 </Text>
               </TouchableOpacity>
 
-              <Text style={styles.timeText}>{moment(createdAt).calendar()}</Text>
+              <Text style={styles.timeText}>{timeHelper.calendarTime(createdAt)}</Text>
             </View>
           )}
 
@@ -229,18 +228,18 @@ const styles = StyleSheet.create({
   avatar: {
     left: 15,
     position: 'absolute',
-    top: 5,
+    top: 15,
   },
   container: {
     alignItems: 'flex-start',
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     paddingHorizontal: 15,
-    paddingVertical: 5,
+    paddingVertical: 4,
     width: '100%',
   },
   containerWithHeading: {
-    paddingTop: 8,
+    paddingTop: 20,
   },
   content: {
     flex: 1,
@@ -275,12 +274,12 @@ const styles = StyleSheet.create({
   messageText: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 14,
+    fontSize: 15,
   },
   nameText: {
     color: '#2A99CC',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
+    fontSize: 15,
   },
   reaction: {
     marginRight: 5,
@@ -293,8 +292,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   timeText: {
-    color: '#797979',
+    color: '#9B9B9B',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 12,
+    fontSize: 11,
   },
 });

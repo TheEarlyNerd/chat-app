@@ -5,7 +5,7 @@ import { BabbleUserAvatar } from './';
 export default class BabbleUserAvatarGroup extends Component {
   render() {
     const { users, usersCount, size, disabled, onPress } = this.props;
-    const avatarSize = (users.length > 2) ? size / 2.1 : size / 1.4;
+    const avatarSize = (users.length > 2) ? size / 2 : size / 1.4;
 
     return (
       <TouchableOpacity

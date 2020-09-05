@@ -28,6 +28,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     color: '#9B9B9B',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
+    fontSize: 13,
   },
 });

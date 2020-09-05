@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   detailsText: {
     color: '#797979',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 13,
+    fontSize: 15,
     marginBottom: 15,
     textAlign: 'center',
   },

@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#2A99CC',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
+    fontSize: 15,
   },
   container: {
     borderTopColor: '#D8D8D8',
@@ -290,17 +290,17 @@ const styles = StyleSheet.create({
   replyMessageText: {
     color: '#797979',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 14,
+    fontSize: 15,
     marginRight: 8,
   },
   replyTitleNameText: {
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
+    fontSize: 15,
   },
   replyTitleText: {
     color: '#323643',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 14,
+    fontSize: 15,
     marginBottom: 2,
   },
   sendButton: {

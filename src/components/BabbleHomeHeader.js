@@ -30,9 +30,6 @@ export default class BabbleHeader extends Component {
 
   render() {
     const { activity, user } = this.state;
-    const { scene } = this.props;
-    const { descriptor } = scene;
-    const { navigation } = descriptor;
 
     return (
       <SafeAreaView>
@@ -42,7 +39,7 @@ export default class BabbleHeader extends Component {
               <BabbleUserAvatar
                 avatarAttachment={user.avatarAttachment}
                 lastActiveAt={new Date() /* TODO: This should be settable by the user, if they're in the app they'll show active to other users right now due to any backend requests setting server side lastActiveAt */}
-                size={40}
+                size={45}
                 imageStyle={styles.userButton}
                 onPress={() => {
                   navigationHelper.push('ProfileNavigator', {
@@ -96,14 +93,14 @@ const styles = StyleSheet.create({
   activityButton: {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    height: 40,
+    borderRadius: 25,
+    height: 45,
     justifyContent: 'center',
     shadowColor: '#252A3F',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
     shadowRadius: 5,
-    width: 40,
+    width: 45,
   },
   activityButtonIcon: {
     color: '#2A99CC',
@@ -121,7 +118,8 @@ const styles = StyleSheet.create({
   },
   babbleLogoText: {
     fontFamily: 'Lobster-Regular',
-    fontSize: 32,
+    fontSize: 38,
+    position: 'absolute',
   },
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
@@ -129,6 +127,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: 'row',
+    height: 60,
     justifyContent: 'center',
   },
   headerCenter: {

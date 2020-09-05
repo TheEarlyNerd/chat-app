@@ -68,7 +68,6 @@ export default class ActivityScreen extends Component {
         data={activity}
         renderItem={this._renderActivity}
         keyExtractor={item => `${item.id}`}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
         refreshing={refreshing}
         onRefresh={this._refresh}
         style={styles.container}
@@ -93,13 +92,7 @@ const styles = StyleSheet.create({
   noActivityText: {
     color: '#4F4F4F',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 16,
+    fontSize: 17,
     textAlign: 'center',
-  },
-  separator: {
-    borderBottomColor: '#E8E8E8',
-    borderBottomWidth: 0.5,
-    marginBottom: 15,
-    paddingTop: 15,
   },
 });

@@ -28,4 +28,15 @@ export default class TimeHelper extends Helper {
   fromNow(time) {
     return moment(time).fromNow(true);
   }
+
+  calendarTime(time) {
+    return moment(time).calendar(null, {
+      sameDay: '[Today]',
+      nextDay: '[Tomorrow]',
+      nextWeek: 'dddd',
+      lastDay: '[Yesterday]',
+      lastWeek: 'MM/DD/YYYY LT',
+      sameElse: 'MM/DD/YYYY LT',
+    });
+  }
 }

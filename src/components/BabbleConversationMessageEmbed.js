@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   descriptionText: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 12,
+    fontSize: 13,
   },
   image: {
     borderRadius: 4,
@@ -101,12 +101,12 @@ const styles = StyleSheet.create({
   linkText: {
     color: '#797979',
     fontFamily: 'NunitoSans-SemiBoldItalic',
-    fontSize: 12,
+    fontSize: 11,
   },
   titleText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 14,
+    fontSize: 15,
   },
   video: {
     borderRadius: 4,
