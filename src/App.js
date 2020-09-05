@@ -31,7 +31,7 @@ export default class App extends Component {
   }
 
   async receiveEvent(name, data) {
-    if (name === 'NAVIGATION_RESET') {
+    if (name === 'ROOT_NAVIGATION_RESET') {
       await this._toggleVisibility(false);
 
       await new Promise(resolve => {

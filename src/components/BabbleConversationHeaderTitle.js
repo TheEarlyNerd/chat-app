@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet } from 'react-native';
 import { UsersIcon, MessageCircleIcon, LockIcon } from './icons';
+import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
 const { navigationHelper } = maestro.helpers;
 
 export default class BabbleConversationHeaderTitle extends Component {
+  static contextType = NavigationTypeContext;
+
   swapSubtextTimeout = null; // prevents setState no-op if unmounted before 1st animation.
 
   state = {
@@ -63,7 +66,7 @@ export default class BabbleConversationHeaderTitle extends Component {
   _onPress = () => {
     const { conversation } = this.props;
 
-    navigationHelper.push('ConversationInfo', { conversation });
+    navigationHelper.push('ConversationInfo', { conversation }, this.context);
   }
 
   render() {

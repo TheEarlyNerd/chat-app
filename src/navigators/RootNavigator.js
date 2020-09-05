@@ -1,13 +1,15 @@
 import React from 'react';
-import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import ActivityNavigator from './ActivityNavigator';
 import MainNavigator from './MainNavigator';
 import ProfileNavigator from './ProfileNavigator';
 import SplitMainNavigator from './SplitMainNavigator';
 import WebBrowserNavigator from './WebBrowserNavigator';
+import ModalPopupTransition from './transitions/ModalPopupTransition';
 import maestro from '../maestro';
 
 const { interfaceHelper } = maestro.helpers;
+const { userManager } = maestro.managers;
 
 export default props => {
   const RootStack = createStackNavigator();
@@ -16,16 +18,20 @@ export default props => {
     <RootStack.Navigator
       initialRouteName={interfaceHelper.deviceValue({
         default: 'MainNavigator',
-        lg: 'SplitMainNavigator',
+        lg: (userManager.store.user) ? 'SplitMainNavigator' : 'MainNavigator',
       })}
       mode={'modal'}
       headerMode={'none'}
       screenOptions={{
+        ...ModalPopupTransition,
         cardOverlayEnabled: true,
-        ...TransitionPresets.ModalPresentationIOS,
         cardStyle: {
           backgroundColor: 'transparent',
         },
+        safeAreaInsets: interfaceHelper.deviceValue({
+          default: undefined,
+          lg: { top: 0 },
+        }),
       }}
     >
       <RootStack.Screen

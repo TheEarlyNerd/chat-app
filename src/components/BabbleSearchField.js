@@ -48,7 +48,7 @@ export default class BabbleSearchField extends Component {
         <BabbleTextField
           autoCorrect={false}
           placeholder={placeholder}
-          returnKeyType={'search'}
+          returnKeyType={'done'}
           onFocus={() => this._toggleCancelButton(true)}
           onBlur={this._onBlur}
           onChangeText={this._onChangeText}

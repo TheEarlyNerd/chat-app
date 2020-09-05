@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { KeyboardAvoidingView, SafeAreaView, ActivityIndicator, Alert, Dimensions, StyleSheet } from 'react-native';
 import { BabbleConversationComposerToolbar, BabbleConversationHeaderTitle, BabbleConversation, BabbleConversationMessageComposerToolbar, BabbleConversationViewerToolbar } from '../components';
 import { AlertTriangleIcon, RepeatIcon, InfoIcon, MoreVerticalIcon, UserPlusIcon } from '../components/icons';
+import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
 const { conversationsManager } = maestro.managers;
@@ -10,6 +11,8 @@ const { navigationHelper, interfaceHelper } = maestro.helpers;
 const windowHeight = Dimensions.get('window').height;
 
 export default class ConversationScreen extends Component {
+  static contextType = NavigationTypeContext;
+
   conversation = null;
   conversationComposer = null;
   messageComposer = null;
@@ -165,7 +168,7 @@ export default class ConversationScreen extends Component {
       text: 'View Info',
       subtext: 'See additional details about this conversation and its participants.',
       onPress: () => {
-        navigationHelper.push('ConversationInfo', { conversation });
+        navigationHelper.push('ConversationInfo', { conversation }, this.context);
       },
     });
 

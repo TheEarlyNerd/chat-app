@@ -176,7 +176,7 @@ export default class UserManager extends Manager {
       this.maestro.managers.conversationsManager.resetStore();
     }, 1000);
 
-    navigationHelper.reset('Landing');
+    navigationHelper.resetRoot('Landing');
   }
 
   /*

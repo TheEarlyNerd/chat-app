@@ -4,6 +4,8 @@ import FastImage from 'react-native-fast-image';
 import { BabbleOverlayDismissibleView, BabbleSearchField } from './';
 import maestro from '../maestro';
 
+const { interfaceHelper } = maestro.helpers;
+
 const GIPHY_API_KEY = 'wElHxeUBoOebuLXNKSaz4XVUoUMrwpyU';
 
 export default class BabbleOverlayGifSelector extends Component {
@@ -111,7 +113,7 @@ export default class BabbleOverlayGifSelector extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: 450,
+    height: interfaceHelper.deviceValue({ default: 450, lg: 700 }),
     padding: 15,
   },
   gif: {

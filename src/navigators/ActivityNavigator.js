@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BabbleHeader } from '../components';
+import ModalPopupCardStyleInterpolator from './interpolators/ModalPopupCardStyleInterpolator';
 import maestro from '../maestro';
 
 import ActivityScreen from '../screens/ActivityScreen';
@@ -16,6 +17,7 @@ export default () => {
       headerMode={'screen'}
       screenOptions={{
         header: ({ scene }) => <BabbleHeader scene={scene} />,
+        cardStyleInterpolator: ModalPopupCardStyleInterpolator,
         cardStyle: interfaceHelper.deviceValue({
           default: {},
           lg: {

@@ -3,12 +3,15 @@ import { View, Alert, ActivityIndicator, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { BabbleUserPreview, BabbleSettingField, BabbleViewMoreButton } from '../components';
 import { ChevronRightIcon } from '../components/icons';
+import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
 const { conversationsManager } = maestro.managers;
 const { navigationHelper, interfaceHelper } = maestro.helpers;
 
 export default class ConversationDetailsScreen extends Component {
+  static contextType = NavigationTypeContext;
+
   state = {
     title: this.props.route.params.conversation.title,
     conversationUsers: null,
@@ -100,7 +103,7 @@ export default class ConversationDetailsScreen extends Component {
       return navigation.setOptions({ showRightLoading: false });
     }
 
-    navigationHelper.pop();
+    navigationHelper.pop(1, this.context);
   }
 
   _openConversationUsers = () => {
@@ -108,7 +111,7 @@ export default class ConversationDetailsScreen extends Component {
 
     navigationHelper.push('ConversationUsers', {
       conversationId: conversation.id,
-    });
+    }, this.context);
   }
 
   _getAccessLevelText = () => {

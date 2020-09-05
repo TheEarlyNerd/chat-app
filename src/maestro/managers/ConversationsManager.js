@@ -64,6 +64,10 @@ export default class ConversationsManager extends Manager {
     return conversation;
   }
 
+  getFocusedActiveConversation() {
+    return this.store.activeConversations[0];
+  }
+
   async loadActiveConversation(conversationId) {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.get({ path: `/conversations/${conversationId}` });
@@ -500,10 +504,6 @@ export default class ConversationsManager extends Manager {
         }
       });
     });
-  }
-
-  removeActiveConversation(conversationId) {
-    this._removeActiveConversation(conversationId);
   }
 
   removeUsersConversations(userId) {

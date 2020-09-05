@@ -3,11 +3,14 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { BabbleUserAvatar } from './';
 import { EditIcon } from './icons';
+import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
 const { navigationHelper } = maestro.helpers;
 
 export default class BabbleUserPreview extends Component {
+  static contextType = NavigationTypeContext;
+
   _onPress = () => {
     const { user } = this.props;
 
@@ -18,7 +21,14 @@ export default class BabbleUserPreview extends Component {
   }
 
   _onMessagePress = () => {
-    navigationHelper.push('Conversation', { toUsers: [ this.props.user ] });
+    if (this.context === 'sidebar') {
+      navigationHelper.reset('Conversation', {
+        backEnabled: false,
+        toUsers: [ this.props.user ],
+      }, 'content');
+    } else {
+      navigationHelper.push('Conversation', { toUsers: [ this.props.user ] }, this.context);
+    }
   }
 
   render() {

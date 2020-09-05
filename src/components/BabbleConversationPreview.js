@@ -2,16 +2,26 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { BabbleUserAvatar, BabbleUserAvatarGroup } from './';
 import { MessageCircleIcon, UsersIcon, LockIcon, RepeatIcon } from './icons';
+import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
 const { navigationHelper, timeHelper } = maestro.helpers;
 
 export default class BabbleConversationPreview extends Component {
+  static contextType = NavigationTypeContext;
+
   _onPress = () => {
     const { conversation } = this.props;
 
-    navigationHelper.navigate('Conversation', { conversationId: conversation.id });
+    if (this.context === 'sidebar') {
+      navigationHelper.reset('Conversation', {
+        backEnabled: false,
+        conversationId: conversation.id,
+      }, 'content');
+    } else {
+      navigationHelper.navigate('Conversation', { conversationId: conversation.id });
+    }
   }
 
   _getAvatarAttachment = () => {

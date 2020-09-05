@@ -63,7 +63,7 @@ export default class PhoneLoginCodeScreen extends Component {
       });
     }
 
-    navigationHelper.reset(userManager.nextRouteNameForUserState());
+    navigationHelper.resetRoot(userManager.nextRouteNameForUserState());
   }
 
   render() {

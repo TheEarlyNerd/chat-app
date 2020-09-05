@@ -2,6 +2,7 @@ import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BabbleHeader } from '../components';
+import ModalPopupCardStyleInterpolator from './interpolators/ModalPopupCardStyleInterpolator';
 import maestro from '../maestro';
 
 import ConversationInfoScreen from '../screens/ConversationInfoScreen';
@@ -21,6 +22,7 @@ export default () => {
       headerMode={'screen'}
       screenOptions={{
         header: ({ scene }) => <BabbleHeader scene={scene} />,
+        cardStyleInterpolator: ModalPopupCardStyleInterpolator,
         cardStyle: interfaceHelper.deviceValue({
           default: {},
           lg: {

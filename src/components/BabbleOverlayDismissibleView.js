@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { SafeAreaView, KeyboardAvoidingView, View, TouchableOpacity, PanResponder, Animated, StyleSheet } from 'react-native';
+import maestro from '../maestro';
+
+const { interfaceHelper } = maestro.helpers;
 
 export default class BabbleOverlayDismissibleView extends Component {
   state = {
@@ -98,10 +101,11 @@ const styles = StyleSheet.create({
     width: 50,
   },
   overlay: {
+    alignSelf: 'center',
     backgroundColor: '#FFFFFF',
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     borderRadius: 10,
-    width: '100%',
+    width: interfaceHelper.deviceValue({ default: '100%', lg: '50%' }),
   },
 });

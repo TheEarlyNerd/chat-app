@@ -36,9 +36,10 @@ export default initialRouteName => {
       <MainStack.Screen
         name={'Conversation'}
         component={ConversationScreen}
-        options={{
+        options={({ route }) => ({
+          animationEnabled: !route.params || route.params.animationEnabled !== false,
           backEnabled: true,
-        }}
+        })}
       />
 
       <MainStack.Screen

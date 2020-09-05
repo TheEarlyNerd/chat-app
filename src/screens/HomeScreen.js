@@ -4,12 +4,15 @@ import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import LinearGradient from 'react-native-linear-gradient';
 import { BabbleConversationPreview, BabbleUserPreview, BabbleSearchField, BabbleViewMoreButton } from '../components';
 import { ChevronRightIcon, EditIcon } from '../components/icons';
+import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
 const { conversationsManager, userManager } = maestro.managers;
 const { navigationHelper } = maestro.helpers;
 
 export default class HomeScreen extends Component {
+  static contextType = NavigationTypeContext;
+
   state = {
     exploreConversations: null,
     feedConversations: null,
@@ -53,7 +56,7 @@ export default class HomeScreen extends Component {
   }
 
   _openConversationsList = ({ title, type }) => {
-    navigationHelper.push('ConversationsList', { title, type });
+    navigationHelper.push('ConversationsList', { title, type }, 'sidebar');
   }
 
   _loadConversations = async () => {
@@ -176,6 +179,14 @@ export default class HomeScreen extends Component {
       lazyLoading: false,
       refreshing: false,
     });
+  }
+
+  _newPress = () => {
+    if (this.context === 'sidebar') {
+      navigationHelper.reset('Conversation', { backEnabled: false }, 'content');
+    } else {
+      navigationHelper.navigate('Conversation');
+    }
   }
 
   _endReached = async () => {
@@ -322,7 +333,7 @@ export default class HomeScreen extends Component {
           style={styles.container}
         />
 
-        <TouchableOpacity onPress={() => this.props.navigation.push('Conversation')} style={styles.newButton}>
+        <TouchableOpacity onPress={this._newPress} style={styles.newButton}>
           <EditIcon width={25} height={25} style={styles.newButtonIcon} />
 
           <LinearGradient

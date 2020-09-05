@@ -10,23 +10,51 @@ export default class NavigationHelper extends Helper {
   _splitSidebarNavigation = null;
   _splitContentNavigation = null;
 
-  pop(numberOfScreens = 1) {
-    this._navigation.dispatch(StackActions.pop(numberOfScreens));
+  pop(numberOfScreens = 1, navigationType) {
+    const navigation = this._getNavigationByType(navigationType);
+
+    navigation.dispatch(StackActions.pop(numberOfScreens));
   }
 
-  push(routeName, params) {
-    this._navigation.dispatch(StackActions.push(routeName, params));
+  push(routeName, params, navigationType) {
+    const navigation = this._getNavigationByType(navigationType);
+
+    navigation.dispatch(StackActions.push(routeName, params));
   }
 
-  navigate(routeName, params) { // won't allow same route on the stack more than 1 time whereas push will.
-    this._navigation.dispatch(CommonActions.navigate({
+  reset(routeName, params, navigationType) {
+    const navigation = this._getNavigationByType(navigationType);
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: routeName,
+            params: { animationEnabled: false, ...params },
+          },
+        ],
+      }),
+    );
+  }
+
+  replace(routeName, params, navigationType) {
+    const navigation = this._getNavigationByType(navigationType);
+
+    navigation.dispatch(StackActions.replace(routeName, params));
+  }
+
+  navigate(routeName, params, navigationType) { // won't allow same route on the stack more than 1 time whereas push will.
+    const navigation = this._getNavigationByType(navigationType);
+
+    navigation.dispatch(CommonActions.navigate({
       name: routeName,
       params,
     }));
   }
 
-  reset(routeName, params) {
-    this.maestro.dispatchEvent('NAVIGATION_RESET', { routeName, params });
+  resetRoot(routeName, params) {
+    this.maestro.dispatchEvent('ROOT_NAVIGATION_RESET', { routeName, params });
   }
 
   setNavigation(navigation) {
@@ -39,5 +67,17 @@ export default class NavigationHelper extends Helper {
 
   setSplitContentNavigation(navigation) {
     this._splitContentNavigation = navigation;
+  }
+
+  _getNavigationByType = navigationType => {
+    if (navigationType === 'sidebar' && this._splitSidebarNavigation) {
+      return this._splitSidebarNavigation;
+    }
+
+    if (navigationType === 'content' && this._splitContentNavigation) {
+      return this._splitContentNavigation;
+    }
+
+    return this._navigation;
   }
 }

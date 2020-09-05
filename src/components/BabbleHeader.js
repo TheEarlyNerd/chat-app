@@ -1,83 +1,90 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { BabbleBackground, BabbleConnectionStatusBar } from './';
 import { ArrowLeftIcon, XIcon } from './icons';
+import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
+import maestro from '../maestro';
 
-const BabbleHeader = ({ scene }) => {
-  const { descriptor } = scene;
-  const { navigation, options } = descriptor;
-  const params = scene.route.params || {};
-  const title = options.title || params.title;
-  const { rightButtonTitle, rightButtonComponent, showRightLoading, onRightButtonPress, backEnabled, closeEnabled } = options || params || {};
+const { navigationHelper, interfaceHelper } = maestro.helpers;
 
-  return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <View style={styles.headerLeft}>
+export default class BabbleHeader extends Component {
+  static contextType = NavigationTypeContext;
+
+  render() {
+    const { scene } = this.props;
+    const { descriptor } = scene;
+    const { options } = descriptor;
+    const params = scene.route.params || {};
+    const title = options.title || params.title;
+    const { rightButtonTitle, rightButtonComponent, showRightLoading, onRightButtonPress, backEnabled, closeEnabled } = Object.assign({}, options, params);
+
+    return (
+      <SafeAreaView>
+        <View style={styles.container}>
           {(backEnabled || closeEnabled) && (
-            <TouchableOpacity onPress={() => navigation.pop()} style={styles.backButton}>
-              {closeEnabled && (
-                <XIcon
-                  width={33}
-                  height={33}
-                  style={styles.backIcon}
-                />
-              )}
+            <View style={styles.headerLeft}>
+              <TouchableOpacity onPress={() => navigationHelper.pop(1, this.context)} style={styles.backButton}>
+                {closeEnabled && (
+                  <XIcon
+                    width={33}
+                    height={33}
+                    style={styles.backIcon}
+                  />
+                )}
 
-              {!closeEnabled && (
-                <ArrowLeftIcon
-                  width={33}
-                  height={33}
-                  style={styles.backIcon}
-                />
-              )}
-            </TouchableOpacity>
-          )}
-        </View>
-
-        <View style={styles.headerCenter}>
-          {!!title && typeof title === 'string' && (
-            <Text numberOfLines={1} style={[ styles.text, styles.titleText ]}>{title}</Text>
+                {!closeEnabled && (
+                  <ArrowLeftIcon
+                    width={33}
+                    height={33}
+                    style={styles.backIcon}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
           )}
 
-          {React.isValidElement(title) && title}
+          <View style={styles.headerCenter}>
+            {!!title && typeof title === 'string' && (
+              <Text numberOfLines={1} style={[ styles.text, styles.titleText ]}>{title}</Text>
+            )}
+
+            {React.isValidElement(title) && title}
+          </View>
+
+          <View style={styles.headerRight}>
+            {(!!rightButtonTitle || !!rightButtonComponent) && (
+              <TouchableOpacity disabled={showRightLoading} onPress={onRightButtonPress}>
+                {!showRightLoading && !rightButtonComponent && (
+                  <Text style={styles.rightButtonText}>{rightButtonTitle}</Text>
+                )}
+
+                {!showRightLoading && !!rightButtonComponent && (
+                  rightButtonComponent
+                )}
+
+                {showRightLoading && (
+                  <ActivityIndicator color={'#FFFFFF'} />
+                )}
+              </TouchableOpacity>
+            )}
+          </View>
+
+          <BabbleBackground
+            linearGradientProps={{
+              colors: [ '#299BCB', '#1ACCB4' ],
+              locations: [ 0, 0.7 ],
+              useAngle: true,
+              angle: 36,
+            }}
+            style={styles.backgroundGradient}
+          />
         </View>
 
-        <View style={styles.headerRight}>
-          {(!!rightButtonTitle || !!rightButtonComponent) && (
-            <TouchableOpacity disabled={showRightLoading} onPress={onRightButtonPress}>
-              {!showRightLoading && !rightButtonComponent && (
-                <Text style={styles.rightButtonText}>{rightButtonTitle}</Text>
-              )}
-
-              {!showRightLoading && !!rightButtonComponent && (
-                rightButtonComponent
-              )}
-
-              {showRightLoading && (
-                <ActivityIndicator color={'#FFFFFF'} />
-              )}
-            </TouchableOpacity>
-          )}
-        </View>
-
-        <BabbleBackground
-          linearGradientProps={{
-            colors: [ '#299BCB', '#1ACCB4' ],
-            locations: [ 0, 0.7 ],
-            useAngle: true,
-            angle: 36,
-          }}
-          style={styles.backgroundGradient}
-        />
-      </View>
-
-      <BabbleConnectionStatusBar />
-    </SafeAreaView>
-  );
-};
-
-export default BabbleHeader;
+        <BabbleConnectionStatusBar />
+      </SafeAreaView>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   backButton: {
@@ -98,7 +105,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    minHeight: 50,
+    minHeight: interfaceHelper.deviceValue({ default: 50, lg: 60 }),
     paddingVertical: 10,
   },
   headerLeft: {
