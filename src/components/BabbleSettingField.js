@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, View, Text, TextInput, StyleSheet } from 'react-native';
+import maestro from '../maestro';
+
+const { interfaceHelper } = maestro.helpers;
 
 export default class BabbleSettingField extends Component {
   textInput = null;
@@ -96,7 +99,7 @@ const styles = StyleSheet.create({
   editText: {
     color: '#40A1D5',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 16,
+    fontSize: interfaceHelper.deviceValue({ default: 16, lg: 18 }),
   },
   headingContainer: {
     flexDirection: 'row',
@@ -111,12 +114,12 @@ const styles = StyleSheet.create({
   labelText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 17,
+    fontSize: interfaceHelper.deviceValue({ default: 17, lg: 18 }),
   },
   lengthText: {
     color: '#ADADAD',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
     textAlign: 'right',
     width: '100%',
   },
@@ -126,7 +129,7 @@ const styles = StyleSheet.create({
   textInput: {
     color: '#323643',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
     marginTop: 5,
     width: '100%',
   },
@@ -137,7 +140,7 @@ const styles = StyleSheet.create({
   valueText: {
     color: '#ADADAD',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
     marginTop: 5,
   },
 });

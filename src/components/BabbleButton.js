@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, Text, View, ActivityIndicator, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import maestro from '../maestro';
+
+const { interfaceHelper } = maestro.helpers;
 
 export default class BabbleButton extends Component {
   render() {
@@ -51,19 +54,11 @@ export default class BabbleButton extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 4,
-    zIndex: 1,
-  },
   button: {
-    width: '100%',
-    height: 44,
     alignItems: 'center',
+    height: interfaceHelper.deviceValue({ default: 44, lg: 50 }),
     justifyContent: 'center',
+    width: '100%',
   },
   buttonDisabled: {
     opacity: 0.5,
@@ -74,30 +69,39 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
   },
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 4,
+    justifyContent: 'center',
+    zIndex: 1,
+  },
+
   linearGradientBackground: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: 4,
     zIndex: -1,
   },
-  text: {
-    color: '#FFFFFF',
-    fontFamily: 'NunitoSans-Bold',
-    fontSize: 18,
-  },
-  textInverted: {
-    color: '#26A6C6',
-  },
   shadow: {
+    backgroundColor: '#FFF',
     bottom: 0,
     left: '5%',
     position: 'absolute',
     right: '5%',
-    top: 10,
-    zIndex: -2,
-    backgroundColor: '#FFF',
     shadowColor: '#252A3F',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.25,
     shadowRadius: 5,
+    top: 10,
+    zIndex: -2,
+  },
+  text: {
+    color: '#FFFFFF',
+    fontFamily: 'NunitoSans-Bold',
+    fontSize: interfaceHelper.deviceValue({ default: 18, lg: 22 }),
+  },
+  textInverted: {
+    color: '#26A6C6',
   },
 });

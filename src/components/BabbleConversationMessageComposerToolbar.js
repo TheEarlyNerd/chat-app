@@ -165,8 +165,8 @@ export default class BabbleMessageComposerToolbar extends Component {
             style={[ styles.button, styles.leftButton ]}
           >
             <ImageIcon
-              width={22}
-              height={22}
+              width={interfaceHelper.deviceValue({ default: 22, lg: 25 })}
+              height={interfaceHelper.deviceValue({ default: 22, lg: 25 })}
               style={styles.buttonIcon}
             />
           </TouchableOpacity>
@@ -219,8 +219,8 @@ export default class BabbleMessageComposerToolbar extends Component {
 
             {!loading && (
               <ArrowUpIcon
-                width={21}
-                height={21}
+                width={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
+                height={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
                 style={[
                   styles.buttonIcon,
                   (!text.length && !attachments?.length) ? styles.buttonIconDisabled : null,
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#2A99CC',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 17 }),
   },
   container: {
     borderTopColor: '#D8D8D8',
@@ -290,38 +290,38 @@ const styles = StyleSheet.create({
   replyMessageText: {
     color: '#797979',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
     marginRight: 8,
   },
   replyTitleNameText: {
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
   },
   replyTitleText: {
     color: '#323643',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
     marginBottom: 2,
   },
   sendButton: {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
-    height: 35,
+    height: interfaceHelper.deviceValue({ default: 35, lg: 40 }),
     justifyContent: 'center',
     marginLeft: 15,
     shadowColor: '#252A3F',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
     shadowRadius: 5,
-    width: 35,
+    width: interfaceHelper.deviceValue({ default: 35, lg: 40 }),
   },
   textInput: {
     color: '#323643',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 16,
+    fontSize: interfaceHelper.deviceValue({ default: 16, lg: 17 }),
     maxHeight: 120,
-    minHeight: 35,
+    minHeight: interfaceHelper.deviceValue({ default: 35, lg: 40 }),
     paddingBottom: 8,
     paddingHorizontal: 15,
     paddingTop: 8,

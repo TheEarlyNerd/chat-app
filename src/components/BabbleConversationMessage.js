@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   avatar: {
     left: 15,
     position: 'absolute',
-    top: 15,
+    top: interfaceHelper.deviceValue({ default: 15, lg: 17 }),
   },
   container: {
     alignItems: 'flex-start',
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    marginLeft: 55,
+    marginLeft: interfaceHelper.deviceValue({ default: 55, lg: 60 }),
   },
   embed: {
     marginBottom: 5,
@@ -274,12 +274,12 @@ const styles = StyleSheet.create({
   messageText: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
   },
   nameText: {
     color: '#2A99CC',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
   },
   reaction: {
     marginRight: 5,
@@ -294,6 +294,6 @@ const styles = StyleSheet.create({
   timeText: {
     color: '#9B9B9B',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 11,
+    fontSize: interfaceHelper.deviceValue({ default: 11, lg: 13 }),
   },
 });

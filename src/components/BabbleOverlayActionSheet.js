@@ -4,6 +4,8 @@ import { BabbleOverlayDismissibleView } from './';
 import { ArrowDownIcon } from './icons';
 import maestro from '../maestro';
 
+const { interfaceHelper } = maestro.helpers;
+
 export default class BabbleOverlayActionSheet extends Component {
   dismissibleView = null;
 
@@ -76,12 +78,12 @@ const styles = StyleSheet.create({
   actionSubText: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 14,
+    fontSize: interfaceHelper.deviceValue({ default: 14, lg: 16 }),
   },
   actionText: {
     color: '#323643',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 18,
+    fontSize: interfaceHelper.deviceValue({ default: 18, lg: 20 }),
   },
   actionTextCancel: {
     color: '#F54444',

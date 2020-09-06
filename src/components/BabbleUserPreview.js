@@ -6,7 +6,7 @@ import { EditIcon } from './icons';
 import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
-const { navigationHelper } = maestro.helpers;
+const { navigationHelper, interfaceHelper } = maestro.helpers;
 
 export default class BabbleUserPreview extends Component {
   static contextType = NavigationTypeContext;
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   aboutText: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 13,
+    fontSize: interfaceHelper.deviceValue({ default: 13, lg: 14 }),
     marginTop: 1,
   },
   buttons: {
@@ -110,11 +110,11 @@ const styles = StyleSheet.create({
   nameText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 17 }),
   },
   usernameText: {
     color: '#797979',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 13,
+    fontSize: interfaceHelper.deviceValue({ default: 13, lg: 15 }),
   },
 });

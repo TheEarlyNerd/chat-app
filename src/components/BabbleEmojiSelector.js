@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Dimensions } from 'react-native';
-import { BabbleSearchField } from './';
 import emoji from 'emojilib';
+import { BabbleSearchField } from './';
+import maestro from '../maestro';
+
+const { interfaceHelper } = maestro.helpers;
 
 const windowWidth = Dimensions.get('window').width;
-const columns = Math.floor(windowWidth / 50);
+const columns = Math.floor(windowWidth / interfaceHelper.deviceValue({ default: 50, lg: 100 }));
 
 export default class BabbleEmojiSelector extends Component {
   state = {
@@ -123,12 +126,12 @@ export default class BabbleEmojiSelector extends Component {
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
-    height: 45,
+    height: interfaceHelper.deviceValue({ default: 45, lg: 50 }),
     justifyContent: 'center',
-    width: 45,
+    width: interfaceHelper.deviceValue({ default: 45, lg: 50 }),
   },
   buttonText: {
-    fontSize: 24,
+    fontSize: interfaceHelper.deviceValue({ default: 24, lg: 30 }),
   },
   container: {
     padding: 15,
@@ -136,12 +139,12 @@ const styles = StyleSheet.create({
   list: {
     alignSelf: 'center',
     height: 300,
-    width: 45 * columns,
+    width: interfaceHelper.deviceValue({ default: 45, lg: 50 }) * columns,
   },
   title: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 16,
+    fontSize: interfaceHelper.deviceValue({ default: 16, lg: 18 }),
     marginBottom: 5,
     marginTop: 15,
   },

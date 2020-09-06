@@ -1,5 +1,8 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import maestro from '../maestro';
+
+const { interfaceHelper } = maestro.helpers;
 
 const BabbleViewMoreButton = props => {
   return (
@@ -28,6 +31,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     color: '#9B9B9B',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 13,
+    fontSize: interfaceHelper.deviceValue({ default: 13, lg: 14 }),
   },
 });

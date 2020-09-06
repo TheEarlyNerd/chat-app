@@ -6,7 +6,7 @@ import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext'
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
-const { navigationHelper, timeHelper } = maestro.helpers;
+const { navigationHelper, interfaceHelper, timeHelper } = maestro.helpers;
 
 export default class BabbleConversationPreview extends Component {
   static contextType = NavigationTypeContext;
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   headingRightText: {
     color: '#797979',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 13,
+    fontSize: interfaceHelper.deviceValue({ default: 13, lg: 14 }),
   },
   preview: {
     flexDirection: 'row',
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     color: '#797979',
     flexShrink: 1,
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 13,
+    fontSize: interfaceHelper.deviceValue({ default: 13, lg: 14 }),
     marginTop: -1,
   },
   previewTextUnread: {
@@ -265,6 +265,6 @@ const styles = StyleSheet.create({
     color: '#404040',
     flex: 1,
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 16,
+    fontSize: interfaceHelper.deviceValue({ default: 16, lg: 17 }),
   },
 });

@@ -1,5 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import maestro from '../maestro';
+
+const { interfaceHelper } = maestro.helpers;
 
 const BabbleFieldLabel = props => (
   <View style={[ styles.container, props.containerStyle ]}>
@@ -18,6 +21,6 @@ const styles = StyleSheet.create({
   labelText: {
     color: '#2A99CC',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 18,
+    fontSize: interfaceHelper.deviceValue({ default: 18, lg: 22 }),
   },
 });

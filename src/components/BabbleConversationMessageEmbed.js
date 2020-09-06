@@ -3,6 +3,9 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Video from 'react-native-video';
 import { BabbleAutoscaleImage } from './';
+import maestro from '../maestro';
+
+const { interfaceHelper } = maestro.helpers;
 
 export default class BabbleConversationMessageEmbed extends Component {
   state = {
@@ -83,12 +86,13 @@ const styles = StyleSheet.create({
     borderColor: '#D8D8D8',
     borderRadius: 4,
     borderWidth: 0.5,
+    maxWidth: 500,
     padding: 10,
   },
   descriptionText: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 13,
+    fontSize: interfaceHelper.deviceValue({ default: 13, lg: 15 }),
   },
   image: {
     borderRadius: 4,
@@ -101,12 +105,13 @@ const styles = StyleSheet.create({
   linkText: {
     color: '#797979',
     fontFamily: 'NunitoSans-SemiBoldItalic',
-    fontSize: 11,
+    fontSize: interfaceHelper.deviceValue({ default: 11, lg: 13 }),
   },
   titleText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 17 }),
+    marginTop: 5,
   },
   video: {
     borderRadius: 4,

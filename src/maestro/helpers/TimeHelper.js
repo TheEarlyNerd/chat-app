@@ -31,10 +31,10 @@ export default class TimeHelper extends Helper {
 
   calendarTime(time) {
     return moment(time).calendar(null, {
-      sameDay: '[Today]',
-      nextDay: '[Tomorrow]',
-      nextWeek: 'dddd',
-      lastDay: '[Yesterday]',
+      sameDay: '[Today] [at] LT',
+      nextDay: '[Tomorrow] [at] LT',
+      nextWeek: 'dddd [at] LT',
+      lastDay: '[Yesterday] [at] LT',
       lastWeek: 'MM/DD/YYYY LT',
       sameElse: 'MM/DD/YYYY LT',
     });

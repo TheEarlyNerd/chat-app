@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   resendButtonText: {
     color: '#666666',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 18,
+    fontSize: interfaceHelper.deviceValue({ default: 18, lg: 22 }),
   },
   topContainer: {
     alignItems: 'center',

@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontFamily: 'NunitoSans-Black',
-    fontSize: 22,
+    fontSize: interfaceHelper.deviceValue({ default: 22, lg: 24 }),
     paddingHorizontal: 15,
   },
 });

@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
     padding: 4,
     position: 'absolute',
     right: 15,
-    top: 17,
+    top: interfaceHelper.deviceValue({ default: 17, lg: 16 }),
   },
   accessLevelButtonIcon: {
     color: '#2A99CC',
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
   accessLevelButtonText: {
     color: '#2A99CC',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
     marginLeft: 5,
     marginRight: 2.5,
   },
@@ -455,7 +455,7 @@ const styles = StyleSheet.create({
   labelText: {
     color: '#909090',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 16,
+    fontSize: interfaceHelper.deviceValue({ default: 16, lg: 17 }),
     marginRight: 10,
   },
   nameSelectedText: {
@@ -464,19 +464,19 @@ const styles = StyleSheet.create({
   nameText: {
     color: '#2A99CC',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
   },
   suggestedText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
     paddingBottom: 5,
     paddingHorizontal: 15,
   },
   textInput: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 16,
+    fontSize: interfaceHelper.deviceValue({ default: 16, lg: 17 }),
     marginLeft: 5,
     paddingVertical: 5,
   },

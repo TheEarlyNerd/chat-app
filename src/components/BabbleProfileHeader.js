@@ -4,7 +4,7 @@ import { BabbleUserAvatar, BabbleButton } from './';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
-const { navigationHelper } = maestro.helpers;
+const { navigationHelper, interfaceHelper } = maestro.helpers;
 
 export default class BabbleProfileHeader extends Component {
   state = {
@@ -155,12 +155,12 @@ const styles = StyleSheet.create({
   followersText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 16,
+    fontSize: interfaceHelper.deviceValue({ default: 16, lg: 18 }),
   },
   nameText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 16,
+    fontSize: interfaceHelper.deviceValue({ default: 16, lg: 18 }),
   },
   user: {
     flexDirection: 'row',
@@ -168,6 +168,6 @@ const styles = StyleSheet.create({
   usernameText: {
     color: '#797979',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 17 }),
   },
 });

@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   termsButtonText: {
     color: '#9B9B9B',
     fontFamily: 'NunitoSans-Regular',
-    fontSize: 12,
+    fontSize: interfaceHelper.deviceValue({ default: 12, lg: 14 }),
     textAlign: 'center',
   },
   termsButtonTextBold: {

@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import maestro from '../maestro';
+
+const { interfaceHelper } = maestro.helpers;
 
 export default class BabbleReaction extends Component {
   render() {
@@ -47,7 +50,7 @@ const styles = StyleSheet.create({
   reactionText: {
     color: '#000000',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 13,
-    lineHeight: 17,
+    fontSize: interfaceHelper.deviceValue({ default: 13, lg: 15 }),
+    lineHeight: interfaceHelper.deviceValue({ default: 17, lg: 20 }),
   },
 });

@@ -5,7 +5,7 @@ import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext'
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
-const { navigationHelper } = maestro.helpers;
+const { navigationHelper, interfaceHelper } = maestro.helpers;
 
 export default class BabbleConversationHeaderTitle extends Component {
   static contextType = NavigationTypeContext;
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   subtext: {
     color: '#FFFFFFCC',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 13,
+    fontSize: interfaceHelper.deviceValue({ default: 13, lg: 15 }),
   },
   subtextContainer: {
     alignItems: 'center',
@@ -133,8 +133,8 @@ const styles = StyleSheet.create({
   titleText: {
     color: '#FFFFFF',
     fontFamily: 'NunitoSans-Black',
-    fontSize: 18,
-    marginTop: -3,
+    fontSize: interfaceHelper.deviceValue({ default: 18, lg: 20 }),
+    marginTop: interfaceHelper.deviceValue({ default: -3, lg: -7 }),
     shadowColor: '#252A3F',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
