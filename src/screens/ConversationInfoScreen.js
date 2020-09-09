@@ -9,7 +9,7 @@ import maestro from '../maestro';
 const { conversationsManager } = maestro.managers;
 const { navigationHelper, interfaceHelper } = maestro.helpers;
 
-export default class ConversationDetailsScreen extends Component {
+export default class ConversationInfoScreen extends Component {
   static contextType = NavigationTypeContext;
 
   state = {

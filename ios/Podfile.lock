@@ -255,7 +255,7 @@ PODS:
     - react-native-video/Video (= 4.4.5)
   - react-native-video/Video (4.4.5):
     - React
-  - react-native-webview (10.4.0):
+  - react-native-webview (10.8.3):
     - React
   - React-RCTActionSheet (0.62.2):
     - React-Core/RCTActionSheetHeaders (= 0.62.2)
@@ -316,19 +316,19 @@ PODS:
     - React-cxxreact (= 0.62.2)
     - React-jsi (= 0.62.2)
     - ReactCommon/callinvoker (= 0.62.2)
-  - RNCAsyncStorage (1.9.0):
+  - RNCAsyncStorage (1.12.0):
     - React
-  - RNCMaskedView (0.1.9):
+  - RNCMaskedView (0.1.10):
     - React
-  - RNCPushNotificationIOS (1.2.2):
+  - RNCPushNotificationIOS (1.4.1):
     - React
-  - RNDeviceInfo (5.6.1):
+  - RNDeviceInfo (5.6.5):
     - React
-  - RNFastImage (8.1.5):
+  - RNFastImage (8.3.2):
     - React
-    - SDWebImage (~> 5.0)
-    - SDWebImageWebPCoder (~> 0.4.1)
-  - RNGestureHandler (1.6.1):
+    - SDWebImage (~> 5.8)
+    - SDWebImageWebPCoder (~> 0.6.1)
+  - RNGestureHandler (1.8.0):
     - React
   - RNImageCropPicker (0.31.1):
     - React-Core
@@ -341,18 +341,18 @@ PODS:
     - TOCropViewController
   - RNLocalize (1.4.1):
     - React
-  - RNReanimated (1.8.0):
+  - RNReanimated (1.13.0):
     - React
-  - RNScreens (2.5.0):
+  - RNScreens (2.10.1):
     - React
   - RNSVG (12.1.0):
     - React
   - SDWebImage (5.8.0):
     - SDWebImage/Core (= 5.8.0)
   - SDWebImage/Core (5.8.0)
-  - SDWebImageWebPCoder (0.4.1):
+  - SDWebImageWebPCoder (0.6.1):
     - libwebp (~> 1.0)
-    - SDWebImage/Core (~> 5.5)
+    - SDWebImage/Core (~> 5.7)
   - TOCropViewController (2.5.2)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -561,7 +561,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: 3dd993921571d01b78a8f91f1caaffcab7a1e1c7
   react-native-safe-area-context: 8260e5157617df4b72865f44006797f895b2ada7
   react-native-video: aa527b0acb37f94c4491e70df0274cb26979405d
-  react-native-webview: d2ddd1c9a3c04b2c7a034df1d14b7cd80dbb0a05
+  react-native-webview: 162c2f2b14555cb524ac0e3b422a9b66ebceefee
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
   React-RCTAnimation: 49ab98b1c1ff4445148b72a3d61554138565bad0
   React-RCTBlob: a332773f0ebc413a0ce85942a55b064471587a71
@@ -572,19 +572,19 @@ SPEC CHECKSUMS:
   React-RCTText: fae545b10cfdb3d247c36c56f61a94cfd6dba41d
   React-RCTVibration: 4356114dbcba4ce66991096e51a66e61eda51256
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
-  RNCAsyncStorage: b16697280b08bab4b5f2f67f752d93d13a52e9ed
-  RNCMaskedView: 5dba3cb07493765fb66156c83c3dd281ca709a48
-  RNCPushNotificationIOS: 375feee5b89ad4aeee8a971f63fe4848902380b7
-  RNDeviceInfo: ab2ab4ca9e7f2bc4f35d62ab6ce2b66f2cbf1e7a
-  RNFastImage: 35ae972d6727c84ee3f5c6897e07f84d0a3445e9
-  RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
+  RNCAsyncStorage: 3eea36d9460c5159b592f9ecbe5a77f8aca98006
+  RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
+  RNCPushNotificationIOS: c625dde093c3c8351d4babd34285d772f551dc36
+  RNDeviceInfo: e841619c3dac5495a095c5455473579ff04908d4
+  RNFastImage: e19ba191922e7dab9d932a4d59d62d76660aa222
+  RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNImageCropPicker: 38865ab4af1b0b2146ad66061196bc0184946855
   RNLocalize: c388679af021ddd6069c215f7fdd2acf4e77ede5
-  RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
-  RNScreens: ac02d0e4529f08ced69f5580d416f968a6ec3a1d
+  RNReanimated: 89f5e0a04d1dd52fbf27e7e7030d8f80a646a3fc
+  RNScreens: b748efec66e095134c7166ca333b628cd7e6f3e2
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   SDWebImage: 84000f962cbfa70c07f19d2234cbfcf5d779b5dc
-  SDWebImageWebPCoder: 36f8f47bd9879a8aea6044765c1351120fd8e3a8
+  SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   TOCropViewController: e9da34f484aedd4e5d5a8ab230ba217cfe16c729
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

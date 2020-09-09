@@ -14,10 +14,7 @@ export default class HomeScreen extends Component {
   static contextType = NavigationTypeContext;
 
   state = {
-    exploreConversations: null,
-    feedConversations: null,
-    privateConversations: null,
-    recentConversations: null,
+    conversations: null,
     search: null,
     searchUsers: null,
     searchConversations: null,
@@ -41,12 +38,7 @@ export default class HomeScreen extends Component {
   }
 
   receiveStoreUpdate({ conversations }) {
-    this.setState({
-      exploreConversations: conversations.exploreConversations,
-      feedConversations: conversations.feedConversations,
-      privateConversations: conversations.privateConversations,
-      recentConversations: conversations.recentConversations,
-    });
+    this.setState({ conversations: conversations.recentConversations });
   }
 
   receiveEvent(name, value) {
@@ -60,20 +52,12 @@ export default class HomeScreen extends Component {
   }
 
   _loadConversations = async () => {
-    await Promise.all([
-      conversationsManager.loadExploreConversations(),
-      conversationsManager.loadFeedConversations(),
-      conversationsManager.loadPrivateConversations(),
-      conversationsManager.loadRecentConversations(),
-    ]);
+    await conversationsManager.loadRecentConversations({ limit: 15 });
   }
 
   _generateData = () => {
     const {
-      exploreConversations,
-      feedConversations,
-      privateConversations,
-      recentConversations,
+      conversations,
       search,
       searchUsers,
       searchConversations,
@@ -118,30 +102,11 @@ export default class HomeScreen extends Component {
     return [
       { id: 'search', search: true },
 
-      ...((!!recentConversations && recentConversations.length) ? [
-        { id: 'recentConversations', title: 'Recent Conversations', type: 'recent', header: true },
-        ...mapItems(recentConversations.slice(0, 5), 'conversationPreview'),
-        ...((recentConversations.length >= 5) ? [ { viewMore: true, title: 'Recent Conversations', type: 'recent' } ] : []),
+      ...((!!conversations && conversations.length) ? [
+        ...mapItems(conversations.slice(0, 20), 'conversationPreview'),
       ] : []),
 
-      ...((!!privateConversations && privateConversations.length) ? [
-        { id: 'directMessages', title: 'Direct Messages', type: 'private', header: true },
-        ...mapItems(privateConversations.slice(0, 5), 'conversationPreview'),
-        ...((privateConversations.length >= 5) ? [ { viewMore: true, title: 'Direct Messages', type: 'private' } ] : []),
-      ] : []),
-
-      ...((!!feedConversations && feedConversations.length) ? [
-        { id: 'feed', title: 'Feed', type: 'feed', header: true },
-        ...mapItems(feedConversations.slice(0, 5), 'conversationPreview'),
-        ...((feedConversations.length >= 5) ? [ { viewMore: true, title: 'Feed', type: 'feed' } ] : []),
-      ] : []),
-
-      ...((!!exploreConversations && exploreConversations.length) ? [
-        { id: 'explore', title: 'Explore', type: 'explore', header: true },
-        ...mapItems(exploreConversations, 'conversationPreview'),
-      ] : []),
-
-      ...((!recentConversations && !privateConversations && !feedConversations && !exploreConversations) ? [
+      ...((!conversations) ? [
         { id: 'loading', loading: true, last: true },
       ] : []),
     ];
@@ -181,25 +146,17 @@ export default class HomeScreen extends Component {
     });
   }
 
-  _newPress = () => {
-    if (this.context === 'sidebar') {
-      navigationHelper.reset('Conversation', { backEnabled: false }, 'content');
-    } else {
-      navigationHelper.navigate('Conversation');
-    }
-  }
-
   _endReached = async () => {
-    const { exploreConversations, lazyLoading } = this.state;
+    const { conversations, lazyLoading } = this.state;
 
-    if (lazyLoading || lazyLoading === null || !exploreConversations) {
+    if (lazyLoading || lazyLoading === null || !conversations) {
       return;
     }
 
     this.setState({ lazyLoading: true });
 
-    const loadedConversations = await conversationsManager.loadExploreConversations({
-      staler: exploreConversations[exploreConversations.length - 1].lastMessageAt,
+    const loadedConversations = await conversationsManager.loadRecentConversations({
+      staler: conversations[conversations.length - 1].lastMessageAt,
     });
 
     this.setState({ lazyLoading: (loadedConversations.length) ? false : null });
@@ -294,14 +251,6 @@ export default class HomeScreen extends Component {
     }
   }
 
-  _renderItemSeparator = ({ leadingItem }) => {
-    if (leadingItem.last) {
-      return <View style={styles.spacer} />;
-    }
-
-    return null;
-  }
-
   _renderNoResults = () => {
     return (
       <Text style={styles.noResultsText}>No results found</Text>
@@ -319,7 +268,6 @@ export default class HomeScreen extends Component {
           renderItem={this._renderItem}
           keyboardShouldPersistTaps={'handled'}
           keyExtractor={(item, index) => `${item.id}.${index}`}
-          ItemSeparatorComponent={this._renderItemSeparator}
           ListFooterComponent={(lazyLoading) ? this._renderLoading : null}
           showsVerticalScrollIndicator={false}
           refreshing={refreshing}
@@ -328,17 +276,6 @@ export default class HomeScreen extends Component {
           onEndReachedThreshold={0.25}
           style={styles.container}
         />
-
-        <TouchableOpacity onPress={this._newPress} style={styles.newButton}>
-          <EditIcon width={25} height={25} style={styles.newButtonIcon} />
-
-          <LinearGradient
-            useAngle
-            angle={36}
-            colors={[ '#299BCB', '#1ACCB4' ]}
-            style={styles.newButtonBackground}
-          />
-        </TouchableOpacity>
       </View>
     );
   }
@@ -373,28 +310,6 @@ const styles = StyleSheet.create({
     fontFamily: 'NunitoSans-Black',
     fontSize: 26,
   },
-  newButton: {
-    alignItems: 'center',
-    borderRadius: 30,
-    bottom: 25,
-    height: 60,
-    justifyContent: 'center',
-    position: 'absolute',
-    right: 30,
-    shadowColor: '#252A3F',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.5,
-    shadowRadius: 6,
-    width: 60,
-  },
-  newButtonBackground: {
-    ...StyleSheet.absoluteFillObject,
-    borderRadius: 30,
-    zIndex: -1,
-  },
-  newButtonIcon: {
-    color: '#FFFFFF',
-  },
   noResultsText: {
     color: '#797979',
     fontFamily: 'NunitoSans-Bold',
@@ -404,9 +319,6 @@ const styles = StyleSheet.create({
   searchField: {
     marginBottom: 30,
     paddingHorizontal: 15,
-  },
-  spacer: {
-    height: 40,
   },
   userPreview: {
     marginVertical: 10,

@@ -90,7 +90,7 @@ export default class ApiHelper extends Helper {
 
     if (response.status === 401) {
       userManager.logout();
-      return {};
+      return { code: response.status };
     }
 
     return {
