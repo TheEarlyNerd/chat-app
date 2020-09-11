@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import { BabbleUserAvatar, BabbleUserAvatarGroup } from './';
 import { MessageCircleIcon, UsersIcon, LockIcon, RepeatIcon } from './icons';
-import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
@@ -160,7 +160,7 @@ export default class BabbleConversationPreview extends Component {
 
         <View style={styles.content}>
           <View style={styles.heading}>
-            <Text style={styles.titleText} numberOfLines={1}>{this._getTitle()}</Text>
+            <Text style={styles.titleText} numberOfLines={3}>{this._getTitle()}</Text>
 
             <View style={styles.headingRight}>
               {!!conversationRepostUser && (
@@ -220,22 +220,25 @@ const styles = StyleSheet.create({
     paddingTop: 1.5,
   },
   container: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flexDirection: 'row',
-    paddingVertical: 8,
+    paddingVertical: 10,
   },
   content: {
     flex: 1,
+    justifyContent: 'center',
     marginLeft: 15,
+    minHeight: 50,
   },
   heading: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   headingRight: {
     flexDirection: 'row',
     marginLeft: 5,
+    marginTop: 1,
   },
   headingRightText: {
     color: '#797979',
@@ -250,8 +253,9 @@ const styles = StyleSheet.create({
     color: '#797979',
     flexShrink: 1,
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: interfaceHelper.deviceValue({ default: 13, lg: 14 }),
-    marginTop: -1,
+    fontSize: interfaceHelper.deviceValue({ default: 14, lg: 15 }),
+    lineHeight: 18,
+    marginTop: 1,
   },
   previewTextUnread: {
     color: '#404040',
@@ -265,6 +269,7 @@ const styles = StyleSheet.create({
     color: '#404040',
     flex: 1,
     fontFamily: 'NunitoSans-Bold',
-    fontSize: interfaceHelper.deviceValue({ default: 16, lg: 17 }),
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
+    lineHeight: 20,
   },
 });

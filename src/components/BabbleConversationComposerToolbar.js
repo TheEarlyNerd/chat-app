@@ -221,6 +221,8 @@ export default class BabbleConversationComposerToolbar extends Component {
   }
 
   _accessLevelPress = () => {
+    const { accessLevel } = this.state;
+
     interfaceHelper.showOverlay({
       name: 'ActionSheet',
       data: {
@@ -229,18 +231,21 @@ export default class BabbleConversationComposerToolbar extends Component {
             iconComponent: MessageCircleIcon,
             text: 'Public',
             subtext: 'Anyone can view and join this conversation, send and react to messages, and invite others.',
+            highlighted: !accessLevel || accessLevel === 'public',
             onPress: () => this._changeAccessLevel('public'),
           },
           {
             iconComponent: UsersIcon,
             text: 'V.I.P.',
             subtext: 'Only people you invite to this conversation can send messages. Anyone can see this conversation and react to messages.',
+            highlighted: accessLevel === 'protected',
             onPress: () => this._changeAccessLevel('protected'),
           },
           {
             iconComponent: LockIcon,
             text: 'Private',
             subtext: 'Only people you choose can see this conversation, send messages and react to messages.',
+            highlighted: accessLevel === 'private',
             onPress: () => this._changeAccessLevel('private'),
           },
         ],

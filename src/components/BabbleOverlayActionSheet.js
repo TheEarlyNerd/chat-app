@@ -41,13 +41,32 @@ export default class BabbleOverlayActionSheet extends Component {
       >
         {actions.map((action, index) => (
           <TouchableOpacity onPress={() => this._actionPressed(action.onPress)} style={styles.action} key={index}>
-            <action.iconComponent style={styles.actionIcon} />
+            <action.iconComponent
+              style={[
+                styles.actionIcon,
+                (action.highlighted) ? styles.highlighted : null,
+              ]}
+            />
 
             <View style={styles.actionTextContainer}>
-              <Text style={styles.actionText}>{action.text}</Text>
+              <Text
+                style={[
+                  styles.actionText,
+                  (action.highlighted) ? styles.highlighted : null,
+                ]}
+              >
+                {action.text}
+              </Text>
 
               {!!action.subtext && (
-                <Text style={styles.actionSubText}>{action.subtext}</Text>
+                <Text
+                  style={[
+                    styles.actionSubText,
+                    (action.highlighted) ? styles.highlighted : null,
+                  ]}
+                >
+                  {action.subtext}
+                </Text>
               )}
             </View>
           </TouchableOpacity>
@@ -91,5 +110,8 @@ const styles = StyleSheet.create({
   actionTextContainer: {
     flex: 1,
     marginLeft: 15,
+  },
+  highlighted: {
+    color: '#2A99CC',
   },
 });
