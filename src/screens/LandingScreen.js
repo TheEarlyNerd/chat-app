@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { View, KeyboardAvoidingView, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, KeyboardAvoidingView, TouchableOpacity, Alert, Text, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { BabblePhoneField, BabbleButton, BabbleBackground } from '../components';
 import maestro from '../maestro';
 
-const { interfaceHelper } = maestro.helpers;
+const { dataHelper, interfaceHelper } = maestro.helpers;
 const { userManager } = maestro.managers;
 
 export default class LandingScreen extends Component {
@@ -23,18 +23,29 @@ export default class LandingScreen extends Component {
       return this.setState({ error: 'Invalid phone number.' });
     }
 
-    this.setState({ loading: true });
+    Alert.alert(`Is this number correct?\n${dataHelper.formatPhoneNumber(`+${phone}`)}`, null, [
+      {
+        text: 'Yes',
+        onPress: async () => {
+          this.setState({ loading: true });
 
-    try {
-      await userManager.requestPhoneLoginCode(phone);
+          try {
+            await userManager.requestPhoneLoginCode(phone);
 
-      // visually pleasing, continue doesn't flash on screen transition.
-      setTimeout(() => this.setState({ loading: false }), 1000);
-    } catch (error) {
-      this.setState({ error: error.message, loading: false });
-    }
+            // visually pleasing, continue doesn't flash on screen transition.
+            setTimeout(() => this.setState({ loading: false }), 1000);
+          } catch (error) {
+            this.setState({ error: error.message, loading: false });
+          }
 
-    this.props.navigation.navigate('PhoneLoginCode', { countryCode, phone });
+          this.props.navigation.navigate('PhoneLoginCode', { countryCode, phone });
+        },
+      },
+      {
+        text: 'No',
+        style: 'cancel',
+      },
+    ]);
   }
 
   render() {

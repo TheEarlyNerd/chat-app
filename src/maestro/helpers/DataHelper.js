@@ -77,4 +77,14 @@ export default class DataHelper extends Helper {
 
     return (parsedPhoneNumber) ? parsedPhoneNumber.number.replace('+', '') : false;
   }
+
+  formatPhoneNumber = phoneNumber => {
+    if (!phoneNumber) {
+      return;
+    }
+
+    const parsedPhoneNumber = parsePhoneNumberFromString(phoneNumber);
+
+    return parsedPhoneNumber.formatInternational();
+  }
 }
