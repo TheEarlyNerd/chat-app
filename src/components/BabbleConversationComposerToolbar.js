@@ -31,6 +31,8 @@ export default class BabbleConversationComposerToolbar extends Component {
     if (deviceContactsManager.requestedPermission()) {
       deviceContactsManager.loadContacts();
     }
+
+    setTimeout(() => this.titleTextInput.focus(), 250);
   }
 
   componentWillUnmount() {
@@ -175,10 +177,6 @@ export default class BabbleConversationComposerToolbar extends Component {
       return 'Type to search users...';
     }
 
-    if (!selectedUsers.length && (!accessLevel || accessLevel === 'public')) {
-      return 'The World';
-    }
-
     return '';
   }
 
@@ -286,81 +284,83 @@ export default class BabbleConversationComposerToolbar extends Component {
           style,
         ]}
       >
-        <TouchableWithoutFeedback onPress={this._toolbarPress}>
-          <View style={styles.toolbarContainer}>
-            <Text style={styles.labelText}>{(accessLevel !== 'private' ? 'Invite:' : 'To:')}</Text>
+        <TouchableOpacity disabled={!editable} onPress={this._accessLevelPress} style={styles.accessLevelButton}>
+          {(!accessLevel || accessLevel === 'public') && (
+            <>
+              <MessageCircleIcon width={16} height={16} style={styles.accessLevelButtonIcon} />
+              <Text style={styles.accessLevelButtonText}>Public</Text>
+            </>
+          )}
 
-            {selectedUsers.map((selectedUser, index) => (
-              <TouchableOpacity
-                onPress={() => this._userPress(index)}
-                disabled={!editable}
-                key={index}
-                style={[
-                  styles.user,
-                  (index === selectedUserIndex) ? styles.userSelected : null,
-                ]}
-              >
-                <BabbleUserAvatar
-                  avatarAttachment={selectedUser.avatarAttachment}
-                  lastActiveAt={selectedUser.lastActiveAt}
-                  disabled
-                  size={20}
-                  style={styles.avatar}
-                  statusIconStyle={styles.avatarActivityIcon}
-                />
+          {accessLevel === 'protected' && (
+            <>
+              <UsersIcon width={16} height={16} style={styles.accessLevelButtonIcon} />
+              <Text style={styles.accessLevelButtonText}>V.I.P.</Text>
+            </>
+          )}
 
-                <Text
+          {accessLevel === 'private' && (
+            <>
+              <LockIcon width={16} height={16} style={styles.accessLevelButtonIcon} />
+              <Text style={styles.accessLevelButtonText}>Private</Text>
+            </>
+          )}
+
+          <ChevronDownIcon width={20} height={20} style={styles.accessLevelButtonIcon} />
+        </TouchableOpacity>
+
+        {(accessLevel && accessLevel !== 'public') && (
+          <TouchableWithoutFeedback onPress={this._toolbarPress}>
+            <View style={styles.toolbarContainer}>
+              <Text style={styles.labelText}>{(accessLevel !== 'private' ? 'Invite:' : 'To:')}</Text>
+
+              {selectedUsers.map((selectedUser, index) => (
+                <TouchableOpacity
+                  onPress={() => this._userPress(index)}
+                  disabled={!editable}
+                  key={index}
                   style={[
-                    styles.nameText,
-                    (index === selectedUserIndex) ? styles.nameSelectedText : null,
+                    styles.user,
+                    (index === selectedUserIndex) ? styles.userSelected : null,
                   ]}
                 >
-                  {selectedUser.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <BabbleUserAvatar
+                    avatarAttachment={selectedUser.avatarAttachment}
+                    lastActiveAt={selectedUser.lastActiveAt}
+                    disabled
+                    size={20}
+                    style={styles.avatar}
+                    statusIconStyle={styles.avatarActivityIcon}
+                  />
 
-            <TextInput
-              caretHidden={selectedUserIndex !== null}
-              onKeyPress={this._onKeyPress}
-              onChangeText={this._onChangeText}
-              onFocus={this._onFocus}
-              onBlur={this._onBlur}
-              editable={editable !== undefined ? editable : true}
-              placeholder={this._getToPlaceholder()}
-              placeholderTextColor={'#D8D8D8'}
-              returnKeyType={'done'}
-              value={search}
-              style={styles.textInput}
-              ref={component => this.searchTextInput = component}
-            />
+                  <Text
+                    style={[
+                      styles.nameText,
+                      (index === selectedUserIndex) ? styles.nameSelectedText : null,
+                    ]}
+                  >
+                    {selectedUser.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
 
-            <TouchableOpacity disabled={!editable} onPress={this._accessLevelPress} style={styles.accessLevelButton}>
-              {(!accessLevel || accessLevel === 'public') && (
-                <>
-                  <MessageCircleIcon width={16} height={16} style={styles.accessLevelButtonIcon} />
-                  <Text style={styles.accessLevelButtonText}>Public</Text>
-                </>
-              )}
-
-              {accessLevel === 'protected' && (
-                <>
-                  <UsersIcon width={16} height={16} style={styles.accessLevelButtonIcon} />
-                  <Text style={styles.accessLevelButtonText}>V.I.P.</Text>
-                </>
-              )}
-
-              {accessLevel === 'private' && (
-                <>
-                  <LockIcon width={16} height={16} style={styles.accessLevelButtonIcon} />
-                  <Text style={styles.accessLevelButtonText}>Private</Text>
-                </>
-              )}
-
-              <ChevronDownIcon width={20} height={20} style={styles.accessLevelButtonIcon} />
-            </TouchableOpacity>
-          </View>
-        </TouchableWithoutFeedback>
+              <TextInput
+                caretHidden={selectedUserIndex !== null}
+                onKeyPress={this._onKeyPress}
+                onChangeText={this._onChangeText}
+                onFocus={this._onFocus}
+                onBlur={this._onBlur}
+                editable={editable !== undefined ? editable : true}
+                placeholder={this._getToPlaceholder()}
+                placeholderTextColor={'#D8D8D8'}
+                returnKeyType={'done'}
+                value={search}
+                style={styles.textInput}
+                ref={component => this.searchTextInput = component}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        )}
 
         {accessLevel !== 'private' && !showSearchUsersList && (
           <TouchableWithoutFeedback onPress={() => this.titleTextInput.focus()}>
@@ -369,7 +369,7 @@ export default class BabbleConversationComposerToolbar extends Component {
 
               <TextInput
                 onChangeText={text => this.setState({ title: text })}
-                placeholder={'What do you want to talk about?'}
+                placeholder={`What's happening?`}
                 placeholderTextColor={'#D8D8D8'}
                 returnKeyType={'done'}
                 editable={editable !== undefined ? editable : true}
@@ -420,6 +420,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 15,
     top: interfaceHelper.deviceValue({ default: 17, lg: 16 }),
+    zIndex: 1,
   },
   accessLevelButtonIcon: {
     color: '#2A99CC',

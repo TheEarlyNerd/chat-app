@@ -13,6 +13,8 @@ import SetupIOSNotificationsScreen from '../screens/SetupIOSNotificationsScreen'
 import SetupProfileScreen from '../screens/SetupProfileScreen';
 import SplitEmptyStateScreen from '../screens/SplitEmptyStateScreen';
 
+import TabNavigator from './TabNavigator';
+
 export default initialRouteName => {
   const MainStack = createStackNavigator();
 
@@ -38,7 +40,8 @@ export default initialRouteName => {
         component={ConversationScreen}
         options={({ route }) => ({
           animationEnabled: !route.params || route.params.animationEnabled !== false,
-          backEnabled: true,
+          backEnabled: initialRouteName !== 'Conversation',
+          closeEnabled: initialRouteName === 'Conversation',
         })}
       />
 
@@ -105,6 +108,14 @@ export default initialRouteName => {
         component={SplitEmptyStateScreen}
         options={{
           headerShown: false,
+        }}
+      />
+
+      <MainStack.Screen
+        name={'TabNavigator'}
+        component={TabNavigator}
+        options={{
+          header: ({ scene }) => <BabbleHomeHeader scene={scene} />,
         }}
       />
     </MainStack.Navigator>

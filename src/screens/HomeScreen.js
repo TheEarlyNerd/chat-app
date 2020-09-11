@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import LinearGradient from 'react-native-linear-gradient';
 import { BabbleConversationPreview, BabbleUserPreview, BabbleSearchField, BabbleViewMoreButton } from '../components';
-import { ChevronRightIcon, EditIcon } from '../components/icons';
+import { ChevronRightIcon } from '../components/icons';
 import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
@@ -149,7 +148,7 @@ export default class HomeScreen extends Component {
   _endReached = async () => {
     const { conversations, lazyLoading } = this.state;
 
-    if (lazyLoading || lazyLoading === null || !conversations) {
+    if (lazyLoading || lazyLoading === null || !conversations?.length) {
       return;
     }
 
@@ -261,22 +260,20 @@ export default class HomeScreen extends Component {
     const { refreshing, lazyLoading } = this.state;
 
     return (
-      <View style={styles.container}>
-        <KeyboardAwareFlatList
-          data={this._generateData()}
-          contentContainerStyle={styles.contentContainer}
-          renderItem={this._renderItem}
-          keyboardShouldPersistTaps={'handled'}
-          keyExtractor={(item, index) => `${item.id}.${index}`}
-          ListFooterComponent={(lazyLoading) ? this._renderLoading : null}
-          showsVerticalScrollIndicator={false}
-          refreshing={refreshing}
-          onRefresh={this._refresh}
-          onEndReached={this._endReached}
-          onEndReachedThreshold={0.25}
-          style={styles.container}
-        />
-      </View>
+      <KeyboardAwareFlatList
+        data={this._generateData()}
+        contentContainerStyle={styles.contentContainer}
+        renderItem={this._renderItem}
+        keyboardShouldPersistTaps={'handled'}
+        keyExtractor={(item, index) => `${item.id}.${index}`}
+        ListFooterComponent={(lazyLoading) ? this._renderLoading : null}
+        showsVerticalScrollIndicator={false}
+        refreshing={refreshing}
+        onRefresh={this._refresh}
+        onEndReached={this._endReached}
+        onEndReachedThreshold={0.25}
+        style={styles.container}
+      />
     );
   }
 }
