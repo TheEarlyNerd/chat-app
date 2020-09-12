@@ -3,21 +3,15 @@ import { BabbleFeed } from '../components';
 import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
-const { conversationsManager, userManager } = maestro.managers;
+const { conversationsManager } = maestro.managers;
 
 export default class HomeScreen extends Component {
   static contextType = NavigationTypeContext;
 
   state = {
     conversations: null,
-    search: null,
-    searchUsers: null,
-    searchConversations: null,
-    loadingSearch: false,
     canLoadMore: true,
   }
-
-  searchTextInputTimeout = null;
 
   componentDidMount() {
     maestro.link(this);
@@ -27,8 +21,6 @@ export default class HomeScreen extends Component {
 
   componentWillUnmount() {
     maestro.unlink(this);
-
-    clearTimeout(this.searchTextInputTimeout);
   }
 
   receiveStoreUpdate({ conversations }) {
@@ -62,13 +54,7 @@ export default class HomeScreen extends Component {
   }
 
   _generateData = () => {
-    const {
-      conversations,
-      search,
-      searchUsers,
-      searchConversations,
-      loadingSearch,
-    } = this.state;
+    const { conversations } = this.state;
 
     const mapItems = (items, type) => items.map((item, index) => {
       if (index === items.length - 1) {
@@ -82,32 +68,7 @@ export default class HomeScreen extends Component {
       return item;
     });
 
-    if (search) {
-      return [
-        { id: 'search', search: true },
-        { id: 'searchUsers', title: 'Users', header: true },
-        ...((!!searchUsers && !loadingSearch && searchUsers.length) ? [
-          ...mapItems(searchUsers, 'userPreview'),
-        ] : [
-          (!loadingSearch)
-            ? { id: 'searchUsersNoResults', last: true, noResults: true }
-            : { id: 'searchUsersLoading', last: true, loading: true },
-        ]),
-
-        { id: 'searchConversations', title: 'Conversations', header: true },
-        ...((!!searchConversations && !loadingSearch && searchConversations.length) ? [
-          ...mapItems(searchConversations, 'conversationPreview'),
-        ] : [
-          (!loadingSearch)
-            ? { id: 'searchConversationsNoResults', last: true, noResults: true }
-            : { id: 'searchConversationsLoading', last: true, loading: true },
-        ]),
-      ];
-    }
-
     return [
-      { id: 'search', search: true },
-
       ...((!!conversations && conversations.length) ? [
         ...mapItems(conversations, 'conversationPreview'),
       ] : []),
@@ -118,36 +79,11 @@ export default class HomeScreen extends Component {
     ];
   }
 
-  _onSearchChange = async text => {
-    this.setState({ search: text });
-
-    clearTimeout(this.searchTextInputTimeout);
-
-    if (!text) {
-      return this.setState({ canLoadMore: true });
-    } else {
-      this.setState({ loadingSearch: true, canLoadMore: false });
-    }
-
-    this.searchTextInputTimeout = setTimeout(async () => {
-      const searchUsers = await userManager.searchUsers(text);
-      const searchConversations = await conversationsManager.searchConversations(text);
-
-      this.setState({
-        search: text,
-        searchUsers,
-        searchConversations,
-        loadingSearch: false,
-      });
-    }, 500);
-  }
-
   render() {
     return (
       <BabbleFeed
         onEndReached={this._loadMore}
         onRefresh={this._loadConversations}
-        onSearchChange={this._onSearchChange}
         generateData={this._generateData}
         canLoadMore={this.state.canLoadMore}
       />

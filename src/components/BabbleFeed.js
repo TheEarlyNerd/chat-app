@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 25,
-    paddingTop: 40,
+    paddingTop: 10,
   },
   conversationPreview: {
     paddingHorizontal: 15,
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   headerText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Black',
-    fontSize: 26,
+    fontSize: 32,
   },
   noResultsText: {
     color: '#797979',
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   searchField: {
-    marginBottom: 30,
+    marginVertical: 30,
     paddingHorizontal: 15,
   },
   userPreview: {
