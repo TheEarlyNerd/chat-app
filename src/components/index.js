@@ -20,6 +20,7 @@ import BabbleConversationPreviewsList from './BabbleConversationPreviewsList';
 import BabbleConversationUserList from './BabbleConversationUserList';
 import BabbleConversationViewerToolbar from './BabbleConversationViewerToolbar';
 import BabbleEmojiSelector from './BabbleEmojiSelector';
+import BabbleFeed from './BabbleFeed';
 import BabbleFieldLabel from './BabbleFieldLabel';
 import BabbleHeader from './BabbleHeader';
 import BabbleHomeHeader from './BabbleHomeHeader';
@@ -70,6 +71,7 @@ export {
   BabbleConversationUserList,
   BabbleConversationViewerToolbar,
   BabbleEmojiSelector,
+  BabbleFeed,
   BabbleFieldLabel,
   BabbleHeader,
   BabbleHomeHeader,
