@@ -186,7 +186,7 @@ export default class BabbleRoomComposerToolbar extends Component {
     const { accessLevel, selectedUsers, showSearchUsersList } = this.state;
 
     if (([ 'protected', 'private' ].includes(accessLevel) || showSearchUsersList) && !selectedUsers.length) {
-      return 'Type to search users...';
+      return 'Type to search...';
     }
 
     return '';
@@ -343,6 +343,7 @@ export default class BabbleRoomComposerToolbar extends Component {
                 >
                   <BabbleUserAvatar
                     avatarAttachment={selectedUser.avatarAttachment}
+                    hideStatusIcon={!selectedUser.username}
                     lastActiveAt={selectedUser.lastActiveAt}
                     disabled
                     size={20}
@@ -408,7 +409,7 @@ export default class BabbleRoomComposerToolbar extends Component {
                 noResultsMessage={'No users found'}
                 onPress={this.addUser}
                 contentContainerStyle={styles.usersList}
-                ListHeaderComponent={(!search && !selectedUsers.length) ? <Text style={styles.suggestedText}>My Contacts</Text> : null}
+                ListHeaderComponent={(!search && !selectedUsers.length) ? <Text style={styles.suggestedText}>All Contacts</Text> : null}
               />
             )}
 
@@ -460,7 +461,7 @@ const styles = StyleSheet.create({
     width: 8,
   },
   connectDeviceContactsContainer: {
-    marginTop: 130,
+    marginTop: 60,
   },
   container: {
     backgroundColor: '#FFFFFF',

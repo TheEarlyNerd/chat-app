@@ -15,6 +15,7 @@ export default class BabbleRoomUserList extends Component {
         <BabbleUserAvatar
           avatarAttachment={item.avatarAttachment}
           lastActiveAt={item.lastActiveAt}
+          hideStatusIcon={!item.username}
           disabled
           size={40}
         />
