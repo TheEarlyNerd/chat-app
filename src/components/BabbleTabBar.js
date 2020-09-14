@@ -7,7 +7,33 @@ import maestro from '../maestro';
 const { navigationHelper } = maestro.helpers;
 
 export default class BabbleTabBar extends Component {
+  state = {
+    hasUnreadMessage: false,
+  }
+
+  componentDidMount() {
+    maestro.link(this);
+  }
+
+  componentWillUnmount() {
+    maestro.unlink(this);
+  }
+
+  receiveStoreUpdate({ rooms }) {
+    const { recentRooms } = rooms;
+    let hasUnreadMessage = false;
+
+    recentRooms.forEach(room => {
+      const { authUserRoomData, previewRoomMessage } = room;
+
+      hasUnreadMessage = authUserRoomData.lastReadAt < previewRoomMessage.createdAt || hasUnreadMessage;
+    });
+
+    this.setState({ hasUnreadMessage });
+  }
+
   render() {
+    const { hasUnreadMessage } = this.state;
     const { routes, index } = this.props.state;
 
     return (
@@ -33,7 +59,7 @@ export default class BabbleTabBar extends Component {
                 My Rooms
               </Text>
 
-              {false && (
+              {hasUnreadMessage && (
                 <View style={styles.alertIcon} />
               )}
             </View>
