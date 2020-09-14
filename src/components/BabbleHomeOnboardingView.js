@@ -17,12 +17,12 @@ const slideItems = [
   {
     emoji: '🚪🔑',
     title: 'Private Rooms',
-    text: 'Create private rooms as a place for the people that matter to you to hang out and stay in touch.',
+    text: 'Create private rooms as a place to hang out and stay in touch with the people that matter to you.',
   },
   {
     emoji: '🚪💬',
     title: 'Public Rooms',
-    text: 'Create or join public rooms to instantly chat with others that care about the same things as you.',
+    text: 'Create or join public rooms to chat with others who care about the same things as you.',
   },
   {
     emoji: '🚪✨',
