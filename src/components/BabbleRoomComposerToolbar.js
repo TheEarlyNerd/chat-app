@@ -36,15 +36,15 @@ export default class BabbleRoomComposerToolbar extends Component {
 
     if (initialAccessLevel) {
       this.setState({ accessLevel: initialAccessLevel });
-
-      setTimeout(() => {
-        if (initialAccessLevel === 'public') {
-          this.titleTextInput.focus();
-        } else {
-          this.searchTextInput.focus();
-        }
-      }, 250);
     }
+
+    setTimeout(() => {
+      if (!initialAccessLevel || initialAccessLevel === 'public') {
+        this.titleTextInput.focus();
+      } else {
+        this.searchTextInput.focus();
+      }
+    }, 250);
   }
 
   componentWillUnmount() {
