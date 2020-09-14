@@ -144,14 +144,14 @@ export default class RoomScreen extends Component {
       actions.push({
         iconComponent: RepeatIcon,
         text: (!authUserRoomRepost) ? 'Repost' : 'Delete Repost',
-        subtext: (!authUserRoomRepost) ? 'This room will be reposted to your profile and the feeds of your followers.' : 'Your repost of this room will be deleted and removed from the feeds of your followers.',
+        subtext: (!authUserRoomRepost) ? 'This room will be reposted to your profile.' : 'Your repost of this room will be deleted and removed your profile.',
         onPress: () => {
           if (!authUserRoomRepost) {
             roomsManager.createRoomRepost(id);
-            Alert.alert('Reposted', 'This room has been reposted to your profile and feeds of your followers.');
+            Alert.alert('Reposted', 'This room has been reposted to your profile.');
           } else {
             roomsManager.deleteRoomRepost(id);
-            Alert.alert('Repost Deleted', 'This room repost has been deleted and removed from your profile and the feeds of your followers.');
+            Alert.alert('Repost Deleted', 'This room repost has been deleted and removed from your profile.');
           }
         },
       });
