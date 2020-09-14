@@ -415,7 +415,7 @@ export default class BabbleRoomComposerToolbar extends Component {
 
             {!canAccessContacts && !selectedUsers.length && !search && (
               <BabbleConnectDeviceContactsView
-                promptText={'Invite friends in your contacts to your room or type to search Babble users.'}
+                promptText={'Invite friends from your contacts or type to search and invite Babble users.'}
                 contentContainerStyle={styles.connectDeviceContactsContainer}
               />
             )}
