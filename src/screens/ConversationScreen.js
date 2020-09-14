@@ -29,11 +29,11 @@ export default class ConversationScreen extends Component {
     maestro.link(this);
 
     const params = this.props.route.params || {};
-    const { conversationId, toUsers, title } = params;
+    const { conversationId, title, composeToUsers } = params;
 
     if (!title) {
       this.props.navigation.setOptions({
-        title: (conversationId) ? <ActivityIndicator color={'#FFFFFF'} /> : 'New Conversation',
+        title: (conversationId) ? <ActivityIndicator color={'#FFFFFF'} /> : 'New Room',
       });
     }
 
@@ -50,19 +50,13 @@ export default class ConversationScreen extends Component {
       });
     }
 
-    if (Array.isArray(toUsers)) {
-      toUsers.forEach(user => this.conversationComposer.addUser(user));
+    if (Array.isArray(composeToUsers)) {
+      composeToUsers.forEach(user => this.conversationComposer.addUser(user));
     }
   }
 
   componentWillUnmount() {
     maestro.unlink(this);
-
-    const conversationId = this.state.conversation?.id || this.props.route?.params?.conversationId;
-
-    if (conversationId) {
-      conversationsManager.removeActiveConversation(conversationId);
-    }
   }
 
   receiveStoreUpdate({ conversations }) {
@@ -268,17 +262,18 @@ export default class ConversationScreen extends Component {
       const phones = selectedUsers.map(user => (user.isPhoneContact) ? user.phone : null).filter(phone => !!phone);
       const conversation = await conversationsManager.getPrivateConversation({ userIds, phones });
 
-      this.props.navigation.setOptions({ title: (conversation) ? 'New Message' : 'New Conversation' });
+      this.props.navigation.setOptions({ title: (conversation) ? 'New Message' : 'New Room' });
 
       this.setState({ conversation });
     } else {
-      this.props.navigation.setOptions({ title: 'New Conversation' });
+      this.props.navigation.setOptions({ title: 'New Room' });
     }
   }
 
   render() {
     const { conversation, composingConversation, loading, keyboardVerticalOffset } = this.state;
     const { accessLevel, conversationMessages, conversationTypingUsers, authConversationUser } = conversation || {};
+    const { composeAccessLevel } = this.props.route.params || {};
     const showViewerToolbar = accessLevel === 'protected' && (
       !authConversationUser || (
         !authConversationUser.permissions.includes('CONVERSATION_ADMIN') &&
@@ -296,6 +291,7 @@ export default class ConversationScreen extends Component {
           {composingConversation && (
             <BabbleConversationComposerToolbar
               editable={!loading}
+              initialAccessLevel={composeAccessLevel}
               onUserSelectionAccessLevelChange={this._onUserSelectionAccessLevelChange}
               ref={component => this.conversationComposer = component}
             />

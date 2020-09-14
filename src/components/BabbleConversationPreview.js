@@ -160,7 +160,7 @@ export default class BabbleConversationPreview extends Component {
 
         <View style={styles.content}>
           <View style={styles.heading}>
-            <Text style={styles.titleText} numberOfLines={3}>{this._getTitle()}</Text>
+            <Text style={styles.titleText} numberOfLines={2}>{this._getTitle()}</Text>
 
             <View style={styles.headingRight}>
               {!!conversationRepostUser && (
@@ -189,7 +189,7 @@ export default class BabbleConversationPreview extends Component {
 
           <View style={styles.preview}>
             <Text
-              numberOfLines={2}
+              numberOfLines={1}
               style={[
                 styles.previewText,
                 (this._isUnread()) ? styles.previewTextUnread : null,
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     color: '#404040',
     flex: 1,
     fontFamily: 'NunitoSans-Bold',
-    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
+    fontSize: interfaceHelper.deviceValue({ default: 17, lg: 18 }),
     lineHeight: 20,
   },
 });

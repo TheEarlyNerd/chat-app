@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BabbleFeed } from '../components';
+import { BabbleFeed, BabbleHomeOnboardingView } from '../components';
 import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
@@ -80,6 +80,12 @@ export default class HomeScreen extends Component {
   }
 
   render() {
+    if (this.state.conversations?.length === 0) {
+      return (
+        <BabbleHomeOnboardingView />
+      );
+    }
+
     return (
       <BabbleFeed
         onEndReached={this._loadMore}

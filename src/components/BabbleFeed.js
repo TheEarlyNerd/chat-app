@@ -53,7 +53,7 @@ export default class BabbleFeed extends Component {
     return (
       <BabbleSearchField
         onChangeText={this.props.onSearchChange}
-        placeholder={'Search users and conversations...'}
+        placeholder={'Search users and rooms...'}
         containerStyle={styles.searchField}
       />
     );

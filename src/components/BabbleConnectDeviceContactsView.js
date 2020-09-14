@@ -23,9 +23,9 @@ export default class BabbleConnectDeviceContactsView extends Component {
         contentContainerStyle={[ styles.contentContainer, contentContainerStyle ]}
         style={[ styles.container, style ]}
       >
-        <Text style={styles.titleText}>Babble Is Better With Friends!</Text>
+        <Text style={styles.titleText}>Invite Friends</Text>
         <Text style={styles.subtext}>{promptText}</Text>
-        <BabbleButton onPress={this._enableDeviceContacts} style={styles.button}>Connect My Contacts</BabbleButton>
+        <BabbleButton onPress={this._enableDeviceContacts} style={styles.button}>Allow Access To Contacts</BabbleButton>
       </ScrollView>
     );
   }
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   titleText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Black',
-    fontSize: 20,
+    fontSize: 24,
     marginBottom: 10,
   },
 });

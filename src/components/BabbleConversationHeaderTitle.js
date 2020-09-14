@@ -44,7 +44,7 @@ export default class BabbleConversationHeaderTitle extends Component {
     const { accessLevel, user, usersCount } = this.props.conversation;
     const loggedInUserId = userManager.store.user.id;
     const username = (user.id === loggedInUserId) ? 'You' : `@${user.username}`;
-    const permission = (accessLevel === 'protected') ? 'V.I.P.' : accessLevel.charAt(0).toUpperCase() + accessLevel.slice(1);
+    const permission = (accessLevel === 'protected') ? 'Audience' : accessLevel.charAt(0).toUpperCase() + accessLevel.slice(1);
     const count = (usersCount > 2) ? `${usersCount - 1} others` : '1 other';
 
     return (usersCount === 1)

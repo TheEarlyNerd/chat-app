@@ -28,11 +28,23 @@ export default class BabbleConversationComposerToolbar extends Component {
   componentDidMount() {
     maestro.link(this);
 
+    const { initialAccessLevel } = this.props;
+
     if (deviceContactsManager.requestedPermission()) {
       deviceContactsManager.loadContacts();
     }
 
-    setTimeout(() => this.titleTextInput.focus(), 250);
+    if (initialAccessLevel) {
+      this.setState({ accessLevel: initialAccessLevel });
+
+      setTimeout(() => {
+        if (initialAccessLevel === 'public') {
+          this.titleTextInput.focus();
+        } else {
+          this.searchTextInput.focus();
+        }
+      }, 250);
+    }
   }
 
   componentWillUnmount() {
@@ -230,21 +242,21 @@ export default class BabbleConversationComposerToolbar extends Component {
           {
             iconComponent: MessageCircleIcon,
             text: 'Public',
-            subtext: 'Anyone can view and join this conversation, send and react to messages, and invite others.',
+            subtext: 'Anyone can view and join this room, send and react to messages, and invite others.',
             highlighted: !accessLevel || accessLevel === 'public',
             onPress: () => this._changeAccessLevel('public'),
           },
           {
             iconComponent: UsersIcon,
-            text: 'V.I.P.',
-            subtext: 'Only people you invite to this conversation can send messages. Anyone can see this conversation and react to messages.',
+            text: 'Audience',
+            subtext: 'Only people you invite to this room can send messages. Anyone can see this conversation and react to messages.',
             highlighted: accessLevel === 'protected',
             onPress: () => this._changeAccessLevel('protected'),
           },
           {
             iconComponent: LockIcon,
             text: 'Private',
-            subtext: 'Only people you choose can see this conversation, send messages and react to messages.',
+            subtext: 'Only people you choose can see this room, send messages and react to messages.',
             highlighted: accessLevel === 'private',
             onPress: () => this._changeAccessLevel('private'),
           },
@@ -300,7 +312,7 @@ export default class BabbleConversationComposerToolbar extends Component {
           {accessLevel === 'protected' && (
             <>
               <UsersIcon width={16} height={16} style={styles.accessLevelButtonIcon} />
-              <Text style={styles.accessLevelButtonText}>V.I.P.</Text>
+              <Text style={styles.accessLevelButtonText}>Audience</Text>
             </>
           )}
 
@@ -317,7 +329,7 @@ export default class BabbleConversationComposerToolbar extends Component {
         {(accessLevel && accessLevel !== 'public') && (
           <TouchableWithoutFeedback onPress={this._toolbarPress}>
             <View style={styles.toolbarContainer}>
-              <Text style={styles.labelText}>{(accessLevel !== 'private' ? 'Invite:' : 'To:')}</Text>
+              <Text style={styles.labelText}>Invite:</Text>
 
               {selectedUsers.map((selectedUser, index) => (
                 <TouchableOpacity
@@ -370,11 +382,11 @@ export default class BabbleConversationComposerToolbar extends Component {
         {accessLevel !== 'private' && !showSearchUsersList && (
           <TouchableWithoutFeedback onPress={() => this.titleTextInput.focus()}>
             <View style={styles.toolbarContainer}>
-              <Text style={styles.labelText}>Title:</Text>
+              <Text style={styles.labelText}>Room Name:</Text>
 
               <TextInput
                 onChangeText={text => this.setState({ title: text })}
-                placeholder={`What's happening?`}
+                placeholder={''}
                 placeholderTextColor={'#D8D8D8'}
                 returnKeyType={'done'}
                 editable={editable !== undefined ? editable : true}
@@ -402,7 +414,7 @@ export default class BabbleConversationComposerToolbar extends Component {
 
             {!canAccessContacts && !selectedUsers.length && !search && (
               <BabbleConnectDeviceContactsView
-                promptText={'Chat with your contacts, or invite them to conversations.'}
+                promptText={'Invite friends in your contacts to your room or type to search Babble users.'}
                 contentContainerStyle={styles.connectDeviceContactsContainer}
               />
             )}

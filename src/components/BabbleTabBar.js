@@ -30,7 +30,7 @@ export default class BabbleTabBar extends Component {
                   (index === 0) ? styles.activeColor : null,
                 ]}
               >
-                Home
+                My Rooms
               </Text>
 
               {false && (
@@ -67,7 +67,7 @@ export default class BabbleTabBar extends Component {
                   (index === 1) ? styles.secondActiveColor : null,
                 ]}
               >
-                Discover
+                Browse Rooms
               </Text>
 
               {false && (

@@ -24,6 +24,7 @@ import BabbleFeed from './BabbleFeed';
 import BabbleFieldLabel from './BabbleFieldLabel';
 import BabbleHeader from './BabbleHeader';
 import BabbleHomeHeader from './BabbleHomeHeader';
+import BabbleHomeOnboardingView from './BabbleHomeOnboardingView';
 import BabbleOverlayActionSheet from './BabbleOverlayActionSheet';
 import BabbleOverlayCountrySelector from './BabbleOverlayCountrySelector';
 import BabbleOverlayDismissibleView from './BabbleOverlayDismissibleView';
@@ -75,6 +76,7 @@ export {
   BabbleFieldLabel,
   BabbleHeader,
   BabbleHomeHeader,
+  BabbleHomeOnboardingView,
   BabbleOverlayActionSheet,
   BabbleOverlayCountrySelector,
   BabbleOverlayDismissibleView,

@@ -118,15 +118,15 @@ export default class ConversationInfoScreen extends Component {
     const { accessLevel } = this.props.route.params.conversation;
 
     if (accessLevel === 'public') {
-      return 'Public - Anyone can join this conversation, send and react to messages, and invite others.';
+      return 'Public - Anyone can join this room, send and react to messages, and invite others.';
     }
 
     if (accessLevel === 'protected') {
-      return 'V.I.P. - Only V.I.Ps invited to this conversation can send messages. Anyone can join this conversation to react to messages.';
+      return 'Audience - Only select people can send messages. Anyone can join this room to read and react to messages.';
     }
 
     if (accessLevel === 'private') {
-      return 'Private - Only participants can see this conversation, send messages and react to messages.';
+      return 'Private - Only participants can see this room, send messages and react to messages.';
     }
   }
 
@@ -142,7 +142,7 @@ export default class ConversationInfoScreen extends Component {
         contentContainerStyle={styles.contentContainer}
       >
         <BabbleSettingField
-          label={'Title'}
+          label={'Name'}
           editable={!!authConversationUser && authConversationUser.permissions.includes('CONVERSATION_ADMIN')}
           returnKeyType={'done'}
           placeholder={'(Optional)'}

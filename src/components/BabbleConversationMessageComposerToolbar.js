@@ -200,7 +200,7 @@ export default class BabbleMessageComposerToolbar extends Component {
             <TextInput
               multiline
               placeholderColor={'#909090'}
-              placeholder={'Message...'}
+              placeholder={'Say something...'}
               onChangeText={this._onChangeText}
               editable={!loading}
               value={text}

@@ -38,7 +38,7 @@ export default class BabbleConversationViewerToolbar extends Component {
       <SafeAreaView style={styles.container}>
         <View style={styles.permissionHeader}>
           <UsersIcon width={18} height={18} style={styles.permissionIcon} />
-          <Text style={styles.headingText}>V.I.P. Conversation</Text>
+          <Text style={styles.headingText}>Audience Conversation</Text>
         </View>
 
         <Text style={styles.detailsText}>Only people invited by the owner of this conversation can send messages. Anyone can read and react to messages.</Text>

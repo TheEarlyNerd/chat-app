@@ -71,7 +71,7 @@ export default class ProfileScreen extends Component {
 
     return (
       <View style={styles.noConversationsContainer}>
-        <Text style={styles.noConversationsText}>{user.name} hasn't started or shared any public conversations.</Text>
+        <Text style={styles.noConversationsText}>{user.name} hasn't started or shared any rooms.</Text>
       </View>
     );
   }

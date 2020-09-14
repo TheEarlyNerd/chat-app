@@ -105,7 +105,7 @@ export default class ExploreScreen extends Component {
 
     return [
       { id: 'search', search: true },
-      { id: 'discover', title: 'Happening Now', header: true },
+      { id: 'discover', title: 'Popular Rooms', header: true },
 
       ...((!!conversations && conversations.length) ? [
         ...mapItems(conversations, 'conversationPreview'),

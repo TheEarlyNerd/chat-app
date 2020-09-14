@@ -16,7 +16,7 @@ export default () => {
       />
 
       <Tab.Screen
-        name={'ExploreTab'}
+        name={'DiscoverTab'}
         component={DiscoverScreen}
       />
     </Tab.Navigator>
