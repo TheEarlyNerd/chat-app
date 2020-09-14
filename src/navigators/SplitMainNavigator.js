@@ -17,7 +17,7 @@ export default () => {
             theme={{ colors: { background: '#FFFFFF' } }}
             ref={navigation => navigationHelper.setSplitSidebarNavigation(navigation)}
           >
-            {MainNavigator('Home')}
+            {MainNavigator('TabNavigator')}
           </NavigationContainer>
         </NavigationTypeContext.Provider>
       </View>
