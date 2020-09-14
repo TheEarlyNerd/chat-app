@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { HomeIcon, CompassIcon, PlusIcon } from './icons';
 import maestro from '../maestro';
 
-const { navigationHelper } = maestro.helpers;
+const { navigationHelper, interfaceHelper } = maestro.helpers;
 
 export default class BabbleTabBar extends Component {
   state = {
@@ -56,8 +56,8 @@ export default class BabbleTabBar extends Component {
           <TouchableOpacity onPress={() => navigationHelper.navigate(routes[0].name)} style={styles.tabBarButton}>
             <View style={styles.tabBarButtonIconContainer}>
               <HomeIcon
-                width={26}
-                height={26}
+                width={interfaceHelper.deviceValue({ default: 26, lg: 30 })}
+                height={interfaceHelper.deviceValue({ default: 26, lg: 30 })}
                 style={[
                   styles.tabBarIcon,
                   (index === 0) ? styles.activeColor : null,
@@ -79,8 +79,15 @@ export default class BabbleTabBar extends Component {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigationHelper.navigate('NewRoomNavigator')} style={styles.tabBarComposeButton}>
-            <PlusIcon width={26} height={26} style={{ color: '#FFF' }} />
+          <TouchableOpacity
+            onPress={() => navigationHelper.navigate('NewRoomNavigator')}
+            style={styles.tabBarComposeButton}
+          >
+            <PlusIcon
+              width={interfaceHelper.deviceValue({ default: 26, lg: 36 })}
+              height={interfaceHelper.deviceValue({ default: 26, lg: 36 })}
+              style={{ color: '#FFF' }}
+            />
 
             <LinearGradient
               useAngle
@@ -93,8 +100,8 @@ export default class BabbleTabBar extends Component {
           <TouchableOpacity onPress={() => navigationHelper.navigate(routes[1].name)} style={styles.tabBarButton}>
             <View style={styles.tabBarButtonIconContainer}>
               <CompassIcon
-                width={26}
-                height={26}
+                width={interfaceHelper.deviceValue({ default: 26, lg: 36 })}
+                height={interfaceHelper.deviceValue({ default: 26, lg: 36 })}
                 style={[
                   styles.tabBarIcon,
                   (index === 1) ? styles.secondActiveColor : null,
@@ -129,18 +136,18 @@ const styles = StyleSheet.create({
   alertIcon: {
     backgroundColor: '#FF0000',
     borderColor: '#FFFFFF',
-    borderRadius: 6,
+    borderRadius: interfaceHelper.deviceValue({ default: 6, lg: 8 }),
     borderWidth: 2,
-    height: 12,
+    height: interfaceHelper.deviceValue({ default: 12, lg: 15 }),
     position: 'absolute',
-    right: 35,
-    top: 3,
-    width: 12,
+    right: interfaceHelper.deviceValue({ default: 35, lg: 55 }),
+    top: interfaceHelper.deviceValue({ default: 3, lg: 1 }),
+    width: interfaceHelper.deviceValue({ default: 12, lg: 15 }),
     zIndex: 1,
   },
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
-    borderRadius: 25,
+    borderRadius: interfaceHelper.deviceValue({ default: 25, lg: 35 }),
     zIndex: -1,
   },
   container: {
@@ -154,7 +161,7 @@ const styles = StyleSheet.create({
   labelText: {
     color: '#979797',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 11,
+    fontSize: interfaceHelper.deviceValue({ default: 11, lg: 15 }),
   },
   secondActiveColor: {
     color: '#1ACCB4',
@@ -162,7 +169,8 @@ const styles = StyleSheet.create({
   tabBar: {
     flex: 1,
     flexDirection: 'row',
-    height: 50,
+    height: interfaceHelper.deviceValue({ default: 50, lg: 65 }),
+    paddingTop: interfaceHelper.deviceValue({ default: 0, lg: 5 }),
     justifyContent: 'space-around',
   },
   tabBarButton: {
@@ -173,20 +181,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    width: 100,
+    width: interfaceHelper.deviceValue({ default: 100, lg: 150 }),
   },
   tabBarComposeButton: {
     alignItems: 'center',
-    borderRadius: 25,
-    height: 45,
+    borderRadius: interfaceHelper.deviceValue({ default: 25, lg: 35 }),
+    height: interfaceHelper.deviceValue({ default: 45, lg: 55 }),
     justifyContent: 'center',
     position: 'relative',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    top: -10,
-    width: 45,
+    top: interfaceHelper.deviceValue({ default: -10, lg: -15 }),
+    width: interfaceHelper.deviceValue({ default: 45, lg: 55 }),
   },
   tabBarIcon: {
     color: '#979797',
