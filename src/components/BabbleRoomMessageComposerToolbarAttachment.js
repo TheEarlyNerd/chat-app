@@ -3,7 +3,7 @@ import { TouchableOpacity, StyleSheet } from 'react-native';
 import { BabbleAutoscaleImage, BabbleAutoscaleVideo } from './';
 import { VideoIcon, XIcon } from './icons';
 
-export default class BabbleConversationMessageComposerToolbarAttachment extends Component {
+export default class BabbleRoomMessageComposerToolbarAttachment extends Component {
   render() {
     const { attachment, onPress, onDeletePress, style } = this.props;
 

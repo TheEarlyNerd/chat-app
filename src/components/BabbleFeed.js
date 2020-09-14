@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import { BabbleConversationPreview, BabbleUserPreview, BabbleSearchField, BabbleViewMoreButton } from '../components';
+import { BabbleRoomPreview, BabbleUserPreview, BabbleSearchField, BabbleViewMoreButton } from '../components';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { ChevronRightIcon } from '../components/icons';
 
@@ -74,11 +74,11 @@ export default class BabbleFeed extends Component {
     );
   }
 
-  _renderConversationPreview = conversation => {
+  _renderRoomPreview = room => {
     return (
-      <BabbleConversationPreview
-        conversation={conversation}
-        style={styles.conversationPreview}
+      <BabbleRoomPreview
+        room={room}
+        style={styles.roomPreview}
       />
     );
   }
@@ -113,8 +113,8 @@ export default class BabbleFeed extends Component {
       return this._renderHeader(item);
     }
 
-    if (item.conversationPreview) {
-      return this._renderConversationPreview(item);
+    if (item.roomPreview) {
+      return this._renderRoomPreview(item);
     }
 
     if (item.userPreview) {
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     paddingBottom: 25,
     paddingTop: 10,
   },
-  conversationPreview: {
+  roomPreview: {
     paddingHorizontal: 15,
   },
   headerButton: {

@@ -22,12 +22,12 @@ export default class BabbleUserPreview extends Component {
 
   _onMessagePress = () => {
     if (this.context === 'sidebar') {
-      navigationHelper.reset('Conversation', {
+      navigationHelper.reset('Room', {
         backEnabled: false,
         toUsers: [ this.props.user ],
       }, 'content');
     } else {
-      navigationHelper.push('Conversation', { toUsers: [ this.props.user ] }, this.context);
+      navigationHelper.push('Room', { toUsers: [ this.props.user ] }, this.context);
     }
   }
 

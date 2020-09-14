@@ -43,8 +43,8 @@ export default props => {
         {() => MainNavigator(props.initialRouteName)}
       </RootStack.Screen>
 
-      <RootStack.Screen name={'NewConversationNavigator'}>
-        {() => MainNavigator('Conversation')}
+      <RootStack.Screen name={'NewRoomNavigator'}>
+        {() => MainNavigator('Room')}
       </RootStack.Screen>
 
       <RootStack.Screen

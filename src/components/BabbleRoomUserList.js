@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 import { BabbleUserAvatar } from './';
 
-export default class BabbleConversationUserList extends Component {
+export default class BabbleRoomUserList extends Component {
   _renderUser = ({ item, index }) => {
     const { onPress, renderUserAction, userStyle } = this.props;
 

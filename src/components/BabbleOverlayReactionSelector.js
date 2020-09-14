@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BabbleOverlayDismissibleView, BabbleEmojiSelector } from './';
 import maestro from '../maestro';
 
-const { conversationsManager } = maestro.managers;
+const { roomsManager } = maestro.managers;
 
 export default class BabbleOverlayReactionSelector extends Component {
   dismissibleView = null;
@@ -22,11 +22,11 @@ export default class BabbleOverlayReactionSelector extends Component {
   }
 
   _emojiPress = emoji => {
-    const { conversationId, conversationMessageId, onEmojiPress } = this.props.data;
+    const { roomId, roomMessageId, onEmojiPress } = this.props.data;
 
-    conversationsManager.createConversationMessageReaction({
-      conversationId,
-      conversationMessageId,
+    roomsManager.createRoomMessageReaction({
+      roomId,
+      roomMessageId,
       emoji: emoji.emoji,
     });
 

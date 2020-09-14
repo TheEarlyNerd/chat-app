@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { BabbleSearchField, BabbleButton, BabbleConnectDeviceContactsView, BabbleConversationUserList } from './';
+import { BabbleSearchField, BabbleButton, BabbleConnectDeviceContactsView, BabbleRoomUserList } from './';
 import maestro from '../maestro';
 
-const { deviceContactsManager, conversationsManager, userManager } = maestro.managers;
+const { deviceContactsManager, roomsManager, userManager } = maestro.managers;
 
 export default class BabbleInviteSelector extends Component {
   state = {
@@ -64,11 +64,11 @@ export default class BabbleInviteSelector extends Component {
   }
 
   _inviteUser = user => {
-    const { conversationId } = this.props;
+    const { roomId } = this.props;
     const invitedUsers = [ ...this.state.invitedUsers ];
 
-    conversationsManager.createConversationUser({
-      conversationId,
+    roomsManager.createRoomUser({
+      roomId,
       userId: (!user.isPhoneContact) ? user.id : null,
       phoneUser: (user.isPhoneContact) ? {
         name: user.name,
@@ -138,7 +138,7 @@ export default class BabbleInviteSelector extends Component {
         </View>
 
         {(!!search || canAccessContacts) && (
-          <BabbleConversationUserList
+          <BabbleRoomUserList
             loading={loadingSearch}
             renderUserAction={this._renderUserAction}
             users={searchUsers}
@@ -150,7 +150,7 @@ export default class BabbleInviteSelector extends Component {
 
         {!canAccessContacts && !search && (
           <BabbleConnectDeviceContactsView
-            promptText={'Spice things up by inviting friends and family to the conversation.'}
+            promptText={'Spice things up by inviting friends and family to the room.'}
             contentContainerStyle={styles.connectDeviceContactsContainer}
           />
         )}

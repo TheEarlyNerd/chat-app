@@ -177,7 +177,7 @@ export default class UserManager extends Manager {
       this._setLoggedInUser(null);
 
       this.maestro.managers.activityManager.resetStore();
-      this.maestro.managers.conversationsManager.resetStore();
+      this.maestro.managers.roomsManager.resetStore();
     }, 1000);
 
     navigationHelper.resetRoot('Landing');

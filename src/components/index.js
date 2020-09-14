@@ -6,19 +6,6 @@ import BabbleButton from './BabbleButton';
 import BabbleCodeField from './BabbleCodeField';
 import BabbleConnectDeviceContactsView from './BabbleConnectDeviceContactsView';
 import BabbleConnectionStatusBar from './BabbleConnectionStatusBar';
-import BabbleConversation from './BabbleConversation';
-import BabbleConversationComposerToolbar from './BabbleConversationComposerToolbar';
-import BabbleConversationHeaderTitle from './BabbleConversationHeaderTitle';
-import BabbleConversationMessage from './BabbleConversationMessage';
-import BabbleConversationMessageAttachment from './BabbleConversationMessageAttachment';
-import BabbleConversationMessageComposerToolbar from './BabbleConversationMessageComposerToolbar';
-import BabbleConversationMessageComposerToolbarAttachment from './BabbleConversationMessageComposerToolbarAttachment';
-import BabbleConversationMessageEmbed from './BabbleConversationMessageEmbed';
-import BabbleConversationMessageOptions from './BabbleConversationMessageOptions';
-import BabbleConversationPreview from './BabbleConversationPreview';
-import BabbleConversationPreviewsList from './BabbleConversationPreviewsList';
-import BabbleConversationUserList from './BabbleConversationUserList';
-import BabbleConversationViewerToolbar from './BabbleConversationViewerToolbar';
 import BabbleEmojiSelector from './BabbleEmojiSelector';
 import BabbleFeed from './BabbleFeed';
 import BabbleFieldLabel from './BabbleFieldLabel';
@@ -37,6 +24,19 @@ import BabbleOverlaysContainer from './BabbleOverlaysContainer';
 import BabblePhoneField from './BabblePhoneField';
 import BabbleProfileHeader from './BabbleProfileHeader';
 import BabbleReaction from './BabbleReaction';
+import BabbleRoom from './BabbleRoom';
+import BabbleRoomComposerToolbar from './BabbleRoomComposerToolbar';
+import BabbleRoomHeaderTitle from './BabbleRoomHeaderTitle';
+import BabbleRoomMessage from './BabbleRoomMessage';
+import BabbleRoomMessageAttachment from './BabbleRoomMessageAttachment';
+import BabbleRoomMessageComposerToolbar from './BabbleRoomMessageComposerToolbar';
+import BabbleRoomMessageComposerToolbarAttachment from './BabbleRoomMessageComposerToolbarAttachment';
+import BabbleRoomMessageEmbed from './BabbleRoomMessageEmbed';
+import BabbleRoomMessageOptions from './BabbleRoomMessageOptions';
+import BabbleRoomPreview from './BabbleRoomPreview';
+import BabbleRoomPreviewsList from './BabbleRoomPreviewsList';
+import BabbleRoomUserList from './BabbleRoomUserList';
+import BabbleRoomViewerToolbar from './BabbleRoomViewerToolbar';
 import BabbleSearchField from './BabbleSearchField';
 import BabbleSettingField from './BabbleSettingField';
 import BabbleTabBar from './BabbleTabBar';
@@ -58,19 +58,6 @@ export {
   BabbleCodeField,
   BabbleConnectDeviceContactsView,
   BabbleConnectionStatusBar,
-  BabbleConversation,
-  BabbleConversationComposerToolbar,
-  BabbleConversationHeaderTitle,
-  BabbleConversationMessage,
-  BabbleConversationMessageAttachment,
-  BabbleConversationMessageComposerToolbar,
-  BabbleConversationMessageComposerToolbarAttachment,
-  BabbleConversationMessageEmbed,
-  BabbleConversationMessageOptions,
-  BabbleConversationPreview,
-  BabbleConversationPreviewsList,
-  BabbleConversationUserList,
-  BabbleConversationViewerToolbar,
   BabbleEmojiSelector,
   BabbleFeed,
   BabbleFieldLabel,
@@ -89,6 +76,19 @@ export {
   BabblePhoneField,
   BabbleProfileHeader,
   BabbleReaction,
+  BabbleRoom,
+  BabbleRoomComposerToolbar,
+  BabbleRoomHeaderTitle,
+  BabbleRoomMessage,
+  BabbleRoomMessageAttachment,
+  BabbleRoomMessageComposerToolbar,
+  BabbleRoomMessageComposerToolbarAttachment,
+  BabbleRoomMessageEmbed,
+  BabbleRoomMessageOptions,
+  BabbleRoomPreview,
+  BabbleRoomPreviewsList,
+  BabbleRoomUserList,
+  BabbleRoomViewerToolbar,
   BabbleSearchField,
   BabbleSettingField,
   BabbleTabBar,

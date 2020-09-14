@@ -150,70 +150,70 @@ export default class EventsManager extends Manager {
   }
 
   _receivedMessage = message => {
-    const { activityManager, conversationsManager } = this.maestro.managers;
+    const { activityManager, roomsManager } = this.maestro.managers;
     const { dataHelper } = this.maestro.helpers;
     const messageObject = JSON.parse(message.payloadString);
     const event = messageObject.event;
     const data = dataHelper.normalizeDataObject(messageObject.data);
 
-    if (event === 'CONVERSATION_CREATE') {
-      conversationsManager._addUpdateRecentConversation(data);
+    if (event === 'ROOM_CREATE') {
+      roomsManager._addUpdateRecentRoom(data);
 
       if (data.accessLevel === 'private') {
-        conversationsManager._addUpdatePrivateConversation(data);
+        roomsManager._addUpdatePrivateRoom(data);
       }
     }
 
-    if (event === 'CONVERSATION_UPDATE') {
-      conversationsManager._updateConversation({
-        conversationId: data.id,
+    if (event === 'ROOM_UPDATE') {
+      roomsManager._updateRoom({
+        roomId: data.id,
         fields: data,
       });
     }
 
-    if (event === 'CONVERSATION_DELETE') {
-      conversationsManager._removeFromAllConversationTypes(data.id);
+    if (event === 'ROOM_DELETE') {
+      roomsManager._removeFromAllRoomTypes(data.id);
     }
 
-    if (event === 'CONVERSATION_MESSAGE_CREATE') {
-      conversationsManager._addMessageToConversation({
-        conversationId: data.conversationId,
+    if (event === 'ROOM_MESSAGE_CREATE') {
+      roomsManager._addMessageToRoom({
+        roomId: data.roomId,
         message: data,
       });
     }
 
-    if (event === 'CONVERSATION_MESSAGE_UPDATE') {
+    if (event === 'ROOM_MESSAGE_UPDATE') {
 
     }
 
-    if (event === 'CONVERSATION_MESSAGE_DELETE') {
-      conversationsManager._removeMessageFromConversation({
-        conversationId: data.conversationId,
-        conversationMessageId: data.id,
+    if (event === 'ROOM_MESSAGE_DELETE') {
+      roomsManager._removeMessageFromRoom({
+        roomId: data.roomId,
+        roomMessageId: data.id,
       });
     }
 
-    if (event === 'CONVERSATION_MESSAGE_TYPING_START') {
-      conversationsManager._addTypingUserToConversation({
-        conversationId: data.user.conversationId,
+    if (event === 'ROOM_MESSAGE_TYPING_START') {
+      roomsManager._addTypingUserToRoom({
+        roomId: data.user.roomId,
         user: data.user,
       });
     }
 
-    if (event === 'CONVERSATION_MESSAGE_REACTION_CREATE') {
-      conversationsManager._addReactionToConversationMessage({
-        conversationId: data.conversationId,
-        conversationMessageId: data.conversationMessageId,
+    if (event === 'ROOM_MESSAGE_REACTION_CREATE') {
+      roomsManager._addReactionToRoomMessage({
+        roomId: data.roomId,
+        roomMessageId: data.roomMessageId,
         reaction: data,
       });
     }
 
-    if (event === 'CONVERSATION_MESSAGE_REACTION_DELETE') {
-      conversationsManager._removeReactionFromConversationMessage({
+    if (event === 'ROOM_MESSAGE_REACTION_DELETE') {
+      roomsManager._removeReactionFromRoomMessage({
         userId: data.userId,
-        conversationId: data.conversationId,
-        conversationMessageId: data.conversationMessageId,
-        conversationMessageReactionId: data.id,
+        roomId: data.roomId,
+        roomMessageId: data.roomMessageId,
+        roomMessageReactionId: data.id,
         reaction: data.reaction,
       });
     }

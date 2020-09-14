@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet, Platform, Dimensions, Keyboard, Linking } from 'react-native';
 import ParsedText from 'react-native-parsed-text';
-import { BabbleConversationMessageAttachment, BabbleConversationMessageEmbed, BabbleUserAvatar, BabbleReaction } from './';
+import { BabbleRoomMessageAttachment, BabbleRoomMessageEmbed, BabbleUserAvatar, BabbleReaction } from './';
 import maestro from '../maestro';
 
 const windowWidth = Dimensions.get('window').width;
 
-const { conversationsManager } = maestro.managers;
+const { roomsManager } = maestro.managers;
 const { interfaceHelper, timeHelper, navigationHelper } = maestro.helpers;
 
-export default class BabbleConversationMessage extends Component {
+export default class BabbleRoomMessage extends Component {
   _getText = () => {
     const { message: { text, embeds = [] } } = this.props;
     const linklessText = embeds.reduce((linklessText, embed) => {
@@ -47,22 +47,22 @@ export default class BabbleConversationMessage extends Component {
   }
 
   _reactionPress = reaction => {
-    const { message: { id, conversationId, authUserConversationMessageReactions } } = this.props;
-    const authReaction = authUserConversationMessageReactions.find(authReaction => (
+    const { message: { id, roomId, authUserRoomMessageReactions } } = this.props;
+    const authReaction = authUserRoomMessageReactions.find(authReaction => (
       authReaction.reaction === reaction.reaction
     ));
 
     if (!authReaction) {
-      conversationsManager.createConversationMessageReaction({
-        conversationId,
-        conversationMessageId: id,
+      roomsManager.createRoomMessageReaction({
+        roomId,
+        roomMessageId: id,
         emoji: reaction.reaction,
       });
     } else {
-      conversationsManager.deleteConversationMessageReaction({
-        conversationId,
-        conversationMessageId: id,
-        conversationMessageReactionId: authReaction.id,
+      roomsManager.deleteRoomMessageReaction({
+        roomId,
+        roomMessageId: id,
+        roomMessageReactionId: authReaction.id,
       });
     }
   }
@@ -96,7 +96,7 @@ export default class BabbleConversationMessage extends Component {
   }
 
   render() {
-    const { message: { conversationUser, attachments, embeds, authUserConversationMessageReactions, conversationMessageReactions, createdAt }, heading, style } = this.props;
+    const { message: { roomUser, attachments, embeds, authUserRoomMessageReactions, roomMessageReactions, createdAt }, heading, style } = this.props;
     const text = this._getText();
     const contentWidth = windowWidth - styles.content.marginLeft - styles.container.paddingHorizontal * 2;
     const parsedTextOptions = [
@@ -127,10 +127,10 @@ export default class BabbleConversationMessage extends Component {
       >
         {heading && (
           <BabbleUserAvatar
-            avatarAttachment={conversationUser.user.avatarAttachment}
-            lastActiveAt={conversationUser.user.lastActiveAt}
+            avatarAttachment={roomUser.user.avatarAttachment}
+            lastActiveAt={roomUser.user.lastActiveAt}
             size={45}
-            onPress={() => this._userPress(conversationUser.userId)}
+            onPress={() => this._userPress(roomUser.userId)}
             style={styles.avatar}
           />
         )}
@@ -138,12 +138,12 @@ export default class BabbleConversationMessage extends Component {
         <View style={styles.content}>
           {heading && (
             <View style={styles.heading}>
-              <TouchableOpacity onPress={() => this._userPress(conversationUser.userId)}>
+              <TouchableOpacity onPress={() => this._userPress(roomUser.userId)}>
                 <Text
                   dataDetectorType={'all'}
                   style={styles.nameText}
                 >
-                  {conversationUser.user.name}
+                  {roomUser.user.name}
                 </Text>
               </TouchableOpacity>
 
@@ -160,7 +160,7 @@ export default class BabbleConversationMessage extends Component {
           {attachments?.length > 0 && (
             <View style={styles.attachments}>
               {attachments.map((attachment, index) => (
-                <BabbleConversationMessageAttachment
+                <BabbleRoomMessageAttachment
                   attachment={attachment}
                   playVideoInline={attachments.length === 1}
                   onPress={() => this._openAttachment(index)}
@@ -179,7 +179,7 @@ export default class BabbleConversationMessage extends Component {
           {embeds?.length > 0 && (
             <View style={styles.embeds}>
               {embeds.map((embed, index) => (
-                <BabbleConversationMessageEmbed
+                <BabbleRoomMessageEmbed
                   embed={embed}
                   onPress={() => this._openEmbed(embed)}
                   maxWidth={contentWidth}
@@ -194,14 +194,14 @@ export default class BabbleConversationMessage extends Component {
             </View>
           )}
 
-          {conversationMessageReactions?.length > 0 && (
+          {roomMessageReactions?.length > 0 && (
             <View style={styles.reactions}>
-              {conversationMessageReactions.map((reaction, index) => (
+              {roomMessageReactions.map((reaction, index) => (
                 <BabbleReaction
                   onPress={() => this._reactionPress(reaction)}
                   reaction={reaction}
-                  reacted={authUserConversationMessageReactions.some(conversationMessageReaction => (
-                    conversationMessageReaction.reaction === reaction.reaction
+                  reacted={authUserRoomMessageReactions.some(roomMessageReaction => (
+                    roomMessageReaction.reaction === reaction.reaction
                   ))}
                   count={reaction.count}
                   style={styles.reaction}

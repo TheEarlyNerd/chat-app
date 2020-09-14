@@ -55,8 +55,8 @@ export default class WebBrowserScreen extends Component {
         actions: [
           {
             iconComponent: MessageCircleIcon,
-            text: 'Share To Conversation',
-            subtext: 'Select any of your conversations to share this page with.',
+            text: 'Share To Room',
+            subtext: 'Select any of your rooms to share this page with.',
           },
           {
             iconComponent: LinkIcon,

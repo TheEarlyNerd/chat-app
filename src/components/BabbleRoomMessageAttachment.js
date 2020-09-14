@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import { BabbleAutoscaleImage, BabbleAutoscaleVideo } from './';
 
-export default class BabbleConversationMessageAttachment extends Component {
+export default class BabbleRoomMessageAttachment extends Component {
   render() {
     const { attachment: { url, mimetype, width, height }, onPress, maxHeight, maxWidth, playVideoInline, style } = this.props;
     const isImage = mimetype.includes('image/');

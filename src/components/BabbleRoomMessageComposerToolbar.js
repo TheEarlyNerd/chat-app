@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, TextInput, Text, ScrollView, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import { BabbleConversationMessageComposerToolbarAttachment } from './';
+import { BabbleRoomMessageComposerToolbarAttachment } from './';
 import { CameraIcon, ArrowUpIcon, ImageIcon, VideoIcon, XIcon } from './icons';
 import maestro from '../maestro';
 
@@ -185,7 +185,7 @@ export default class BabbleMessageComposerToolbar extends Component {
                 style={styles.attachmentsScrollView}
               >
                 {attachments.map((attachment, index) => (
-                  <BabbleConversationMessageComposerToolbarAttachment
+                  <BabbleRoomMessageComposerToolbarAttachment
                     attachment={attachment}
                     editable={!loading}
                     onDeletePress={() => this._deleteAttachment(index)}

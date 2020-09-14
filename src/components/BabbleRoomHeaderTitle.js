@@ -7,13 +7,13 @@ import maestro from '../maestro';
 const { userManager } = maestro.managers;
 const { navigationHelper, interfaceHelper } = maestro.helpers;
 
-export default class BabbleConversationHeaderTitle extends Component {
+export default class BabbleRoomHeaderTitle extends Component {
   static contextType = NavigationTypeContext;
 
   swapSubtextTimeout = null; // prevents setState no-op if unmounted before 1st animation.
 
   state = {
-    subtext: 'Tap here for conversation info...',
+    subtext: 'Tap here for room info...',
     subtextOpacityAnimated: new Animated.Value(1),
   }
 
@@ -31,7 +31,7 @@ export default class BabbleConversationHeaderTitle extends Component {
   }
 
   _getTitle = () => {
-    const { user, title } = this.props.conversation;
+    const { user, title } = this.props.room;
 
     if (title) {
       return title;
@@ -41,7 +41,7 @@ export default class BabbleConversationHeaderTitle extends Component {
   }
 
   _getSubtext = () => {
-    const { accessLevel, user, usersCount } = this.props.conversation;
+    const { accessLevel, user, usersCount } = this.props.room;
     const loggedInUserId = userManager.store.user.id;
     const username = (user.id === loggedInUserId) ? 'You' : `@${user.username}`;
     const permission = (accessLevel === 'protected') ? 'Audience' : accessLevel.charAt(0).toUpperCase() + accessLevel.slice(1);
@@ -64,13 +64,13 @@ export default class BabbleConversationHeaderTitle extends Component {
   }
 
   _onPress = () => {
-    const { conversation } = this.props;
+    const { room } = this.props;
 
-    navigationHelper.push('ConversationInfo', { conversation }, this.context);
+    navigationHelper.push('RoomInfo', { room }, this.context);
   }
 
   render() {
-    const { accessLevel } = this.props.conversation;
+    const { accessLevel } = this.props.room;
     const { subtext, subtextOpacityAnimated } = this.state;
 
     return (

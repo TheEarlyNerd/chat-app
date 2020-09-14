@@ -4,12 +4,12 @@ import { BabbleBackground } from './';
 import { EditIcon, Trash2Icon, ShareIcon, SmileIcon, MoreHorizontalIcon, AlertTriangleIcon } from './icons';
 import maestro from '../maestro';
 
-const { conversationsManager, userManager } = maestro.managers;
+const { roomsManager, userManager } = maestro.managers;
 const { interfaceHelper } = maestro.helpers;
 
-export default class BabbleConversationMessageOptions extends Component {
+export default class BabbleRoomMessageOptions extends Component {
   _deletePress = () => {
-    const { id, conversationId } = this.props;
+    const { id, roomId } = this.props;
 
     Alert.alert('Delete this message?', 'Are you sure you want to permanently delete this message? This cannot be undone.', [
       {
@@ -19,9 +19,9 @@ export default class BabbleConversationMessageOptions extends Component {
 
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
-          conversationsManager.deleteConversationMessage({
-            conversationId,
-            conversationMessageId: id,
+          roomsManager.deleteRoomMessage({
+            roomId,
+            roomMessageId: id,
           });
         },
       },
@@ -44,17 +44,17 @@ export default class BabbleConversationMessageOptions extends Component {
     interfaceHelper.showOverlay({
       name: 'ReactionSelector',
       data: {
-        conversationId: this.props.conversationId,
-        conversationMessageId: this.props.id, // maybe change it to props.conversationMessage.id?
+        roomId: this.props.roomId,
+        roomMessageId: this.props.id, // maybe change it to props.roomMessage.id?
         onEmojiPress: this.props.onCloseRow,
       },
     });
   }
 
   _reportPress = () => {
-    const { conversationUser } = this.props;
+    const { roomUser } = this.props;
 
-    Alert.alert('Report User', `Are you sure you want to report ${conversationUser.user.name} for sending inappropriate, violent or concerning content?`, [
+    Alert.alert('Report User', `Are you sure you want to report ${roomUser.user.name} for sending inappropriate, violent or concerning content?`, [
       {
         text: 'Report',
         onPress: () => {},
@@ -67,7 +67,7 @@ export default class BabbleConversationMessageOptions extends Component {
   }
 
   _morePress = () => {
-    const { conversationUser } = this.props;
+    const { roomUser } = this.props;
     const actions = [];
 
     actions.push({
@@ -76,7 +76,7 @@ export default class BabbleConversationMessageOptions extends Component {
       onPress: this._reactPress,
     });
 
-    if (userManager.store.user.id === conversationUser.userId) {
+    if (userManager.store.user.id === roomUser.userId) {
       /*actions.push({
         iconComponent: EditIcon,
         text: 'Edit',
@@ -103,7 +103,7 @@ export default class BabbleConversationMessageOptions extends Component {
   }
 
   render() {
-    const { conversationUser, style } = this.props;
+    const { roomUser, style } = this.props;
 
     return (
       <Animated.View style={[ styles.container, style ]}>
@@ -119,13 +119,13 @@ export default class BabbleConversationMessageOptions extends Component {
             <Text style={styles.reactionPlusText}>+</Text>
           </TouchableOpacity>
 
-          {(userManager.store.user.id === conversationUser.userId) && (
+          {(userManager.store.user.id === roomUser.userId) && (
             <TouchableOpacity onPress={this._deletePress} style={styles.option}>
               <Trash2Icon width={22} height={22} style={styles.optionIcon} />
             </TouchableOpacity>
           )}
 
-          {(userManager.store.user.id !== conversationUser.userId) && (
+          {(userManager.store.user.id !== roomUser.userId) && (
             <TouchableOpacity onPress={this._sharePress} style={styles.option}>
               <ShareIcon width={22} height={22} style={styles.optionIcon} />
             </TouchableOpacity>

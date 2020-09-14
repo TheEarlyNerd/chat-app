@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, Animated, ActivityIndicator, Keyboard, StyleSheet } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { BabbleConversationMessage, BabbleConversationMessageOptions } from './';
+import { BabbleRoomMessage, BabbleRoomMessageOptions } from './';
 
-export default class BabbleConversation extends Component {
+export default class BabbleRoom extends Component {
   swipeListView = null;
   swipeOpenAnimatedValues = {};
 
@@ -100,11 +100,11 @@ export default class BabbleConversation extends Component {
     }
 
     return (
-      <BabbleConversationMessage
+      <BabbleRoomMessage
         message={item}
         heading={(
           index === messages.length - 1 ||
-          messages[index + 1].conversationUser.userId !== item.conversationUser.userId ||
+          messages[index + 1].roomUser.userId !== item.roomUser.userId ||
           (item.createdAt - messages[index + 1].createdAt) / 1000 > 60 * 15
         )}
         style={{
@@ -122,7 +122,7 @@ export default class BabbleConversation extends Component {
     const itemKey = this._getItemKey(item);
 
     return (
-      <BabbleConversationMessageOptions
+      <BabbleRoomMessageOptions
         onCloseRow={() => this._closeRow(rowMap[itemKey])}
         style={{ opacity: this.swipeOpenAnimatedValues[itemKey] }}
         {...item}

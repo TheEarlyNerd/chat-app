@@ -20,7 +20,7 @@ export default class BabbleOverlayUsersSelector extends Component {
   }
 
   render() {
-    const { conversationId } = this.props.data;
+    const { roomId } = this.props.data;
 
     return (
       <BabbleOverlayDismissibleView
@@ -28,7 +28,7 @@ export default class BabbleOverlayUsersSelector extends Component {
         onDragDismiss={this._hide}
         ref={component => this.dismissibleView = component}
       >
-        <BabbleInviteSelector conversationId={conversationId} />
+        <BabbleInviteSelector roomId={roomId} />
       </BabbleOverlayDismissibleView>
     );
   }

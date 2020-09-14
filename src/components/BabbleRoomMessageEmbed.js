@@ -7,7 +7,7 @@ import maestro from '../maestro';
 
 const { interfaceHelper } = maestro.helpers;
 
-export default class BabbleConversationMessageEmbed extends Component {
+export default class BabbleRoomMessageEmbed extends Component {
   state = {
     videoError: false,
   }

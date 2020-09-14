@@ -126,10 +126,10 @@ export default class NotificationsManager extends Manager {
 
   _receivedNotification = notification => {
     const { navigationHelper } = this.maestro.helpers;
-    const conversationId = notification?.data?.data?.conversationId;
+    const roomId = notification?.data?.data?.roomId;
 
-    if (notification.userInteraction && conversationId) {
-      navigationHelper.navigate('Conversation', { conversationId });
+    if (notification.userInteraction && roomId) {
+      navigationHelper.navigate('Room', { roomId });
     }
 
     notification.finish(PushNotificationIOS.FetchResult.NoData);

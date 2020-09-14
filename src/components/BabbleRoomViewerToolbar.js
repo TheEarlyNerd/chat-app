@@ -5,23 +5,23 @@ import { UsersIcon } from './icons';
 import maestro from '../maestro';
 
 const { interfaceHelper } = maestro.helpers;
-const { conversationsManager } = maestro.managers;
+const { roomsManager } = maestro.managers;
 
-export default class BabbleConversationViewerToolbar extends Component {
+export default class BabbleRoomViewerToolbar extends Component {
   state = {
     loading: false,
   }
 
   _buttonPress = async () => {
-    const { conversation } = this.props;
+    const { room } = this.props;
 
     this.setState({ loading: true });
 
     try {
-      if (!conversation.authConversationUser) {
-        await conversationsManager.joinConversation(conversation.id);
+      if (!room.authRoomUser) {
+        await roomsManager.joinRoom(room.id);
       } else {
-        await conversationsManager.leaveConversation(conversation.id);
+        await roomsManager.leaveRoom(room.id);
       }
     } catch (error) {
       interfaceHelper.showError({ message: error.message });
@@ -31,24 +31,24 @@ export default class BabbleConversationViewerToolbar extends Component {
   }
 
   render() {
-    const { conversation } = this.props;
+    const { room } = this.props;
     const { loading } = this.state;
 
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.permissionHeader}>
           <UsersIcon width={18} height={18} style={styles.permissionIcon} />
-          <Text style={styles.headingText}>Audience Conversation</Text>
+          <Text style={styles.headingText}>Audience Room</Text>
         </View>
 
-        <Text style={styles.detailsText}>Only people invited by the owner of this conversation can send messages. Anyone can read and react to messages.</Text>
+        <Text style={styles.detailsText}>Only people invited by the owner of this room can send messages. Anyone can read and react to messages.</Text>
 
         <BabbleButton
           onPress={this._buttonPress}
           loading={loading}
           textStyle={styles.buttonText} style={styles.button}
         >
-          {(!conversation.authConversationUser) ? 'Follow Conversation' : 'Unfollow Conversation'}
+          {(!room.authRoomUser) ? 'Follow Room' : 'Unfollow Room'}
         </BabbleButton>
       </SafeAreaView>
     );

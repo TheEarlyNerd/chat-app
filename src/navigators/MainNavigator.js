@@ -2,10 +2,10 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BabbleHeader, BabbleHomeHeader } from '../components';
 
-import ConversationInfoScreen from '../screens/ConversationInfoScreen';
-import ConversationScreen from '../screens/ConversationScreen';
-import ConversationsListScreen from '../screens/ConversationsListScreen';
-import ConversationUsersScreen from '../screens/ConversationUsersScreen';
+import RoomInfoScreen from '../screens/RoomInfoScreen';
+import RoomScreen from '../screens/RoomScreen';
+import RoomsListScreen from '../screens/RoomsListScreen';
+import RoomUsersScreen from '../screens/RoomUsersScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LandingScreen from '../screens/LandingScreen';
 import PhoneLoginCodeScreen from '../screens/PhoneLoginCodeScreen';
@@ -27,33 +27,33 @@ export default initialRouteName => {
       }}
     >
       <MainStack.Screen
-        name={'ConversationInfo'}
-        component={ConversationInfoScreen}
+        name={'RoomInfo'}
+        component={RoomInfoScreen}
         options={{
-          title: 'Conversation Info',
+          title: 'Room Info',
           backEnabled: true,
         }}
       />
 
       <MainStack.Screen
-        name={'Conversation'}
-        component={ConversationScreen}
+        name={'Room'}
+        component={RoomScreen}
         options={({ route }) => ({
           animationEnabled: !route.params || route.params.animationEnabled !== false,
-          backEnabled: initialRouteName !== 'Conversation',
-          closeEnabled: initialRouteName === 'Conversation',
+          backEnabled: initialRouteName !== 'Room',
+          closeEnabled: initialRouteName === 'Room',
         })}
       />
 
       <MainStack.Screen
-        name={'ConversationsList'}
-        component={ConversationsListScreen}
+        name={'RoomsList'}
+        component={RoomsListScreen}
         options={{ backEnabled: true }}
       />
 
       <MainStack.Screen
-        name={'ConversationUsers'}
-        component={ConversationUsersScreen}
+        name={'RoomUsers'}
+        component={RoomUsersScreen}
         options={{
           backEnabled: true,
           title: 'Participants',

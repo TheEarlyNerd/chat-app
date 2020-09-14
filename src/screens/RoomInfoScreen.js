@@ -6,41 +6,41 @@ import { ChevronRightIcon } from '../components/icons';
 import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
-const { conversationsManager } = maestro.managers;
+const { roomsManager } = maestro.managers;
 const { navigationHelper, interfaceHelper } = maestro.helpers;
 
-export default class ConversationInfoScreen extends Component {
+export default class RoomInfoScreen extends Component {
   static contextType = NavigationTypeContext;
 
   state = {
-    title: this.props.route.params.conversation.title,
-    conversationUsers: null,
+    title: this.props.route.params.room.title,
+    roomUsers: null,
   }
 
   async componentDidMount() {
-    const { conversation } = this.props.route.params;
-    const { authConversationUser } = conversation;
-    const conversationUsers = await conversationsManager.getConversationUsers(conversation.id);
+    const { room } = this.props.route.params;
+    const { authRoomUser } = room;
+    const roomUsers = await roomsManager.getRoomUsers(room.id);
 
-    if (authConversationUser && authConversationUser.permissions.includes('CONVERSATION_ADMIN')) {
+    if (authRoomUser && authRoomUser.permissions.includes('ROOM_ADMIN')) {
       this.props.navigation.setOptions({
         rightButtonTitle: 'Save',
         onRightButtonPress: this._savePress,
       });
     }
 
-    this.setState({ conversationUsers });
+    this.setState({ roomUsers });
   }
 
   _deletePress = () => {
-    Alert.alert('Delete this conversation?', 'Are you sure you want to permanently delete this conversation? This cannot be undone.', [
+    Alert.alert('Delete this room?', 'Are you sure you want to permanently delete this room? This cannot be undone.', [
       {
         text: 'Delete',
         onPress: async () => {
-          const { conversation } = this.props.route.params;
+          const { room } = this.props.route.params;
 
           this.props.navigation.setOptions({ showRightLoading: true });
-          await conversationsManager.deleteConversation(conversation.id);
+          await roomsManager.deleteRoom(room.id);
           navigationHelper.pop(2);
         },
       },
@@ -52,14 +52,14 @@ export default class ConversationInfoScreen extends Component {
   }
 
   _leavePress = () => {
-    Alert.alert('Leave this conversation?', 'Are you sure you want to leave this conversation?', [
+    Alert.alert('Leave this room?', 'Are you sure you want to leave this room?', [
       {
         text: 'Leave',
         onPress: async () => {
-          const { conversation } = this.props.route.params;
+          const { room } = this.props.route.params;
 
           this.props.navigation.setOptions({ showRightLoading: true });
-          await conversationsManager.leaveConversation(conversation.id);
+          await roomsManager.leaveRoom(room.id);
           navigationHelper.pop(2);
         },
       },
@@ -71,11 +71,11 @@ export default class ConversationInfoScreen extends Component {
   }
 
   _reportPress = () => {
-    Alert.alert('Report this conversation?', 'You should only report this conversation if it focuses on hate speech, racism, harming others or criminal activity.', [
+    Alert.alert('Report this room?', 'You should only report this room if it focuses on hate speech, racism, harming others or criminal activity.', [
       {
         text: 'Report',
         onPress: () => {
-          Alert.alert('Reported Successfully', 'Thank you. This conversation has been reported.');
+          Alert.alert('Reported Successfully', 'Thank you. This room has been reported.');
         },
       },
       {
@@ -87,14 +87,14 @@ export default class ConversationInfoScreen extends Component {
 
   _savePress = async () => {
     const { navigation } = this.props;
-    const { conversation } = this.props.route.params;
+    const { room } = this.props.route.params;
     const { title } = this.state;
 
     navigation.setOptions({ showRightLoading: true });
 
     try {
-      await conversationsManager.updateConversation({
-        conversationId: conversation.id,
+      await roomsManager.updateRoom({
+        roomId: room.id,
         fields: { title },
       });
     } catch (error) {
@@ -106,16 +106,16 @@ export default class ConversationInfoScreen extends Component {
     navigationHelper.pop(1, this.context);
   }
 
-  _openConversationUsers = () => {
-    const { conversation } = this.props.route.params;
+  _openRoomUsers = () => {
+    const { room } = this.props.route.params;
 
-    navigationHelper.push('ConversationUsers', {
-      conversationId: conversation.id,
+    navigationHelper.push('RoomUsers', {
+      roomId: room.id,
     }, this.context);
   }
 
   _getAccessLevelText = () => {
-    const { accessLevel } = this.props.route.params.conversation;
+    const { accessLevel } = this.props.route.params.room;
 
     if (accessLevel === 'public') {
       return 'Public - Anyone can join this room, send and react to messages, and invite others.';
@@ -131,9 +131,9 @@ export default class ConversationInfoScreen extends Component {
   }
 
   render() {
-    const { conversation } = this.props.route.params;
-    const { authConversationUser } = conversation;
-    const { title, conversationUsers } = this.state;
+    const { room } = this.props.route.params;
+    const { authRoomUser } = room;
+    const { title, roomUsers } = this.state;
 
     return (
       <KeyboardAwareScrollView
@@ -143,7 +143,7 @@ export default class ConversationInfoScreen extends Component {
       >
         <BabbleSettingField
           label={'Name'}
-          editable={!!authConversationUser && authConversationUser.permissions.includes('CONVERSATION_ADMIN')}
+          editable={!!authRoomUser && authRoomUser.permissions.includes('ROOM_ADMIN')}
           returnKeyType={'done'}
           placeholder={'(Optional)'}
           maxLength={150}
@@ -163,7 +163,7 @@ export default class ConversationInfoScreen extends Component {
 
         <BabbleSettingField label={'Owner'}>
           <BabbleUserPreview
-            user={conversation.user}
+            user={room.user}
             style={styles.participant}
           />
         </BabbleSettingField>
@@ -171,36 +171,36 @@ export default class ConversationInfoScreen extends Component {
         <View style={styles.border} />
 
         <BabbleSettingField
-          label={`Participants (${conversation.usersCount})`}
-          onPress={(conversation.usersCount > 5) ? this._openConversationUsers : null}
-          IconComponent={(conversation.usersCount > 5) ? ChevronRightIcon : null}
+          label={`Participants (${room.usersCount})`}
+          onPress={(room.usersCount > 5) ? this._openRoomUsers : null}
+          IconComponent={(room.usersCount > 5) ? ChevronRightIcon : null}
           style={styles.participantsSettingField}
         >
-          {!conversationUsers && (
+          {!roomUsers && (
             <ActivityIndicator size={'large'} style={styles.loadingIndicator} />
           )}
 
-          {!!conversationUsers && conversationUsers.map(conversationUser => (
+          {!!roomUsers && roomUsers.map(roomUser => (
             <BabbleUserPreview
-              user={conversationUser.user}
+              user={roomUser.user}
               style={styles.participant}
-              key={conversationUser.id}
+              key={roomUser.id}
             />
           ))}
 
-          {!!conversationUsers && conversation.usersCount > 5 && (
+          {!!roomUsers && room.usersCount > 5 && (
             <BabbleViewMoreButton
-              onPress={this._openConversationUsers}
+              onPress={this._openRoomUsers}
               style={styles.viewMoreButton}
             />
           )}
         </BabbleSettingField>
 
-        {!!authConversationUser && !authConversationUser.permissions.includes('CONVERSATION_ADMIN') && (
+        {!!authRoomUser && !authRoomUser.permissions.includes('ROOM_ADMIN') && (
           <>
             <BabbleSettingField
               onPress={this._leavePress}
-              label={'Leave Conversation'}
+              label={'Leave Room'}
               labelStyle={styles.red}
             />
 
@@ -208,18 +208,18 @@ export default class ConversationInfoScreen extends Component {
           </>
         )}
 
-        {(!authConversationUser || !authConversationUser.permissions.includes('CONVERSATION_ADMIN')) && (
+        {(!authRoomUser || !authRoomUser.permissions.includes('ROOM_ADMIN')) && (
           <BabbleSettingField
             onPress={this._reportPress}
-            label={'Report Conversation'}
+            label={'Report Room'}
             labelStyle={styles.red}
           />
         )}
 
-        {!!authConversationUser && authConversationUser.permissions.includes('CONVERSATION_ADMIN') && (
+        {!!authRoomUser && authRoomUser.permissions.includes('ROOM_ADMIN') && (
           <BabbleSettingField
             onPress={this._deletePress}
-            label={'Delete Conversation'}
+            label={'Delete Room'}
             labelStyle={styles.red}
           />
         )}

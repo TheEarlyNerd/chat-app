@@ -39,7 +39,7 @@ export default class BabbleTabBar extends Component {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigationHelper.navigate('NewConversationNavigator')} style={styles.tabBarComposeButton}>
+          <TouchableOpacity onPress={() => navigationHelper.navigate('NewRoomNavigator')} style={styles.tabBarComposeButton}>
             <PlusIcon width={26} height={26} style={{ color: '#FFF' }} />
 
             <LinearGradient

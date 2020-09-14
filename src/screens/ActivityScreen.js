@@ -39,7 +39,7 @@ export default class ActivityScreen extends Component {
   _renderNoActivity = () => {
     return (
       <View style={styles.centeredContainer}>
-        <Text style={styles.noActivityText}>When someone follows you, reposts your conversations, or tags you in a message, we'll let you know here.</Text>
+        <Text style={styles.noActivityText}>When someone follows you, reposts your rooms, or tags you in a message, we'll let you know here.</Text>
       </View>
     );
   }

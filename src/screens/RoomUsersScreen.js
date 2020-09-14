@@ -3,18 +3,18 @@ import { FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 import { BabbleUserPreview } from '../components';
 import maestro from '../maestro';
 
-const { conversationsManager } = maestro.managers;
+const { roomsManager } = maestro.managers;
 
-export default class ConversationUsersScreen extends Component {
+export default class RoomUsersScreen extends Component {
   state = {
-    conversationUsers: null,
+    roomUsers: null,
   }
 
   async componentDidMount() {
-    const { conversationId } = this.props.route.params;
-    const conversationUsers = await conversationsManager.getConversationUsers(conversationId);
+    const { roomId } = this.props.route.params;
+    const roomUsers = await roomsManager.getRoomUsers(roomId);
 
-    this.setState({ conversationUsers });
+    this.setState({ roomUsers });
   }
 
   _renderItem = ({ item, index }) => {
@@ -27,9 +27,9 @@ export default class ConversationUsersScreen extends Component {
   }
 
   _renderFooter = () => {
-    const { conversationUsers } = this.state;
+    const { roomUsers } = this.state;
 
-    if (conversationUsers) {
+    if (roomUsers) {
       return null;
     }
 
@@ -39,11 +39,11 @@ export default class ConversationUsersScreen extends Component {
   }
 
   render() {
-    const { conversationUsers } = this.state;
+    const { roomUsers } = this.state;
 
     return (
       <FlatList
-        data={conversationUsers}
+        data={roomUsers}
         renderItem={this._renderItem}
         keyExtractor={(item, index) => `${item.id}.${index}`}
         ListFooterComponent={this._renderFooter}

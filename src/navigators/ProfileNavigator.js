@@ -5,9 +5,9 @@ import { BabbleHeader } from '../components';
 import ModalPopupCardStyleInterpolator from './interpolators/ModalPopupCardStyleInterpolator';
 import maestro from '../maestro';
 
-import ConversationInfoScreen from '../screens/ConversationInfoScreen';
-import ConversationScreen from '../screens/ConversationScreen';
-import ConversationUsersScreen from '../screens/ConversationUsersScreen';
+import RoomInfoScreen from '../screens/RoomInfoScreen';
+import RoomScreen from '../screens/RoomScreen';
+import RoomUsersScreen from '../screens/RoomUsersScreen';
 import ProfileEditScreen from '../screens/ProfileEditScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
@@ -35,17 +35,17 @@ export default () => {
       }}
     >
       <ProfileStack.Screen
-        name={'ConversationInfo'}
-        component={ConversationInfoScreen}
+        name={'RoomInfo'}
+        component={RoomInfoScreen}
         options={{
-          title: 'Conversation Info',
+          title: 'Room Info',
           backEnabled: true,
         }}
       />
 
       <ProfileStack.Screen
-        name={'Conversation'}
-        component={ConversationScreen}
+        name={'Room'}
+        component={RoomScreen}
         options={{
           backEnabled: true,
           title: <ActivityIndicator color={'#FFFFFF'} />,
@@ -53,8 +53,8 @@ export default () => {
       />
 
       <ProfileStack.Screen
-        name={'ConversationUsers'}
-        component={ConversationUsersScreen}
+        name={'RoomUsers'}
+        component={RoomUsersScreen}
         options={{
           backEnabled: true,
           title: 'Participants',

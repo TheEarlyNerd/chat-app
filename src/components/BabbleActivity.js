@@ -8,12 +8,12 @@ const { navigationHelper, timeHelper } = maestro.helpers;
 
 export default class BabbleActivity extends Component {
   _onPress = () => {
-    const { conversationRepost, userFollower } = this.props.activity;
+    const { roomRepost, userFollower } = this.props.activity;
 
-    if (conversationRepost) {
+    if (roomRepost) {
       navigationHelper.push('ProfileNavigator', {
         screen: 'Profile',
-        params: { userId: conversationRepost.user.id },
+        params: { userId: roomRepost.user.id },
       });
     }
 
@@ -26,10 +26,10 @@ export default class BabbleActivity extends Component {
   }
 
   _getActivityUser = () => {
-    const { conversationRepost, userFollower } = this.props.activity;
+    const { roomRepost, userFollower } = this.props.activity;
 
-    if (conversationRepost) {
-      return conversationRepost.user;
+    if (roomRepost) {
+      return roomRepost.user;
     }
 
     if (userFollower) {
@@ -38,10 +38,10 @@ export default class BabbleActivity extends Component {
   }
 
   _getTime = () => {
-    const { conversationRepost, userFollower } = this.props.activity;
+    const { roomRepost, userFollower } = this.props.activity;
 
-    if (conversationRepost) {
-      return timeHelper.fromNow(conversationRepost.createdAt);
+    if (roomRepost) {
+      return timeHelper.fromNow(roomRepost.createdAt);
     }
 
     if (userFollower) {
@@ -50,10 +50,10 @@ export default class BabbleActivity extends Component {
   }
 
   _getActivityText = () => {
-    const { conversationRepost, userFollower } = this.props.activity;
+    const { roomRepost, userFollower } = this.props.activity;
 
-    if (conversationRepost) {
-      return `${conversationRepost.user.name} (@${conversationRepost.user.username}) reposted your conversation "${conversationRepost.conversation.title}" to their profile and shared it with their followers!`;
+    if (roomRepost) {
+      return `${roomRepost.user.name} (@${roomRepost.user.username}) reposted your room "${roomRepost.room.title}" to their profile and shared it with their followers!`;
     }
 
     if (userFollower) {
@@ -62,9 +62,9 @@ export default class BabbleActivity extends Component {
   }
 
   _getActivityIcon = () => {
-    const { conversationRepost, userFollower } = this.props.activity;
+    const { roomRepost, userFollower } = this.props.activity;
 
-    if (conversationRepost) {
+    if (roomRepost) {
       return (<RepeatIcon width={15} height={15} style={styles.activityIcon} />);
     }
 
@@ -74,10 +74,10 @@ export default class BabbleActivity extends Component {
   }
 
   _getHeading = () => {
-    const { conversationRepost, userFollower } = this.props.activity;
+    const { roomRepost, userFollower } = this.props.activity;
 
-    if (conversationRepost) {
-      return 'Your Conversation Was Reposted.';
+    if (roomRepost) {
+      return 'Your Room Was Reposted.';
     }
 
     if (userFollower) {

@@ -41,8 +41,8 @@ export default class BabbleHomeOnboardingView extends Component {
   }
 
   _createPrivateRoom = () => {
-    navigationHelper.navigate('NewConversationNavigator', {
-      screen: 'Conversation',
+    navigationHelper.navigate('NewRoomNavigator', {
+      screen: 'Room',
       params: {
         composeAccessLevel: 'private',
       },

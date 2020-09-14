@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, LayoutAnimation, StyleSheet } from 'react-native';
-import { BabbleConversationUserList, BabbleUserAvatar, BabbleConnectDeviceContactsView } from './';
+import { BabbleRoomUserList, BabbleUserAvatar, BabbleConnectDeviceContactsView } from './';
 import { UsersIcon, MessageCircleIcon, LockIcon, ChevronDownIcon } from './icons';
 import maestro from '../maestro';
 
 const { deviceContactsManager, userManager } = maestro.managers;
 const { interfaceHelper } = maestro.helpers;
 
-export default class BabbleConversationComposerToolbar extends Component {
+export default class BabbleRoomComposerToolbar extends Component {
   state = {
     accessLevel: null,
     search: '',
@@ -249,7 +249,7 @@ export default class BabbleConversationComposerToolbar extends Component {
           {
             iconComponent: UsersIcon,
             text: 'Audience',
-            subtext: 'Only people you invite to this room can send messages. Anyone can see this conversation and react to messages.',
+            subtext: 'Only people you invite to this room can send messages. Anyone can join this room to view and react to messages.',
             highlighted: accessLevel === 'protected',
             onPress: () => this._changeAccessLevel('protected'),
           },
@@ -401,7 +401,7 @@ export default class BabbleConversationComposerToolbar extends Component {
         {showSearchUsersList && (
           <View style={styles.usersListContainer}>
             {(!!search || (selectedUsers.length === 0 && canAccessContacts)) && (
-              <BabbleConversationUserList
+              <BabbleRoomUserList
                 loading={loadingSearch}
                 users={searchUsers}
                 disableNoResultsMessage={!search}

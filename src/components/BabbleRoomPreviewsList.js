@@ -1,32 +1,32 @@
 import React, { Component } from 'react';
 import { View, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
-import { BabbleConversationPreview } from './';
+import { BabbleRoomPreview } from './';
 
-export default class BabbleConversationPreviewsList extends Component {
+export default class BabbleRoomPreviewsList extends Component {
   state = {
     lazyLoading: false,
     refreshing: false,
   }
 
   _endReached = async () => {
-    const { conversations, loadConversations } = this.props;
+    const { rooms, loadRooms } = this.props;
     const { lazyLoading } = this.state;
 
-    if (lazyLoading || lazyLoading === null || !conversations) {
+    if (lazyLoading || lazyLoading === null || !rooms) {
       return;
     }
 
     this.setState({ lazyLoading: true });
 
-    const loadedConversations = await loadConversations();
+    const loadedRooms = await loadRooms();
 
-    this.setState({ lazyLoading: (loadedConversations.length) ? false : null });
+    this.setState({ lazyLoading: (loadedRooms.length) ? false : null });
   }
 
   _refresh = async () => {
     this.setState({ refreshing: true });
 
-    await this.props.loadConversations(true);
+    await this.props.loadRooms(true);
 
     this.setState({
       lazyLoading: false,
@@ -34,9 +34,9 @@ export default class BabbleConversationPreviewsList extends Component {
     });
   }
 
-  _renderConversationPreview = ({ item, index }) => {
+  _renderRoomPreview = ({ item, index }) => {
     return (
-      <BabbleConversationPreview conversation={item} />
+      <BabbleRoomPreview room={item} />
     );
   }
 
@@ -47,13 +47,13 @@ export default class BabbleConversationPreviewsList extends Component {
   }
 
   render() {
-    const { conversations, style, ...props } = this.props;
+    const { rooms, style, ...props } = this.props;
     const { refreshing, lazyLoading } = this.state;
 
     return (
       <FlatList
-        data={conversations}
-        renderItem={this._renderConversationPreview}
+        data={rooms}
+        renderItem={this._renderRoomPreview}
         keyExtractor={item => `${item.id}`}
         style={[ styles.container, style ]}
         ListFooterComponent={(lazyLoading) ? this._renderLoading : null}

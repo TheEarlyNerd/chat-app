@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import { BabbleConversationPreviewsList, BabbleProfileHeader } from '../components';
+import { BabbleRoomPreviewsList, BabbleProfileHeader } from '../components';
 import maestro from '../maestro';
 
-const { userManager, conversationsManager } = maestro.managers;
+const { userManager, roomsManager } = maestro.managers;
 
 export default class ProfileScreen extends Component {
   state = {
     user: null,
-    conversations: null,
+    rooms: null,
     refreshing: false,
   }
 
@@ -23,19 +23,19 @@ export default class ProfileScreen extends Component {
 
     this.props.navigation.setOptions({ title: (user.username) ? `@${user.username}` : 'Invited User' });
 
-    this._loadConversations();
+    this._loadRooms();
   }
 
   componentWillUnmount() {
     maestro.unlink(this);
   }
 
-  receiveStoreUpdate({ conversations, user }) {
+  receiveStoreUpdate({ rooms, user }) {
     if (!this.state.user) {
       return;
     }
 
-    const state = { conversations: conversations.usersConversations[this.state.user.id] };
+    const state = { rooms: rooms.usersRooms[this.state.user.id] };
 
     if (this.state.user.id === user.user.id) {
       state.user = user.user;
@@ -44,15 +44,15 @@ export default class ProfileScreen extends Component {
     this.setState(state);
   }
 
-  _loadConversations = async refresh => {
+  _loadRooms = async refresh => {
     const params = this.props.route.params || {};
     const { userId } = params;
-    const { conversations } = this.state;
+    const { rooms } = this.state;
 
-    return conversationsManager.loadUsersConversations({
+    return roomsManager.loadUsersRooms({
       userId,
-      queryParams: (conversations && !refresh) ? {
-        before: conversations[conversations.length - 1].createdAt,
+      queryParams: (rooms && !refresh) ? {
+        before: rooms[rooms.length - 1].createdAt,
       } : null,
     });
   }
@@ -66,12 +66,12 @@ export default class ProfileScreen extends Component {
     );
   }
 
-  _renderNoConversations = () => {
+  _renderNoRooms = () => {
     const { user } = this.state;
 
     return (
-      <View style={styles.noConversationsContainer}>
-        <Text style={styles.noConversationsText}>{user.name} hasn't started or shared any rooms.</Text>
+      <View style={styles.noRoomsContainer}>
+        <Text style={styles.noRoomsText}>{user.name} hasn't started or shared any rooms.</Text>
       </View>
     );
   }
@@ -91,21 +91,21 @@ export default class ProfileScreen extends Component {
   }
 
   render() {
-    const { user, conversations } = this.state;
+    const { user, rooms } = this.state;
 
     if (!user) {
       return this._renderLoading();
     }
 
     return (
-      <BabbleConversationPreviewsList
-        conversations={conversations}
-        loadConversations={this._loadConversations}
+      <BabbleRoomPreviewsList
+        rooms={rooms}
+        loadRooms={this._loadRooms}
         ListHeaderComponent={this._renderHeader}
         ListHeaderComponentStyle={styles.header}
-        ListFooterComponent={(conversations === null) ? this._renderFooter : null}
+        ListFooterComponent={(rooms === null) ? this._renderFooter : null}
         ListFooterComponentStyle={styles.footer}
-        ListEmptyComponent={this._renderNoConversations}
+        ListEmptyComponent={this._renderNoRooms}
         style={styles.container}
       />
     );
@@ -130,12 +130,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  noConversationsContainer: {
+  noRoomsContainer: {
     alignItems: 'center',
     alignSelf: 'center',
     width: '80%',
   },
-  noConversationsText: {
+  noRoomsText: {
     color: '#4F4F4F',
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: 16,

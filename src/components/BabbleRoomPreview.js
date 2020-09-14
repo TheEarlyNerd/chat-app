@@ -8,24 +8,24 @@ import maestro from '../maestro';
 const { userManager } = maestro.managers;
 const { navigationHelper, interfaceHelper, timeHelper } = maestro.helpers;
 
-export default class BabbleConversationPreview extends Component {
+export default class BabbleRoomPreview extends Component {
   static contextType = NavigationTypeContext;
 
   _onPress = () => {
-    const { conversation } = this.props;
+    const { room } = this.props;
 
     if (this.context === 'sidebar') {
-      navigationHelper.reset('Conversation', {
+      navigationHelper.reset('Room', {
         backEnabled: false,
-        conversationId: conversation.id,
+        roomId: room.id,
       }, 'content');
     } else {
-      navigationHelper.navigate('Conversation', { conversationId: conversation.id });
+      navigationHelper.navigate('Room', { roomId: room.id });
     }
   }
 
   _getAvatarAttachment = () => {
-    const { accessLevel, user, previewConversationUsers } = this.props.conversation;
+    const { accessLevel, user, previewRoomUsers } = this.props.room;
     const loggedInUserId = userManager.store.user.id;
 
     if ([ 'public', 'protected' ].includes(accessLevel)) {
@@ -33,8 +33,8 @@ export default class BabbleConversationPreview extends Component {
     }
 
     if (accessLevel === 'private') {
-      const otherUser = previewConversationUsers.map(conversationUser => (
-        conversationUser.user
+      const otherUser = previewRoomUsers.map(roomUser => (
+        roomUser.user
       )).find(user => user.id !== loggedInUserId);
 
       return (otherUser) ? otherUser.avatarAttachment : user.avatarAttachment;
@@ -42,30 +42,30 @@ export default class BabbleConversationPreview extends Component {
   }
 
   _getGroupUsers = () => {
-    const { accessLevel, previewConversationUsers } = this.props.conversation;
+    const { accessLevel, previewRoomUsers } = this.props.room;
     const loggedInUserId = userManager.store.user.id;
 
     if ([ 'public', 'protected' ].includes(accessLevel)) {
-      return previewConversationUsers.filter(conversationUser => (
-        conversationUser.permissions.includes('CONVERSATION_ADMIN') ||
-        conversationUser.permissions.includes('CONVERSATION_MESSAGES_CREATE')
-      )).map(conversationUser => conversationUser.user);
+      return previewRoomUsers.filter(roomUser => (
+        roomUser.permissions.includes('ROOM_ADMIN') ||
+        roomUser.permissions.includes('ROOM_MESSAGES_CREATE')
+      )).map(roomUser => roomUser.user);
     }
 
     if (accessLevel === 'private') {
-      return previewConversationUsers.filter(conversationUser => (
-        conversationUser.userId !== loggedInUserId
-      )).map(conversationUser => conversationUser.user);
+      return previewRoomUsers.filter(roomUser => (
+        roomUser.userId !== loggedInUserId
+      )).map(roomUser => roomUser.user);
     }
   }
 
   _getLastActiveAt = () => {
-    const { accessLevel, user, previewConversationUsers } = this.props.conversation;
+    const { accessLevel, user, previewRoomUsers } = this.props.room;
     const loggedInUserId = userManager.store.user.id;
 
     if (accessLevel === 'private') {
-      const otherUser = previewConversationUsers.map(conversationUser => (
-        conversationUser.user
+      const otherUser = previewRoomUsers.map(roomUser => (
+        roomUser.user
       )).find(user => user.id !== loggedInUserId);
 
       return (otherUser) ? otherUser.lastActiveAt : user.lastActiveAt;
@@ -75,7 +75,7 @@ export default class BabbleConversationPreview extends Component {
   }
 
   _getTitle = () => {
-    const { user, title } = this.props.conversation;
+    const { user, title } = this.props.room;
 
     if (title) {
       return title;
@@ -86,22 +86,22 @@ export default class BabbleConversationPreview extends Component {
 
   _getPreviewText = () => {
     const loggedInUserId = userManager.store.user.id;
-    const { previewConversationMessage } = this.props.conversation;
-    const conversationTypingUsers = this.props.conversation.conversationTypingUsers || [];
+    const { previewRoomMessage } = this.props.room;
+    const roomTypingUsers = this.props.room.roomTypingUsers || [];
 
-    if (conversationTypingUsers.length > 0 && (!previewConversationMessage || previewConversationMessage.createdAt < conversationTypingUsers[0].typingAt)) {
-      return (conversationTypingUsers.length > 1)
-        ? `${conversationTypingUsers[0].name} & ${conversationTypingUsers.length - 1} others are typing...`
-        : `${conversationTypingUsers[0].name} is typing...`;
+    if (roomTypingUsers.length > 0 && (!previewRoomMessage || previewRoomMessage.createdAt < roomTypingUsers[0].typingAt)) {
+      return (roomTypingUsers.length > 1)
+        ? `${roomTypingUsers[0].name} & ${roomTypingUsers.length - 1} others are typing...`
+        : `${roomTypingUsers[0].name} is typing...`;
     }
 
-    if (!previewConversationMessage) {
+    if (!previewRoomMessage) {
       return '(Deleted Message)';
     }
 
-    const { conversationUser, text } = previewConversationMessage;
-    const authorIsLoggedInUser = conversationUser.userId === loggedInUserId;
-    const name = (authorIsLoggedInUser) ? 'You' : conversationUser.user.name;
+    const { roomUser, text } = previewRoomMessage;
+    const authorIsLoggedInUser = roomUser.userId === loggedInUserId;
+    const name = (authorIsLoggedInUser) ? 'You' : roomUser.user.name;
 
     if (authorIsLoggedInUser) {
       return (text) ? `You: ${text}` : 'You sent an attachment(s).';
@@ -111,27 +111,27 @@ export default class BabbleConversationPreview extends Component {
   }
 
   _getTime = () => {
-    const { conversation } = this.props;
-    const { previewConversationMessage } = conversation;
+    const { room } = this.props;
+    const { previewRoomMessage } = room;
 
-    return (previewConversationMessage)
-      ? timeHelper.fromNow(previewConversationMessage.createdAt)
-      : timeHelper.fromNow(conversation.lastMessageAt);
+    return (previewRoomMessage)
+      ? timeHelper.fromNow(previewRoomMessage.createdAt)
+      : timeHelper.fromNow(room.lastMessageAt);
   }
 
   _isUnread = () => {
-    const { authUserConversationData, previewConversationMessage } = this.props.conversation;
+    const { authUserRoomData, previewRoomMessage } = this.props.room;
 
-    if (!previewConversationMessage) {
+    if (!previewRoomMessage) {
       return false;
     }
 
-    return !authUserConversationData || authUserConversationData.lastReadAt < previewConversationMessage.createdAt;
+    return !authUserRoomData || authUserRoomData.lastReadAt < previewRoomMessage.createdAt;
   }
 
   render() {
-    const { conversation, style } = this.props;
-    const { accessLevel, conversationRepostUser, usersCount } = conversation;
+    const { room, style } = this.props;
+    const { accessLevel, roomRepostUser, usersCount } = room;
     const groupUsers = this._getGroupUsers();
 
     return (
@@ -163,7 +163,7 @@ export default class BabbleConversationPreview extends Component {
             <Text style={styles.titleText} numberOfLines={2}>{this._getTitle()}</Text>
 
             <View style={styles.headingRight}>
-              {!!conversationRepostUser && (
+              {!!roomRepostUser && (
                 <>
                   <RepeatIcon width={15} height={15} style={styles.repostIcon} />
                   <Text style={[ styles.headingRightText, styles.bulletText ]}>•</Text>
