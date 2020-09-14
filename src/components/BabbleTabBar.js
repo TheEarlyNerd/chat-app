@@ -46,14 +46,26 @@ export default class BabbleTabBar extends Component {
     this.setState({ hasUnreadMessage });
   }
 
+  _openHome = () => {
+    navigationHelper.navigate(this.props.state.routes[0].name, null, 'sidebar');
+  }
+
+  _openNewRoom = () => {
+    navigationHelper.navigate('NewRoomNavigator');
+  }
+
+  _openBrowseRooms = () => {
+    navigationHelper.navigate(this.props.state.routes[1].name, null, 'sidebar');
+  }
+
   render() {
     const { hasUnreadMessage, showBrowseRoomsIcon } = this.state;
-    const { routes, index } = this.props.state;
+    const { index } = this.props.state;
 
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.tabBar}>
-          <TouchableOpacity onPress={() => navigationHelper.navigate(routes[0].name)} style={styles.tabBarButton}>
+          <TouchableOpacity onPress={this._openHome} style={styles.tabBarButton}>
             <View style={styles.tabBarButtonIconContainer}>
               <HomeIcon
                 width={interfaceHelper.deviceValue({ default: 26, lg: 30 })}
@@ -80,7 +92,7 @@ export default class BabbleTabBar extends Component {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => navigationHelper.navigate('NewRoomNavigator')}
+            onPress={this._openNewRoom}
             style={styles.tabBarComposeButton}
           >
             <PlusIcon
@@ -97,7 +109,7 @@ export default class BabbleTabBar extends Component {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigationHelper.navigate(routes[1].name)} style={styles.tabBarButton}>
+          <TouchableOpacity onPress={this._openBrowseRooms} style={styles.tabBarButton}>
             <View style={styles.tabBarButtonIconContainer}>
               <CompassIcon
                 width={interfaceHelper.deviceValue({ default: 26, lg: 36 })}
