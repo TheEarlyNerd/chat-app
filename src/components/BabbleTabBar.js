@@ -35,11 +35,13 @@ export default class BabbleTabBar extends Component {
     const { recentRooms } = rooms;
     let hasUnreadMessage = false;
 
-    recentRooms.forEach(room => {
-      const { authUserRoomData, previewRoomMessage } = room;
+    if (Array.isArray(recentRooms)) {
+      recentRooms.forEach(room => {
+        const { authUserRoomData, previewRoomMessage } = room;
 
-      hasUnreadMessage = authUserRoomData.lastReadAt < previewRoomMessage.createdAt || hasUnreadMessage;
-    });
+        hasUnreadMessage = authUserRoomData.lastReadAt < previewRoomMessage.createdAt || hasUnreadMessage;
+      });
+    }
 
     this.setState({ hasUnreadMessage });
   }
@@ -131,8 +133,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     height: 12,
     position: 'absolute',
-    right: 0,
-    top: 0,
+    right: 35,
+    top: 3,
     width: 12,
     zIndex: 1,
   },
@@ -160,9 +162,8 @@ const styles = StyleSheet.create({
   tabBar: {
     flex: 1,
     flexDirection: 'row',
-    height: 44,
+    height: 50,
     justifyContent: 'space-around',
-    paddingTop: 10,
   },
   tabBarButton: {
     alignItems: 'center',
@@ -172,6 +173,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+    width: 100,
   },
   tabBarComposeButton: {
     alignItems: 'center',
@@ -183,7 +185,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    top: -20,
+    top: -10,
     width: 45,
   },
   tabBarIcon: {
