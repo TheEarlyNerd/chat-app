@@ -8,6 +8,7 @@ const { navigationHelper } = maestro.helpers;
 
 export default class BabbleTabBar extends Component {
   state = {
+    showBrowseRoomsIcon: true,
     hasUnreadMessage: false,
   }
 
@@ -17,6 +18,17 @@ export default class BabbleTabBar extends Component {
 
   componentWillUnmount() {
     maestro.unlink(this);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const { showBrowseRoomsIcon } = this.state;
+
+    if (nextProps.state.index === 1 && showBrowseRoomsIcon) {
+      this.setState({ showBrowseRoomsIcon: false });
+      return false;
+    }
+
+    return true;
   }
 
   receiveStoreUpdate({ rooms }) {
@@ -33,7 +45,7 @@ export default class BabbleTabBar extends Component {
   }
 
   render() {
-    const { hasUnreadMessage } = this.state;
+    const { hasUnreadMessage, showBrowseRoomsIcon } = this.state;
     const { routes, index } = this.props.state;
 
     return (
@@ -96,7 +108,7 @@ export default class BabbleTabBar extends Component {
                 Browse Rooms
               </Text>
 
-              {false && (
+              {showBrowseRoomsIcon && (
                 <View style={styles.alertIcon} />
               )}
             </View>
