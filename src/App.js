@@ -5,6 +5,8 @@ import { BabbleOverlaysContainer } from './components';
 import RootNavigator from './navigators/RootNavigator';
 import maestro from './maestro';
 
+import './dev/releaseStripConsole';
+
 const { userManager } = maestro.managers;
 const { navigationHelper } = maestro.helpers;
 
