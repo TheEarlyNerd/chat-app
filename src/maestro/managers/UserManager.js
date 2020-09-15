@@ -146,7 +146,6 @@ export default class UserManager extends Manager {
 
   nextRouteNameForUserState() {
     const { notificationsManager } = this.maestro.managers;
-    const { interfaceHelper } = this.maestro.helpers;
     const { user } = this.store;
 
     if (!user) {
@@ -161,10 +160,7 @@ export default class UserManager extends Manager {
       return 'SetupIOSNotifications';
     }
 
-    return interfaceHelper.deviceValue({
-      default: 'TabNavigator',
-      lg: 'Home',
-    });
+    return 'TabNavigator';
   }
 
   logout() {

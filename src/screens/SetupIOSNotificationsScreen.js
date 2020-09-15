@@ -5,7 +5,7 @@ import { BabbleButton, BabbleBackground } from '../components';
 import maestro from '../maestro';
 
 const { userManager, notificationsManager } = maestro.managers;
-const { interfaceHelper } = maestro.helpers;
+const { interfaceHelper, navigationHelper } = maestro.helpers;
 
 export default class SetupIOSNotificationsScreen extends Component {
   state = {
@@ -48,7 +48,7 @@ export default class SetupIOSNotificationsScreen extends Component {
 
   _next = () => {
     notificationsManager.deferPermissions();
-    this.props.navigation.navigate(userManager.nextRouteNameForUserState());
+    navigationHelper.resetRoot(userManager.nextRouteNameForUserState());
   }
 
   render() {
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 30,
+    paddingHorizontal: interfaceHelper.deviceValue({ default: 30, lg: 60 }),
   },
   notNowButton: {
     marginTop: 10,
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   notNowButtonText: {
     color: '#666666',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 18,
+    fontSize: interfaceHelper.deviceValue({ default: 18, lg: 22 }),
   },
   topContainer: {
     alignItems: 'center',
