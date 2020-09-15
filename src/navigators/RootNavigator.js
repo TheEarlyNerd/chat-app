@@ -18,7 +18,7 @@ export default props => {
     <RootStack.Navigator
       initialRouteName={interfaceHelper.deviceValue({
         default: 'MainNavigator',
-        lg: (userManager.store.user) ? 'SplitMainNavigator' : 'MainNavigator',
+        lg: (userManager.nextRouteNameForUserState() === 'TabNavigator') ? 'SplitMainNavigator' : 'MainNavigator',
       })}
       mode={'modal'}
       headerMode={'none'}

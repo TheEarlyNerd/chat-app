@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, StyleSheet } from 'react-native';
+import { View, KeyboardAvoidingView, Text, Dimensions, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { BabbleTextField, BabbleUsernameField, BabbleButton, BabbleBackground, BabbleUserAvatar } from '../components';
 import maestro from '../maestro';
@@ -56,11 +56,18 @@ export default class SetupProfileScreen extends Component {
 
   render() {
     const { avatarImageUri, name, username, loading } = this.state;
+    const ContainerComponent = interfaceHelper.deviceValue({
+      default: KeyboardAwareScrollView,
+      lg: KeyboardAvoidingView,
+    });
 
     return (
-      <KeyboardAwareScrollView
+      <ContainerComponent
         keyboardShouldPersistTaps={'handled'}
-        contentContainerStyle={{ minHeight: Dimensions.get('window').height }}
+        contentContainerStyle={styles.contentContainer}
+        behavior={'padding'}
+        keyboardVerticalOffset={-85}
+        style={styles.contentContainer}
       >
         <View style={styles.previewContainer}>
           <BabbleUserAvatar
@@ -69,7 +76,7 @@ export default class SetupProfileScreen extends Component {
             onPress={this._selectAvatarImage}
             hideStatusIcon
             showEditIcon={!!avatarImageUri}
-            size={150}
+            size={interfaceHelper.deviceValue({ default: 150, lg: 200 })}
             style={styles.avatar}
           />
 
@@ -94,7 +101,7 @@ export default class SetupProfileScreen extends Component {
 
         <View style={styles.formContainer}>
           <BabbleTextField
-            label={'Name'}
+            label={`What's your name?`}
             returnKeyType={'next'}
             blurOnSubmit={false}
             autoCapitalize={'words'}
@@ -107,7 +114,7 @@ export default class SetupProfileScreen extends Component {
           />
 
           <BabbleUsernameField
-            label={'Username'}
+            label={'Pick a username'}
             returnKeyType={'done'}
             autoCompleteType={'username'}
             onChangeText={text => this.setState({ username: text })}
@@ -125,7 +132,7 @@ export default class SetupProfileScreen extends Component {
             Continue
           </BabbleButton>
         </View>
-      </KeyboardAwareScrollView>
+      </ContainerComponent>
     );
   }
 }
@@ -138,6 +145,10 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     zIndex: -1,
   },
+  contentContainer: {
+    flexDirection: interfaceHelper.deviceValue({ default: 'column', lg: 'row' }),
+    height: '100%',
+  },
   fieldContainer: {
     marginBottom: 25,
   },
@@ -145,18 +156,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 30,
+    paddingHorizontal: interfaceHelper.deviceValue({ default: 30, lg: 60 }),
   },
   lastFieldContainer: {
     marginBottom: 50,
   },
   previewContainer: {
     alignItems: 'center',
-    height: Dimensions.get('window').height / 2.2,
+    flex: interfaceHelper.deviceValue({ default: 0.9, lg: 1.618 }),
     justifyContent: 'center',
   },
   previewNameText: {
-    fontSize: 22,
+    fontSize: interfaceHelper.deviceValue({ default: 22, lg: 36 }),
   },
   previewText: {
     color: '#FFFFFF',
@@ -167,6 +178,6 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   previewUsernameText: {
-    fontSize: 18,
+    fontSize: interfaceHelper.deviceValue({ default: 18, lg: 30 }),
   },
 });
