@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { BabbleButton } from './';
 import { UsersIcon, MessageCircleIcon } from './icons';
@@ -29,7 +29,7 @@ const slideItems = [
   },
 ];
 
-export default class BabbleHomeOnboardingView extends Component {
+export default class BabbleHomeOnboardingView extends PureComponent {
   state = {
     currentIndex: 0,
     slideWidth: 0,
