@@ -48,14 +48,14 @@ const styles = StyleSheet.create({
   subtext: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 20 }),
     marginBottom: 15,
     textAlign: 'center',
   },
   titleText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Black',
-    fontSize: 24,
+    fontSize: interfaceHelper.deviceValue({ default: 24, lg: 32 }),
     marginBottom: 10,
   },
 });

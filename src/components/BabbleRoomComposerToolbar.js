@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
     width: 8,
   },
   connectDeviceContactsContainer: {
-    marginTop: 60,
+    marginTop: interfaceHelper.deviceValue({ default: 60, lg: 120 }),
   },
   container: {
     backgroundColor: '#FFFFFF',
