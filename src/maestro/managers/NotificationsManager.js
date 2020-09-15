@@ -59,6 +59,12 @@ export default class NotificationsManager extends Manager {
     return 'notifications';
   }
 
+  receiveEvent(name, value) {
+    if (name === 'APP_STATE_CHANGED' && value === 'active') {
+      this.setBadgeNumber(0);
+    }
+  }
+
   async requestPermissions() {
     const { deviceHelper, asyncStorageHelper } = this.maestro.helpers;
 
@@ -104,7 +110,7 @@ export default class NotificationsManager extends Manager {
   }
 
   setBadgeNumber(number) {
-    PushNotification.setApplicationBadgeNumber(number);
+    PushNotification.setApplicationIconBadgeNumber(number);
   }
 
   /*
