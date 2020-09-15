@@ -10,6 +10,7 @@ import BabbleEmojiSelector from './BabbleEmojiSelector';
 import BabbleFeed from './BabbleFeed';
 import BabbleFieldLabel from './BabbleFieldLabel';
 import BabbleHeader from './BabbleHeader';
+import BabbleHomeEmptyView from './BabbleHomeEmptyView';
 import BabbleHomeHeader from './BabbleHomeHeader';
 import BabbleHomeOnboardingView from './BabbleHomeOnboardingView';
 import BabbleOverlayActionSheet from './BabbleOverlayActionSheet';
@@ -62,6 +63,7 @@ export {
   BabbleFeed,
   BabbleFieldLabel,
   BabbleHeader,
+  BabbleHomeEmptyView,
   BabbleHomeHeader,
   BabbleHomeOnboardingView,
   BabbleOverlayActionSheet,

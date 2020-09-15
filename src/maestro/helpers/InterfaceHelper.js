@@ -54,4 +54,16 @@ export default class InterfaceHelper extends Helper {
 
     return result;
   }
+
+  screenBreakpoint = () => {
+    let breakpoint = 'xs';
+
+    if (width >= 411) { breakpoint = 'sm'; }
+    if (width >= 568) { breakpoint = 'md'; }
+    if (width >= 768) { breakpoint = 'lg'; }
+    if (width >= 1024) { breakpoint = 'xl'; }
+    if (width >= 1280) { breakpoint = 'xxl'; }
+
+    return breakpoint;
+  }
 }

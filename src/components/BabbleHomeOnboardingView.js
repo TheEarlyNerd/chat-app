@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, Dimensions, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { BabbleButton } from './';
 import { UsersIcon, MessageCircleIcon } from './icons';
 import maestro from '../maestro';
 
-const { navigationHelper } = maestro.helpers;
-
-const windowWidth = Dimensions.get('window').width;
+const { navigationHelper, interfaceHelper } = maestro.helpers;
 
 const slideItems = [
   {
@@ -34,10 +32,11 @@ const slideItems = [
 export default class BabbleHomeOnboardingView extends Component {
   state = {
     currentIndex: 0,
+    slideWidth: 0,
   }
 
   _browseRooms = () => {
-    navigationHelper.navigate('DiscoverTab');
+    navigationHelper.navigate('DiscoverTab', null, 'sidebar');
   }
 
   _createPrivateRoom = () => {
@@ -56,7 +55,7 @@ export default class BabbleHomeOnboardingView extends Component {
   }
 
   render() {
-    const { currentIndex } = this.state;
+    const { currentIndex, slideWidth } = this.state;
 
     return (
       <View style={styles.container}>
@@ -65,12 +64,12 @@ export default class BabbleHomeOnboardingView extends Component {
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             onMomentumScrollEnd={this._onScrollEnd}
+            onLayout={({ nativeEvent }) => this.setState({ slideWidth: nativeEvent.layout.width })}
             horizontal
             pagingEnabled
-            style={styles.scrollView}
           >
             {slideItems.map((item, index) => (
-              <View style={styles.slide} key={`slide-${index}`}>
+              <View style={[ styles.slide, { width: slideWidth } ]} key={`slide-${index}`}>
                 <Text style={styles.emojiText}>{item.emoji}</Text>
                 <Text style={styles.welcomeTitle}>{item.title}</Text>
                 <Text style={styles.explainerText}>{item.text}</Text>
@@ -88,14 +87,14 @@ export default class BabbleHomeOnboardingView extends Component {
           </View>
 
           <View style={styles.buttonsContainer}>
-            <BabbleButton onPress={this._createPrivateRoom} style={styles.button}>
-              <UsersIcon height={21} width={21} style={styles.icon} />
-              Create Room With Friends
-            </BabbleButton>
-
             <BabbleButton onPress={this._browseRooms} style={styles.button}>
               <MessageCircleIcon height={21} width={21} style={styles.icon} />
-              Browse Public Rooms
+              <Text>Browse Public Rooms</Text>
+            </BabbleButton>
+
+            <BabbleButton onPress={this._createPrivateRoom} style={styles.button}>
+              <UsersIcon height={21} width={21} style={styles.icon} />
+              <Text>Create Room With Friends</Text>
             </BabbleButton>
           </View>
         </View>
@@ -107,23 +106,26 @@ export default class BabbleHomeOnboardingView extends Component {
 const styles = StyleSheet.create({
   button: {
     marginBottom: 20,
+    maxWidth: 450,
   },
   buttonsContainer: {
-    paddingHorizontal: 30,
+    alignItems: 'center',
+    paddingHorizontal: interfaceHelper.deviceValue({ default: 30, lg: 60 }),
   },
   container: {
     flex: 1,
     justifyContent: 'center',
   },
   emojiText: {
-    fontSize: 72,
+    fontSize: interfaceHelper.deviceValue({ default: 72, lg: 90 }),
     marginBottom: 10,
   },
   explainerText: {
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 16,
+    fontSize: interfaceHelper.deviceValue({ default: 16, lg: 20 }),
     marginBottom: 10,
+    maxWidth: 450,
     textAlign: 'center',
   },
   icon: {
@@ -149,19 +151,17 @@ const styles = StyleSheet.create({
     height: 10,
     width: 10,
   },
-  scrollView: {
-    height: 220,
-  },
   slide: {
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 30,
-    width: windowWidth,
+    width: 520,
   },
   welcomeTitle: {
     color: '#404040',
-    fontFamily: 'NunitoSans-Bold',
-    fontSize: 24,
+    fontFamily: 'NunitoSans-Black',
+    fontSize: interfaceHelper.deviceValue({ default: 24, lg: 32 }),
     marginBottom: 10,
   },
 });

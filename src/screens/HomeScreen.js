@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { BabbleFeed, BabbleHomeOnboardingView } from '../components';
+import { BabbleFeed, BabbleHomeOnboardingView, BabbleHomeEmptyView } from '../components';
 import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
+const { interfaceHelper } = maestro.helpers;
 const { roomsManager } = maestro.managers;
 
 export default class HomeScreen extends Component {
@@ -81,8 +82,10 @@ export default class HomeScreen extends Component {
 
   render() {
     if (this.state.rooms?.length === 0) {
-      return (
+      return ([ 'xs', 'sm', 'md' ].includes(interfaceHelper.screenBreakpoint())) ? (
         <BabbleHomeOnboardingView />
+      ) : (
+        <BabbleHomeEmptyView />
       );
     }
 

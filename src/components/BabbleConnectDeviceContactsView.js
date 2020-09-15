@@ -3,6 +3,7 @@ import { ScrollView, Text, Linking, StyleSheet } from 'react-native';
 import { BabbleButton } from './';
 import maestro from '../maestro';
 
+const { interfaceHelper } = maestro.helpers;
 const { deviceContactsManager } = maestro.managers;
 
 export default class BabbleConnectDeviceContactsView extends Component {
@@ -33,7 +34,7 @@ export default class BabbleConnectDeviceContactsView extends Component {
 
 const styles = StyleSheet.create({
   button: {
-    maxWidth: 250,
+    maxWidth: interfaceHelper.deviceValue({ default: 250, lg: 300 }),
     width: '80%',
   },
   container: {

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { View, KeyboardAvoidingView, Text, Dimensions, StyleSheet } from 'react-native';
+import { View, KeyboardAvoidingView, Text, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { BabbleTextField, BabbleUsernameField, BabbleButton, BabbleBackground, BabbleUserAvatar } from '../components';
 import maestro from '../maestro';
 
 const { userManager } = maestro.managers;
-const { attachmentsHelper, interfaceHelper } = maestro.helpers;
+const { attachmentsHelper, interfaceHelper, navigationHelper } = maestro.helpers;
 
 export default class SetupProfileScreen extends Component {
   state = {
@@ -51,7 +51,7 @@ export default class SetupProfileScreen extends Component {
       return this.setState({ loading: false });
     }
 
-    this.props.navigation.navigate(userManager.nextRouteNameForUserState());
+    navigationHelper.resetRoot(userManager.nextRouteNameForUserState());
   }
 
   render() {
