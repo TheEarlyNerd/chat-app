@@ -64,10 +64,6 @@ export default class RoomsManager extends Manager {
     return room;
   }
 
-  getFocusedActiveRoom() {
-    return this.store.activeRooms[0];
-  }
-
   async loadActiveRoom(roomId) {
     const { apiHelper } = this.maestro.helpers;
     const response = await apiHelper.get({ path: `/rooms/${roomId}` });

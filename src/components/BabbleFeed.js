@@ -158,9 +158,6 @@ const styles = StyleSheet.create({
     paddingBottom: 25,
     paddingTop: 10,
   },
-  roomPreview: {
-    paddingHorizontal: 15,
-  },
   headerButton: {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
@@ -184,6 +181,9 @@ const styles = StyleSheet.create({
     fontFamily: 'NunitoSans-Bold',
     fontSize: 15,
     textAlign: 'center',
+  },
+  roomPreview: {
+    paddingHorizontal: 15,
   },
   searchField: {
     marginVertical: 30,
