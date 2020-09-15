@@ -39,7 +39,7 @@ export default class BabbleTabBar extends Component {
       recentRooms.forEach(room => {
         const { authUserRoomData, previewRoomMessage } = room;
 
-        hasUnreadMessage = authUserRoomData.lastReadAt < previewRoomMessage.createdAt || hasUnreadMessage;
+        hasUnreadMessage = !authUserRoomData || authUserRoomData.lastReadAt < previewRoomMessage.createdAt || hasUnreadMessage;
       });
     }
 
