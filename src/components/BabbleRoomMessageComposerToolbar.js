@@ -265,6 +265,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#D8D8D8',
     borderTopWidth: 0.5,
     paddingHorizontal: 15,
+    paddingTop: interfaceHelper.deviceValue({ default: 10, lg: 14 }),
     paddingVertical: 10,
   },
   inputContainer: {

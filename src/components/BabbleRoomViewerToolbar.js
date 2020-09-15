@@ -37,7 +37,11 @@ export default class BabbleRoomViewerToolbar extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.permissionHeader}>
-          <UsersIcon width={18} height={18} style={styles.permissionIcon} />
+          <UsersIcon
+            width={interfaceHelper.deviceValue({ default: 18, lg: 22 })}
+            height={interfaceHelper.deviceValue({ default: 18, lg: 22 })}
+            style={styles.permissionIcon}
+          />
           <Text style={styles.headingText}>Audience Room</Text>
         </View>
 
@@ -62,7 +66,7 @@ const styles = StyleSheet.create({
     width: 200,
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: interfaceHelper.deviceValue({ default: 16, lg: 18 }),
   },
   container: {
     alignItems: 'center',
@@ -74,14 +78,14 @@ const styles = StyleSheet.create({
   detailsText: {
     color: '#797979',
     fontFamily: 'NunitoSans-SemiBold',
-    fontSize: 15,
+    fontSize: interfaceHelper.deviceValue({ default: 15, lg: 17 }),
     marginBottom: 15,
     textAlign: 'center',
   },
   headingText: {
     color: '#404040',
     fontFamily: 'NunitoSans-Bold',
-    fontSize: 16,
+    fontSize: interfaceHelper.deviceValue({ default: 16, lg: 20 }),
   },
   permissionHeader: {
     alignItems: 'center',

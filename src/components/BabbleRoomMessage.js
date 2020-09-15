@@ -98,7 +98,6 @@ export default class BabbleRoomMessage extends Component {
   render() {
     const { message: { roomUser, attachments, embeds, authUserRoomMessageReactions, roomMessageReactions, createdAt }, heading, style } = this.props;
     const text = this._getText();
-    const contentWidth = windowWidth - styles.content.marginLeft - styles.container.paddingHorizontal * 2;
     const parsedTextOptions = [
       {
         onPress: this._openUrl,
@@ -129,7 +128,7 @@ export default class BabbleRoomMessage extends Component {
           <BabbleUserAvatar
             avatarAttachment={roomUser.user.avatarAttachment}
             lastActiveAt={roomUser.user.lastActiveAt}
-            size={45}
+            size={interfaceHelper.deviceValue({ default: 45, lg: 50 })}
             onPress={() => this._userPress(roomUser.userId)}
             style={styles.avatar}
           />
@@ -164,8 +163,8 @@ export default class BabbleRoomMessage extends Component {
                   attachment={attachment}
                   playVideoInline={attachments.length === 1}
                   onPress={() => this._openAttachment(index)}
-                  maxWidth={contentWidth}
-                  maxHeight={attachments.length === 1 ? 400 : 90}
+                  maxWidth={interfaceHelper.deviceValue({ default: 280, lg: 400 })}
+                  maxHeight={attachments.length === 1 ? 400 : interfaceHelper.deviceValue({ default: 90, lg: 150 })}
                   style={[
                     styles.attachment,
                     (attachments.length > 1) ? styles.inlineAttachment : null,
@@ -182,7 +181,7 @@ export default class BabbleRoomMessage extends Component {
                 <BabbleRoomMessageEmbed
                   embed={embed}
                   onPress={() => this._openEmbed(embed)}
-                  maxWidth={contentWidth}
+                  maxWidth={200}
                   maxHeight={(embeds.length === 1) ? 200 : 75}
                   style={[
                     styles.embed,
@@ -218,7 +217,7 @@ export default class BabbleRoomMessage extends Component {
 
 const styles = StyleSheet.create({
   attachment: {
-    marginBottom: 5,
+    marginBottom: interfaceHelper.deviceValue({ default: 5, lg: 10 }),
   },
   attachments: {
     flexDirection: 'row',
@@ -243,7 +242,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    marginLeft: interfaceHelper.deviceValue({ default: 55, lg: 60 }),
+    marginLeft: interfaceHelper.deviceValue({ default: 55, lg: 65 }),
   },
   embed: {
     marginBottom: 5,
@@ -261,7 +260,7 @@ const styles = StyleSheet.create({
     marginTop: -4,
   },
   inlineAttachment: {
-    marginRight: 5,
+    marginRight: interfaceHelper.deviceValue({ default: 5, lg: 10 }),
     width: undefined,
   },
   inlineEmbed: {

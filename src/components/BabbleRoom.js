@@ -164,10 +164,6 @@ export default class BabbleRoom extends Component {
           scrollEventThrottle={150}
           closeOnRowBeginSwipe
           closeOnScroll={false}
-          previewRowKey={(messages) ? this._getItemKey(messages[0]) : null}
-          previewDuration={300}
-          previewOpenValue={-140}
-          previewOpenDelay={1000}
           /*leftOpenValue={60} TODO: Support replies */
           rightOpenValue={-145}
           recalculateHiddenLayout

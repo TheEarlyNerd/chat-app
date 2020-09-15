@@ -40,12 +40,19 @@ export default class BabbleHomeOnboardingView extends Component {
   }
 
   _createPrivateRoom = () => {
-    navigationHelper.navigate('NewRoomNavigator', {
-      screen: 'Room',
-      params: {
+    if ([ 'xs', 'sm', 'md' ].includes(interfaceHelper.screenBreakpoint())) {
+      navigationHelper.navigate('NewRoomNavigator', {
+        screen: 'Room',
+        params: {
+          composeAccessLevel: 'private',
+        },
+      });
+    } else {
+      navigationHelper.reset('Room', {
+        backEnabled: false,
         composeAccessLevel: 'private',
-      },
-    });
+      }, 'content');
+    }
   }
 
   _onScrollEnd = ({ nativeEvent }) => {
@@ -88,12 +95,22 @@ export default class BabbleHomeOnboardingView extends Component {
 
           <View style={styles.buttonsContainer}>
             <BabbleButton onPress={this._browseRooms} style={styles.button}>
-              <MessageCircleIcon height={21} width={21} style={styles.icon} />
+              <MessageCircleIcon
+                height={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
+                width={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
+                style={styles.icon}
+              />
+
               <Text>Browse Public Rooms</Text>
             </BabbleButton>
 
             <BabbleButton onPress={this._createPrivateRoom} style={styles.button}>
-              <UsersIcon height={21} width={21} style={styles.icon} />
+              <UsersIcon
+                height={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
+                width={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
+                style={styles.icon}
+              />
+
               <Text>Create Room With Friends</Text>
             </BabbleButton>
           </View>

@@ -51,7 +51,11 @@ export default class BabbleTabBar extends Component {
   }
 
   _openNewRoom = () => {
-    navigationHelper.navigate('NewRoomNavigator');
+    if ([ 'xs', 'sm', 'md' ].includes(interfaceHelper.screenBreakpoint())) {
+      navigationHelper.navigate('NewRoomNavigator');
+    } else {
+      navigationHelper.reset('Room', { backEnabled: false }, 'content');
+    }
   }
 
   _openBrowseRooms = () => {

@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   contentContainer: {
-    flex: 1.618
+    flex: 1.618,
   },
   sidebarContainer: {
     borderRightColor: '#979797',
