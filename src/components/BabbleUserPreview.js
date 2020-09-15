@@ -24,10 +24,10 @@ export default class BabbleUserPreview extends Component {
     if (this.context === 'sidebar') {
       navigationHelper.reset('Room', {
         backEnabled: false,
-        toUsers: [ this.props.user ],
+        composeToUsers: [ this.props.user ],
       }, 'content');
     } else {
-      navigationHelper.push('Room', { toUsers: [ this.props.user ] }, this.context);
+      navigationHelper.push('Room', { composeToUsers: [ this.props.user ] }, this.context);
     }
   }
 

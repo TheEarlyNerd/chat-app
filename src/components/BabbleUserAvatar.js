@@ -1,72 +1,72 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { EditIcon } from './icons';
 
-const BabbleUserAvatar = props => {
-  const {
-    avatarAttachment,
-    lastActiveAt,
-    onPress,
-    size,
-    showEditIcon,
-    hideStatusIcon,
-    statusIconStyle,
-    editIconStyle,
-    disabled,
-    imageStyle,
-    style,
-  } = props;
-  const defaultAvatar = props.defaultAvatar || require('../assets/images/default-avatar.png');
-  const lastActiveThreshold = 5 * 60 * 1000; // 5 minutes
+export default class BabbleUserAvatar extends Component {
+  render() {
+    const {
+      avatarAttachment,
+      lastActiveAt,
+      onPress,
+      size,
+      showEditIcon,
+      hideStatusIcon,
+      statusIconStyle,
+      editIconStyle,
+      disabled,
+      imageStyle,
+      style,
+    } = this.props;
+    const defaultAvatar = this.props.defaultAvatar || require('../assets/images/default-avatar.png');
+    const lastActiveThreshold = 5 * 60 * 1000; // 5 minutes
 
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[
-        styles.container,
-        style,
-      ]}
-      disabled={disabled}
-    >
-      <FastImage
-        source={(avatarAttachment) ? { uri: avatarAttachment.url } : defaultAvatar}
-        resizeMode={'cover'}
+    return (
+      <TouchableOpacity
+        onPress={onPress}
         style={[
-          styles.image,
-          {
-            width: size,
-            height: size,
-            borderRadius: size,
-          },
-          imageStyle,
+          styles.container,
+          style,
         ]}
-      />
-
-      {showEditIcon && (
-        <View style={styles.editIconContainer}>
-          <EditIcon
-            width={17}
-            height={17}
-            style={[ styles.editIcon, editIconStyle ]}
-          />
-        </View>
-      )}
-
-      {!hideStatusIcon && (
-        <View
+        disabled={disabled}
+      >
+        <FastImage
+          source={(avatarAttachment) ? { uri: avatarAttachment.url } : defaultAvatar}
+          resizeMode={'cover'}
           style={[
-            styles.statusIcon,
-            (new Date() - lastActiveAt < lastActiveThreshold) ? styles.statusIconActive : styles.statusIconInactive,
-            statusIconStyle,
+            styles.image,
+            {
+              width: size,
+              height: size,
+              borderRadius: size,
+            },
+            imageStyle,
           ]}
         />
-      )}
-    </TouchableOpacity>
-  );
-};
 
-export default BabbleUserAvatar;
+        {showEditIcon && (
+          <View style={styles.editIconContainer}>
+            <EditIcon
+              width={17}
+              height={17}
+              style={[ styles.editIcon, editIconStyle ]}
+            />
+          </View>
+        )}
+
+        {!hideStatusIcon && (
+          <View
+            style={[
+              styles.statusIcon,
+              (new Date() - lastActiveAt < lastActiveThreshold) ? styles.statusIconActive : styles.statusIconInactive,
+              statusIconStyle,
+            ]}
+          />
+        )}
+      </TouchableOpacity>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {

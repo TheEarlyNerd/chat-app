@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-export default class BabbleBackground extends Component {
+export default class BabbleBackground extends PureComponent {
   render() {
     const { linearGradientProps, linearGradientRotationAngle, bottom, style } = this.props;
 

@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { TouchableOpacity, Text, View, ActivityIndicator, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import maestro from '../maestro';
 
 const { interfaceHelper } = maestro.helpers;
 
-export default class BabbleButton extends Component {
+export default class BabbleButton extends PureComponent {
   render() {
     const { children, onPress, inverted, loading, disabled, style, textStyle } = this.props;
 

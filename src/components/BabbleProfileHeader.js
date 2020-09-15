@@ -41,7 +41,7 @@ export default class BabbleProfileHeader extends Component {
   }
 
   _messagePress = () => {
-    navigationHelper.push('Room', { toUsers: [ this.props.user ] });
+    navigationHelper.push('Room', { composeToUsers: [ this.props.user ] });
   }
 
   render() {

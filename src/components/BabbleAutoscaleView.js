@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 
-export default class BabbleAutoscaleView extends Component {
+export default class BabbleAutoscaleView extends PureComponent {
   state = {
     adjustedWidth: 0,
     adjustedHeight: 0,

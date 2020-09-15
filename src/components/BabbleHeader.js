@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { BabbleBackground, BabbleConnectionStatusBar } from './';
 import { ArrowLeftIcon, XIcon } from './icons';
@@ -7,7 +7,7 @@ import maestro from '../maestro';
 
 const { navigationHelper, interfaceHelper } = maestro.helpers;
 
-export default class BabbleHeader extends Component {
+export default class BabbleHeader extends PureComponent {
   static contextType = NavigationTypeContext;
 
   render() {

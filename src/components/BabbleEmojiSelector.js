@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Dimensions } from 'react-native';
 import emoji from 'emojilib';
 import { BabbleSearchField } from './';
@@ -9,7 +9,7 @@ const { interfaceHelper } = maestro.helpers;
 const windowWidth = Dimensions.get('window').width;
 const columns = Math.floor(windowWidth / interfaceHelper.deviceValue({ default: 50, lg: 100 }));
 
-export default class BabbleEmojiSelector extends Component {
+export default class BabbleEmojiSelector extends PureComponent {
   state = {
     search: '',
   }

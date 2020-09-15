@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import maestro from '../maestro';
 
 const { interfaceHelper } = maestro.helpers;
 
-export default class BabbleHomeEmptyView extends Component {
+export default class BabbleHomeEmptyView extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
