@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BabbleHeader, BabbleHomeHeader } from '../components';
+import MainCardStyleInterpolator from './interpolators/MainCardStyleInterpolator';
 
 import RoomInfoScreen from '../screens/RoomInfoScreen';
 import RoomScreen from '../screens/RoomScreen';
@@ -24,6 +25,7 @@ export default initialRouteName => {
       headerMode={'screen'}
       screenOptions={{
         header: ({ scene }) => <BabbleHeader scene={scene} />,
+        cardStyleInterpolator: MainCardStyleInterpolator,
       }}
     >
       <MainStack.Screen
