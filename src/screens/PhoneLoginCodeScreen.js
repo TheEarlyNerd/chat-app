@@ -67,7 +67,7 @@ export default class PhoneLoginCodeScreen extends Component {
   }
 
   render() {
-    const { countryCode, phone } = this.props.route.params;
+    const { phone } = this.props.route.params;
     const { sendingText, resendingText, loading, error } = this.state;
 
     return (
@@ -124,7 +124,7 @@ export default class PhoneLoginCodeScreen extends Component {
               disabled={resendingText}
               style={styles.resendButton}
             >
-              <Text style={styles.resendButtonText}>{resendingText ? `Resending code to +${dataHelper.formatPhoneNumber(countryCode, phone)}...` : 'Resend Code'}</Text>
+              <Text style={styles.resendButtonText}>{resendingText ? `Resending code to +${dataHelper.formatPhoneNumber(`+${phone}`)}...` : 'Resend Code'}</Text>
             </TouchableOpacity>
           )}
         </View>

@@ -5,7 +5,7 @@ import { BellIcon } from './icons';
 import maestro from '../maestro';
 
 const { activityManager, userManager } = maestro.managers;
-const { navigationHelper } = maestro.helpers;
+const { navigationHelper, interfaceHelper } = maestro.helpers;
 
 export default class BabbleHeader extends Component {
   state = {
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
   babbleLogoText: {
     fontFamily: 'Lobster-Regular',
     fontSize: 38,
+    paddingTop: interfaceHelper.platformValue({ default: 0, android: 10 }),
     position: 'absolute',
   },
   backgroundGradient: {

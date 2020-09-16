@@ -183,11 +183,15 @@ const styles = StyleSheet.create({
     color: '#1ACCB4',
   },
   tabBar: {
+    backgroundColor: '#FFFFFF',
+    borderTopColor: '#D8D8D8',
+    borderTopWidth: interfaceHelper.platformValue({ default: 0, android: 0.5 }),
     flex: 1,
     flexDirection: 'row',
     height: interfaceHelper.deviceValue({ default: 50, lg: 65 }),
     paddingTop: interfaceHelper.deviceValue({ default: 0, lg: 5 }),
     justifyContent: 'space-around',
+    elevation: 5,
   },
   tabBarButton: {
     alignItems: 'center',

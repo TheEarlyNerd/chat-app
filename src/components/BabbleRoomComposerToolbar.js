@@ -500,6 +500,7 @@ const styles = StyleSheet.create({
     color: '#404040',
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: interfaceHelper.deviceValue({ default: 16, lg: 17 }),
+    fontWeight: 'normal',
     marginLeft: 5,
     paddingVertical: 5,
   },

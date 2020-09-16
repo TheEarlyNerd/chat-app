@@ -20,7 +20,7 @@ export default class SetupProfileScreen extends Component {
   _selectAvatarImage = () => {
     attachmentsHelper.selectMedia({
       sources: [ 'camera', 'library' ],
-      onMediaSelected: result => this.setState({ avatarImageUri: result.path }),
+      onMediaSelected: result => { console.log(result); this.setState({ avatarImageUri: result.path }); },
       imagePickerOptions: {
         width: 512,
         height: 512,
@@ -63,6 +63,8 @@ export default class SetupProfileScreen extends Component {
 
     return (
       <ContainerComponent
+        enableOnAndroid
+        enableAutomaticScroll
         keyboardShouldPersistTaps={'handled'}
         contentContainerStyle={styles.contentContainer}
         behavior={'padding'}
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexDirection: interfaceHelper.deviceValue({ default: 'column', lg: 'row' }),
-    height: '100%',
+    minHeight: '100%',
   },
   fieldContainer: {
     marginBottom: 25,
@@ -157,6 +159,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: interfaceHelper.deviceValue({ default: 30, lg: 60 }),
+    paddingVertical: interfaceHelper.platformValue({ default: 0, android: 30 }),
   },
   lastFieldContainer: {
     marginBottom: 50,
@@ -165,6 +168,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: interfaceHelper.deviceValue({ default: 0.9, lg: 1.618 }),
     justifyContent: 'center',
+    paddingVertical: interfaceHelper.platformValue({ default: 0, android: 30 }),
   },
   previewNameText: {
     fontSize: interfaceHelper.deviceValue({ default: 22, lg: 36 }),

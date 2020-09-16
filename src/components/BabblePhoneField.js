@@ -79,7 +79,9 @@ export default class BabblePhoneField extends Component {
 const styles = StyleSheet.create({
   prefixButton: {
     marginLeft: 10,
-    marginTop: 1,
+    marginTop: interfaceHelper.platformValue({ default: 1, android: 0 }),
+    position: 'relative',
+    top: interfaceHelper.platformValue({ default: 0, android: -2 }),
   },
   prefixButtonText: {
     color: '#323643',

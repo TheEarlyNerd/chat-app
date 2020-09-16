@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import { Helper } from 'react-native-maestro';
 import DeviceInfo from 'react-native-device-info';
 
@@ -53,6 +53,10 @@ export default class InterfaceHelper extends Helper {
     }
 
     return result;
+  }
+
+  platformValue = options => {
+    return Platform.select(options);
   }
 
   screenBreakpoint = () => {

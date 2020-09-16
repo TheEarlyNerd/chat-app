@@ -95,21 +95,31 @@ export default class BabbleHomeOnboardingView extends PureComponent {
 
           <View style={styles.buttonsContainer}>
             <BabbleButton onPress={this._browseRooms} style={styles.button}>
-              <MessageCircleIcon
-                height={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
-                width={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
-                style={styles.icon}
-              />
+              {interfaceHelper.platformValue({
+                android: null,
+                default: (
+                  <MessageCircleIcon
+                    height={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
+                    width={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
+                    style={styles.icon}
+                  />
+                ),
+              })}
 
               <Text>Browse Public Rooms</Text>
             </BabbleButton>
 
             <BabbleButton onPress={this._createPrivateRoom} style={styles.button}>
-              <UsersIcon
-                height={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
-                width={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
-                style={styles.icon}
-              />
+              {interfaceHelper.platformValue({
+                android: null,
+                default: (
+                  <UsersIcon
+                    height={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
+                    width={interfaceHelper.deviceValue({ default: 21, lg: 24 })}
+                    style={styles.icon}
+                  />
+                ),
+              })}
 
               <Text>Create Room With Friends</Text>
             </BabbleButton>

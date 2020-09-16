@@ -7,16 +7,6 @@ export default class DataHelper extends Helper {
     return 'dataHelper';
   }
 
-  formatPhoneNumber = (countryCode, phoneNumber) => {
-    try {
-      const formatter = new AsYouType({ defaultCallingCode: countryCode });
-
-      return formatter.input(phoneNumber);
-    } catch (error) {
-      return phoneNumber;
-    }
-  }
-
   normalizeDataObject = dataObject => {
     const normalize = value => {
       if (typeof value !== 'object' || [ null, undefined ].includes(value)) {

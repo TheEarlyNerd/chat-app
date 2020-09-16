@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { BabbleFieldLabel } from './';
+import maestro from '../maestro';
+
+const { interfaceHelper } = maestro.helpers;
 
 export default class BabbleTextField extends Component {
   state = {
@@ -132,9 +135,10 @@ const styles = StyleSheet.create({
     color: '#323643',
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: 24,
+    fontWeight: 'normal',
     height: 50,
     paddingHorizontal: 10,
-    paddingTop: 2,
+    paddingTop: interfaceHelper.platformValue({ default: 2, android: undefined }),
     width: '100%',
   },
   textInputContainer: {

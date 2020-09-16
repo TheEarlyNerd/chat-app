@@ -1,10 +1,11 @@
 import { Animated } from 'react-native';
+import { CardStyleInterpolators } from '@react-navigation/stack';
 import maestro from '../../maestro';
 
 const { interfaceHelper } = maestro.helpers;
 
 export default interfaceHelper.deviceValue({
-  default: undefined,
+  default: CardStyleInterpolators.forHorizontalIOS,
   lg: ({ current, next, inverted, layouts: { screen } }) => {
     const progress = Animated.add(
       current.progress.interpolate({
