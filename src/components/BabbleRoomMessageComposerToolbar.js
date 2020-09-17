@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
     color: '#323643',
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: interfaceHelper.deviceValue({ default: 16, lg: 17 }),
-    fontWeight: 'normal',
+    fontWeight: interfaceHelper.platformValue({ default: undefined, android: 'normal' }),
     maxHeight: 120,
     minHeight: interfaceHelper.deviceValue({ default: 35, lg: 40 }),
     paddingBottom: 8,

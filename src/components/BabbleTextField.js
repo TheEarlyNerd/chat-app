@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     color: '#323643',
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: 24,
-    fontWeight: 'normal',
+    fontWeight: interfaceHelper.platformValue({ default: undefined, android: 'normal' }),
     height: 50,
     paddingHorizontal: 10,
     paddingTop: interfaceHelper.platformValue({ default: 2, android: undefined }),
