@@ -1,3 +1,4 @@
+import './analytics/sentry';
 import './analytics/smartlook';
 import React, { Component } from 'react';
 import { Animated, StatusBar } from 'react-native';
