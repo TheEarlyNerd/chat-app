@@ -17,7 +17,6 @@ export default class BabbleUsernameField extends Component {
       <BabbleTextField
         autoCorrect={false}
         returnKeyType={'done'}
-        autoCorrect={false}
         autoCapitalize={'none'}
         inputPrefix={(
           <Text style={styles.prefixText}>@</Text>
