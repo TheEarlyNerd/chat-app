@@ -297,7 +297,6 @@ export default class RoomScreen extends Component {
       )
     );
 
-// we have to change the windowSoftInputMode to resizeMode here to get the right behavior..
     return (
       <SafeAreaView style={styles.container} onLayout={this._onLayout}>
         <KeyboardAvoidingView

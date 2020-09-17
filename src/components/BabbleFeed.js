@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import { BabbleRoomPreview, BabbleUserPreview, BabbleSearchField, BabbleViewMoreButton } from '../components';
+import { TouchableOpacity, Text, ActivityIndicator, Dimensions, StyleSheet } from 'react-native';
+import { BabbleRoomPreview, BabbleUserPreview, BabbleHomeOnboardingView, BabbleSearchField, BabbleViewMoreButton } from '../components';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { ChevronRightIcon } from '../components/icons';
+
+const windowHeight = Dimensions.get('window').height;
 
 export default class BabbleFeed extends Component {
   state = {
@@ -92,6 +94,17 @@ export default class BabbleFeed extends Component {
     );
   }
 
+  _renderOnboarding = ({ totalRooms }) => {
+    return (
+      <BabbleHomeOnboardingView
+        style={[
+          styles.onboarding,
+          (!totalRooms) ? styles.onboardingCentered : null,
+        ]}
+      />
+    );
+  }
+
   _renderItem = ({ item, index }) => {
     if (item.search) {
       return this._renderSearch();
@@ -111,6 +124,10 @@ export default class BabbleFeed extends Component {
 
     if (item.header) {
       return this._renderHeader(item);
+    }
+
+    if (item.onboarding) {
+      return this._renderOnboarding(item);
     }
 
     if (item.roomPreview) {
@@ -181,6 +198,13 @@ const styles = StyleSheet.create({
     fontFamily: 'NunitoSans-Bold',
     fontSize: 15,
     textAlign: 'center',
+  },
+  onboarding: {
+    marginBottom: 10,
+    marginTop: 20,
+  },
+  onboardingCentered: {
+    marginTop: windowHeight / 2 - 300,
   },
   roomPreview: {
     paddingHorizontal: 15,

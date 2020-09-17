@@ -62,10 +62,11 @@ export default class BabbleHomeOnboardingView extends PureComponent {
   }
 
   render() {
+    const { style } = this.props;
     const { currentIndex, slideWidth } = this.state;
 
     return (
-      <View style={styles.container}>
+      <View style={[ styles.container, style ]}>
         <View>
           <ScrollView
             showsHorizontalScrollIndicator={false}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BabbleFeed, BabbleHomeOnboardingView, BabbleHomeEmptyView } from '../components';
+import { BabbleFeed, BabbleHomeEmptyView } from '../components';
 import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
 import maestro from '../maestro';
 
@@ -70,6 +70,10 @@ export default class HomeScreen extends Component {
     });
 
     return [
+      ...((!!rooms && rooms.length < 5) ? [
+        { id: 'onboarding', onboarding: true, totalRooms: rooms.length },
+      ] : []),
+
       ...((!!rooms && rooms.length) ? [
         ...mapItems(rooms, 'roomPreview'),
       ] : []),
@@ -81,12 +85,8 @@ export default class HomeScreen extends Component {
   }
 
   render() {
-    if (this.state.rooms?.length === 0) {
-      return ([ 'xs', 'sm', 'md' ].includes(interfaceHelper.screenBreakpoint())) ? (
-        <BabbleHomeOnboardingView />
-      ) : (
-        <BabbleHomeEmptyView />
-      );
+    if (this.state.rooms?.length === 0 && ![ 'xs', 'sm', 'md' ].includes(interfaceHelper.screenBreakpoint())) {
+      return (<BabbleHomeEmptyView />);
     }
 
     return (
