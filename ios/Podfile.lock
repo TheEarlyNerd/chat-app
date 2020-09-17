@@ -349,9 +349,6 @@ PODS:
     - React
   - RNSVG (12.1.0):
     - React
-  - RNUxcam (5.2.0):
-    - React
-    - UXCam (~> 3.2.4)
   - SDWebImage (5.8.0):
     - SDWebImage/Core (= 5.8.0)
   - SDWebImage/Core (5.8.0)
@@ -359,7 +356,6 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.7)
   - TOCropViewController (2.5.2)
-  - UXCam (3.2.5)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -429,7 +425,6 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
-  - RNUxcam (from `../node_modules/react-native-ux-cam`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -449,7 +444,6 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageWebPCoder
     - TOCropViewController
-    - UXCam
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -537,8 +531,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
-  RNUxcam:
-    :path: "../node_modules/react-native-ux-cam"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -597,11 +589,9 @@ SPEC CHECKSUMS:
   RNReanimated: 89f5e0a04d1dd52fbf27e7e7030d8f80a646a3fc
   RNScreens: b748efec66e095134c7166ca333b628cd7e6f3e2
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
-  RNUxcam: 5fda8c568f9788b78eefc6637d5c95450086d077
   SDWebImage: 84000f962cbfa70c07f19d2234cbfcf5d779b5dc
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   TOCropViewController: e9da34f484aedd4e5d5a8ab230ba217cfe16c729
-  UXCam: 2a1547b070cd8aaef946a954142befe02fa1acb9
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
