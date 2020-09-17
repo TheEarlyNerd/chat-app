@@ -55,7 +55,7 @@ export default class DeviceContactsManager extends Manager {
     if (Platform.OS === 'android') {
       return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
         title: 'Contacts',
-        message: 'To find friends, family and acquaintances, allow Babble to view your contacts.',
+        message: 'To invite friends, family and acquaintances, allow Babble to view your contacts.',
         buttonPositive: 'Allow',
       }).then(load);
     } else {
