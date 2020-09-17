@@ -103,6 +103,7 @@ export default class SetupProfileScreen extends Component {
 
         <View style={styles.formContainer}>
           <BabbleTextField
+            autoCorrect={false}
             label={`What's your name?`}
             returnKeyType={'next'}
             blurOnSubmit={false}

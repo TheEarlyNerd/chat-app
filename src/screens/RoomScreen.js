@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, SafeAreaView, ActivityIndicator, Alert, Dimensions, StyleSheet } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, ActivityIndicator, Alert, Dimensions, StyleSheet, Platform } from 'react-native';
 import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 import { BabbleRoomComposerToolbar, BabbleRoomHeaderTitle, BabbleRoom, BabbleRoomMessageComposerToolbar, BabbleRoomViewerToolbar } from '../components';
 import { AlertTriangleIcon, RepeatIcon, InfoIcon, MoreVerticalIcon, UserPlusIcon } from '../components/icons';
@@ -85,11 +85,15 @@ export default class RoomScreen extends Component {
   }
 
   _screenFocused = () => {
-    AndroidKeyboardAdjust.setAdjustResize();
+    if (Platform.OS === 'android') {
+      AndroidKeyboardAdjust.setAdjustResize();
+    }
   }
 
   _screenBlurred = () => {
-    AndroidKeyboardAdjust.setAdjustPan();
+    if (Platform.OS === 'android') {
+      AndroidKeyboardAdjust.setAdjustPan();
+    }
   }
 
   _onLayout = ({ nativeEvent }) => {
@@ -229,7 +233,7 @@ export default class RoomScreen extends Component {
 
     if (!title && accessLevel !== 'private') {
       return interfaceHelper.showError({
-        message: 'Please provide a title.',
+        message: 'Please provide a room name.',
         iconComponent: AlertTriangleIcon,
       });
     }

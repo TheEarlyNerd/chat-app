@@ -66,6 +66,7 @@ export default class BabbleSettingField extends Component {
             <View style={styles.inputContainer}>
               {editing && (
                 <TextInput
+                  autoCorrect={false}
                   autoFocus
                   placeholder={placeholder}
                   maxLength={maxLength}
@@ -131,7 +132,8 @@ const styles = StyleSheet.create({
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
     fontWeight: 'normal',
-    marginTop: 5,
+    marginTop: interfaceHelper.platformValue({ default: 5, android: 2 }),
+    padding: interfaceHelper.platformValue({ default: undefined, android: 0 }),
     width: '100%',
   },
   valueContainer: {

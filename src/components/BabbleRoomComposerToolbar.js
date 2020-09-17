@@ -367,6 +367,7 @@ export default class BabbleRoomComposerToolbar extends Component {
               ))}
 
               <TextInput
+                autoCorrect={false}
                 caretHidden={selectedUserIndex !== null}
                 onKeyPress={this._onKeyPress}
                 onChangeText={this._onChangeText}

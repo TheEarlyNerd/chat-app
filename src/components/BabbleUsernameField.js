@@ -15,6 +15,7 @@ export default class BabbleUsernameField extends Component {
   render() {
     return (
       <BabbleTextField
+        autoCorrect={false}
         returnKeyType={'done'}
         autoCorrect={false}
         autoCapitalize={'none'}
