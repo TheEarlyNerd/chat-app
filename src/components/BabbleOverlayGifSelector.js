@@ -46,8 +46,8 @@ export default class BabbleOverlayGifSelector extends Component {
   _loadGifs = async () => {
     const { search } = this.state;
     const response = (search)
-      ? await fetch(`https://api.giphy.com/v1/gifs/search?q=${search}&api_key=${GIPHY_API_KEY}`)
-      : await fetch(`https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}`);
+      ? await fetch(`https://api.giphy.com/v1/gifs/search?q=${search}&api_key=${GIPHY_API_KEY}&limit=20`)
+      : await fetch(`https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}&limit=20`);
     const responseBody = await response.json();
 
     this.setState({ gifs: responseBody.data });
@@ -57,9 +57,9 @@ export default class BabbleOverlayGifSelector extends Component {
     return (
       <TouchableOpacity onPress={() => this._gifPressed(gif)} key={gif.id}>
         <FastImage
-          source={{ uri: gif.images.fixed_width.url }}
+          source={{ uri: gif.images.preview_gif.url }}
           style={[
-            { width: '100%', aspectRatio: gif.images.fixed_width.width / gif.images.fixed_width.height },
+            { width: '100%', aspectRatio: gif.images.preview_gif.width / gif.images.preview_gif.height },
             styles.gif,
           ]}
         />
