@@ -1,3 +1,4 @@
+import './analytics/uxcam';
 import React, { Component } from 'react';
 import { Animated, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
