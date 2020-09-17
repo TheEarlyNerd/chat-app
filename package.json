@@ -25,6 +25,7 @@
     "paho-mqtt": "^1.1.0",
     "react": "16.11.0",
     "react-native": "0.62.2",
+    "react-native-android-keyboard-adjust": "^1.2.0",
     "react-native-contacts": "^5.2.7",
     "react-native-device-info": "^5.6.1",
     "react-native-fast-image": "^8.1.5",

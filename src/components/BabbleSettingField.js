@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     color: '#323643',
     fontFamily: 'NunitoSans-SemiBold',
     fontSize: interfaceHelper.deviceValue({ default: 15, lg: 16 }),
+    fontWeight: 'normal',
     marginTop: 5,
     width: '100%',
   },

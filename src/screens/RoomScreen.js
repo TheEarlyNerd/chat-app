@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, SafeAreaView, ActivityIndicator, Alert, Dimensions, StyleSheet } from 'react-native';
+import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 import { BabbleRoomComposerToolbar, BabbleRoomHeaderTitle, BabbleRoom, BabbleRoomMessageComposerToolbar, BabbleRoomViewerToolbar } from '../components';
 import { AlertTriangleIcon, RepeatIcon, InfoIcon, MoreVerticalIcon, UserPlusIcon } from '../components/icons';
 import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext';
@@ -27,6 +28,9 @@ export default class RoomScreen extends Component {
 
   componentDidMount() {
     maestro.link(this);
+
+    this.props.navigation.addListener('focus', this._screenFocused);
+    this.props.navigation.addListener('blur', this._screenBlurred);
 
     const params = this.props.route.params || {};
     const { roomId, title, composeToUsers } = params;
@@ -78,6 +82,14 @@ export default class RoomScreen extends Component {
     if (room && name === 'APP_STATE_CHANGED' && value === 'active') {
       this._loadNewMessages();
     }
+  }
+
+  _screenFocused = () => {
+    AndroidKeyboardAdjust.setAdjustResize();
+  }
+
+  _screenBlurred = () => {
+    AndroidKeyboardAdjust.setAdjustPan();
   }
 
   _onLayout = ({ nativeEvent }) => {
@@ -281,11 +293,12 @@ export default class RoomScreen extends Component {
       )
     );
 
+// we have to change the windowSoftInputMode to resizeMode here to get the right behavior..
     return (
       <SafeAreaView style={styles.container} onLayout={this._onLayout}>
         <KeyboardAvoidingView
-          behavior={'padding'}
-          keyboardVerticalOffset={keyboardVerticalOffset}
+          behavior={interfaceHelper.platformValue({ default: 'padding', android: undefined })}
+          keyboardVerticalOffset={interfaceHelper.platformValue({ default: keyboardVerticalOffset, android: 0 })}
           style={styles.container}
         >
           {composingRoom && (

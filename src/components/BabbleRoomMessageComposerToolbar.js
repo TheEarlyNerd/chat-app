@@ -308,6 +308,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
+    elevation: 4,
     height: interfaceHelper.deviceValue({ default: 35, lg: 40 }),
     justifyContent: 'center',
     marginLeft: 15,
