@@ -45,7 +45,8 @@
     "react-native-svg": "^12.1.0",
     "react-native-swipe-list-view": "^3.1.0",
     "react-native-video": "^4.4.5",
-    "react-native-webview": "^10.4.0"
+    "react-native-webview": "^10.4.0",
+    "smartlook-react-native-wrapper": "^0.33.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
