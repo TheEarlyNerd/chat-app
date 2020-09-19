@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image';
 import { BabblePhoneField, BabbleButton, BabbleBackground } from '../components';
 import maestro from '../maestro';
 
-const { dataHelper, interfaceHelper } = maestro.helpers;
+const { dataHelper, interfaceHelper, navigationHelper } = maestro.helpers;
 const { userManager } = maestro.managers;
 
 export default class LandingScreen extends Component {
@@ -46,6 +46,13 @@ export default class LandingScreen extends Component {
         style: 'cancel',
       },
     ]);
+  }
+
+  _termsPress = () => {
+    navigationHelper.push('WebBrowserNavigator', {
+      screen: 'WebBrowser',
+      params: { url: 'https://usebabble.com/terms.html' },
+    });
   }
 
   render() {
@@ -94,7 +101,7 @@ export default class LandingScreen extends Component {
 
           {/* we should have a skip or explain button for skeptical users, phone is a big ask? */}
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={this._termsPress}>
             <Text style={styles.termsButtonText}>By continuing, I confirm that I am at least 18 years old and I agree to Babble's <Text style={styles.termsButtonTextBold}>Terms of Service</Text> and <Text style={styles.termsButtonTextBold}>Privacy Policy</Text>.</Text>
           </TouchableOpacity>
         </View>

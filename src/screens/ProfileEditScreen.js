@@ -61,6 +61,20 @@ export default class ProfileEditScreen extends Component {
     navigationHelper.pop();
   }
 
+  _openPrivacy = () => {
+    navigationHelper.push('WebBrowserNavigator', {
+      screen: 'WebBrowser',
+      params: { url: 'https://usebabble.com/privacy.html' },
+    });
+  }
+
+  _openTerms = () => {
+    navigationHelper.push('WebBrowserNavigator', {
+      screen: 'WebBrowser',
+      params: { url: 'https://usebabble.com/terms.html' },
+    });
+  }
+
   render() {
     const { user } = userManager.store;
     const { avatarImageUri, name, username, about } = this.state;
@@ -126,6 +140,7 @@ export default class ProfileEditScreen extends Component {
           <View style={styles.border} />
 
           <BabbleSettingField
+            onPress={this._openPrivacy}
             label={'Privacy Policy'}
             IconComponent={ChevronRightIcon}
           />
@@ -133,6 +148,7 @@ export default class ProfileEditScreen extends Component {
           <View style={styles.border} />
 
           <BabbleSettingField
+            onPress={this._openTerms}
             label={'Terms & Conditions'}
             IconComponent={ChevronRightIcon}
           />
