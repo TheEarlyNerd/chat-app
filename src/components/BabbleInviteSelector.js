@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Platform, Linking, Alert } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { BabbleSearchField, BabbleButton, BabbleConnectDeviceContactsView, BabbleRoomUserList } from './';
 import maestro from '../maestro';
 
+const { inviteHelper } = maestro.helpers;
 const { deviceContactsManager, roomsManager, userManager } = maestro.managers;
 
 export default class BabbleInviteSelector extends Component {
@@ -66,8 +67,6 @@ export default class BabbleInviteSelector extends Component {
   _inviteUser = user => {
     const { roomId } = this.props;
     const invitedUsers = [ ...this.state.invitedUsers ];
-    const smsDivider = Platform.select({ ios: '&', default: '?' });
-    const smsMessage = `Hey, I invited you to a chat room on Babble I think you'll like. Please put the app on your phone to join it: https://www.usebabble.com/`;
 
     roomsManager.createRoomUser({
       roomId,
@@ -82,7 +81,7 @@ export default class BabbleInviteSelector extends Component {
 
     this.setState({ invitedUsers });
 
-    Linking.openURL(`sms:${user.phone}${smsDivider}body=${smsMessage}`);
+    inviteHelper.sendInvite([ user.phone ]);
   }
 
   _search = search => {

@@ -7,7 +7,7 @@ import NavigationTypeContext from '../navigators/contexts/NavigationTypeContext'
 import maestro from '../maestro';
 
 const { roomsManager } = maestro.managers;
-const { navigationHelper, interfaceHelper } = maestro.helpers;
+const { navigationHelper, interfaceHelper, inviteHelper } = maestro.helpers;
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -256,6 +256,10 @@ export default class RoomScreen extends Component {
         phoneUsers,
         message: { text, attachments, embeds },
       });
+
+      if (phoneUsers?.length) {
+        inviteHelper.sendInvite(phoneUsers.map(phoneUser => phoneUser.phone));
+      }
     } catch (error) {
       this.setState({ loading: false });
 

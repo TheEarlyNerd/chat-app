@@ -4,6 +4,7 @@ import AttachmentsHelper from './AttachmentsHelper';
 import DataHelper from './DataHelper';
 import DeviceHelper from './DeviceHelper';
 import InterfaceHelper from './InterfaceHelper';
+import InviteHelper from './InviteHelper';
 import NavigationHelper from './NavigationHelper';
 import TimeHelper from './TimeHelper';
 
@@ -14,6 +15,7 @@ export default [
   DataHelper,
   DeviceHelper,
   InterfaceHelper,
+  InviteHelper,
   NavigationHelper,
   TimeHelper,
 ];
